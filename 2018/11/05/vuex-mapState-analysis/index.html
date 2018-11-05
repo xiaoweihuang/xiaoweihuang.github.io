@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。 对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余： // 在单独构建的版本中辅助函数为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vuex mapState 函数源码浅析">
+<meta property="og:url" content="https://xiaoweihuang.github.io/2018/11/05/vuex-mapState-analysis/index.html">
+<meta property="og:site_name" content="iF2E">
+<meta property="og:description" content="为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。 对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余： // 在单独构建的版本中辅助函数为">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-07-21T09:08:16.553Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vuex mapState 函数源码浅析">
+<meta name="twitter:description" content="为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。 对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余： // 在单独构建的版本中辅助函数为">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://xiaoweihuang.github.io/2018/11/05/vuex-mapState-analysis/">
+
+
+
+
+
+  <title>vuex mapState 函数源码浅析 | iF2E</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iF2E</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://xiaoweihuang.github.io/2018/11/05/vuex-mapState-analysis/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaoweihuang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iF2E">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">vuex mapState 函数源码浅析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-05T21:36:36+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。</p>
+<p>对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余：</p>
+<pre><code>// 在单独构建的版本中辅助函数为 Vuex.mapState
+import { mapState } from &apos;vuex&apos;
+
+export default {
+ computed: mapState({
+
+     count: state =&gt; state.count,
+
+     // 传字符串参数 &apos;count&apos; 等同于 `state =&gt; state.count`
+     countAlias: &apos;count&apos;,
+
+     // 为了能够使用 `this` 获取局部状态，这里要使用常规函数，而不能使用箭头函数
+     countPlusLocalState (state) {
+         return state.count + this.localCount
+     }
+ })
+}
+</code></pre><p>上述代码将count和countPlusLocalState映射为组件的计算属性，如果组件的计算属性跟state的子节点的名称相同时，也可以给mapState传入一个字符串数组：</p>
+<pre><code>// 在单独构建的版本中辅助函数为 Vuex.mapState
+import { mapState } from &apos;vuex&apos;
+
+export default {
+ // ...
+ computed: mapState([
+     &apos;count&apos;,
+     &apos;coutPlusLocalState&apos;
+ ])
+}
+</code></pre><p>回顾了mapState的具体用法，接下来就分析一下它的源码吧，vuex辅助函数的源码地址在这里：<a href="https://github.com/vuejs/vuex/blob/dev/src/helpers.js" title="https://github.com/vuejs/vuex/blob/dev/src/helpers.js" target="_blank" rel="noopener">https://github.com/vuejs/vuex/blob/dev/src/helpers.js</a></p>
+<p>这里主要分析mapState函数的源码，其他辅助函数的源码也差不多，分析懂了其中一个，其他也就信手拈来了。需要读懂mapState的源码，必须要有以下三个基础知识点的储备，如果自己忘记了或者记忆不太清了，可以自行去温习一下：</p>
+<ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray" target="_blank" rel="noopener">Array.isArray()</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map" target="_blank" rel="noopener">Array.prototype.map()</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys" target="_blank" rel="noopener">Object.keys()</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call" target="_blank" rel="noopener">Function.prototype.call()</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment" target="_blank" rel="noopener">解构赋值</a></li>
+</ul>
+<p>下面我把mapState源码相关的代码先抽出来：</p>
+<pre><code>/**
+ * Reduce the code which written in Vue.js for getting the state.
+ * @param {String} [namespace] - Module&apos;s namespace
+ * @param {Object|Array} states # Object&apos;s item can be a function 
+ * which accept state and getters for param, you can do something for state and getters in it.
+ * @param {Object}
+ */
+export const mapState = normalizeNamespace((namespace, states) =&gt; {
+ const res = {}
+ normalizeMap(states).forEach(({ key, val }) =&gt; {
+     res[key] = function mappedState () {
+         let state = this.$store.state
+         let getters = this.$store.getters
+         if (namespace) {
+              const module = getModuleByNamespace(this.$store, &apos;mapState&apos;, namespace)
+              if (!module) {
+                 return
+              }
+              state = module.context.state
+              getters = module.context.getters
+         }
+         return typeof val === &apos;function&apos;
+                    ? val.call(this, state, getters)
+                        : state[val]
+     }
+     // mark vuex getter for devtools
+     res[key].vuex = true
+ })
+ return res
+})
+
+
+/**
+ * Return a function expect two param contains namespace and map. 
+ * it will normalize the namespace and then the param&apos;s function will handle the new namespace and the map.
+ * @param {Function} fn
+ * @return {Function}
+ */
+function normalizeNamespace (fn) {
+ return (namespace, map) =&gt; {
+   if (typeof namespace !== &apos;string&apos;) {
+        map = namespace
+        namespace = &apos;&apos;
+   } else if (namespace.charAt(namespace.length - 1) !== &apos;/&apos;) {
+        namespace += &apos;/&apos;
+   }
+   return fn(namespace, map)
+ }
+}
+
+**
+ * Normalize the map
+ * normalizeMap([1, 2, 3]) =&gt; [ { key: 1, val: 1 }, { key: 2, val: 2 }, { key: 3, val: 3 } ]
+ * normalizeMap({a: 1, b: 2, c: 3}) =&gt; [ { key: &apos;a&apos;, val: 1 }, { key: &apos;b&apos;, val: 2 }, { key: &apos;c&apos;, val: 3 } ]
+ * @param {Array|Object} map
+ * @return {Object}
+ */
+function normalizeMap (map) {
+ return Array.isArray(map)
+ ? map.map(key =&gt; ({ key, val: key }))
+ : Object.keys(map).map(key =&gt; ({ key, val: map[key] }))
+}
+
+/**
+ * Search a special module from store by namespace. if module not exist, print error message.
+ * @param {Object} store
+ * @param {String} helper
+ * @param {String} namespace
+ * @return {Object}
+ */
+function getModuleByNamespace (store, helper, namespace) {
+    const module = store._modulesNamespaceMap[namespace]
+    if (process.env.NODE_ENV !== &apos;production&apos; &amp;&amp; !module) {
+        console.error(`[vuex] module namespace not found in ${helper}(): ${namespace}`)
+    }
+    return module
+}
+</code></pre><p>其实上面的代码，除了export 方法 mapState 外的其他函数都是所有辅助函数所共用的。第一步需要先分析normalizeNamespace 方法，从源码可以看到，它传入了一个参数，这个参数是一个函数fn，调用normalizeNamespace 后会return回一个匿名函数，这个匿名函数可以传入两个参数：一个是namespace, 一个是map, 这两个参数其实就是用来接收我们在组件中调用mapState方法时要传入的参数，通常情况下我们的应用没有那么复杂，不需要使用命名空间，所以一般都是只传入一个参数，也就是那些被映射为组件计算属性的一些值，但是有时候我们的应用会比较庞大，为了后期便于维护，我们会使用到vuex 支持的 module，这时就会有命名空间的设置，这种情况下传入的两个参数就要严格按照这个匿名函数定义时给出的参数列表顺序进行传值，第一个参数必须是命名空间，而第二个参数就是需要被映射给组件的值，看看源码：</p>
+<pre><code>function normalizeNamespace (fn) {
+ return (namespace, map) =&gt; {
+     if (typeof namespace !== &apos;string&apos;) {
+         map = namespace
+         namespace = &apos;&apos;
+     } else if (namespace.charAt(namespace.length - 1) !== &apos;/&apos;) {
+         namespace += &apos;/&apos;
+     }
+     return fn(namespace, map)
+ }
+}
+</code></pre><p>第一步会先判断mapState那里传入的第一个参数是不是字符串，如果不是字符串，说明没有使用命名空间，于是会把传进来的实参赋值给map，然后将namespace设置为空字符串，接下来讲就分析一下没有命名空间时，mapState的整个执行流程，涉及命名空间的请自行去分析，也差不多，仅仅是多了一个作用域。回到前面的例子，给mapState传入一个对象：</p>
+<pre><code>export default {
+ computed: mapState({
+     count: state =&gt; state.count,
+     countAlias: &apos;count&apos;,
+     countPlusLocalState (state) {
+         return state.count + this.localCount
+     }
+ })
+}
+</code></pre><p>经过mapState工具函数的处理后，结果如下：</p>
+<pre><code>export default { 
+ // ... 
+    computed: { 
+         count() { 
+             return this.$store.state.count 
+         }, 
+         countAlias() { 
+             return this.$store.state[&apos;count&apos;] 
+         }, 
+         countPlusLocalState() { 
+             return this.$store.state.count + this.localCount 
+         } 
+    } 
+}
+</code></pre><p>整个处理的过程是这样的，mapState首先对传入的参数调用 normalizeNamespace，也就是 :</p>
+<pre><code>normalizeNamespace({
+ count: state =&gt; state.count,
+ countAlias: &apos;count&apos;,
+ countPlusLocalState (state) {
+     return state.count + this.localCount
+ }
+})
+</code></pre><p>此时typeof namespace !== ‘string’ 为true，所以接来下会执行：</p>
+<pre><code>map = {
+ count: state =&gt; state.count,
+ countAlias: &apos;count&apos;,
+ countPlusLocalState (state) {
+     return state.count + this.localCount
+ }
+}
+namespace = &apos;&apos;
+</code></pre><p>接下来会把上面的namespace=”作为第一个参数，map={…} 作为第二个参数传入下面这个函数【后面简称整个函数为fn】：</p>
+<pre><code>(namespace, states) =&gt; {
+ const res = {}
+ normalizeMap(states).forEach(({ key, val }) =&gt; {
+     res[key] = function mappedState () {
+         let state = this.$store.state
+         let getters = this.$store.getters
+         if (namespace) {
+            const module = getModuleByNamespace(this.$store, &apos;mapState&apos;, namespace)
+            if (!module) {
+                return
+            }
+            state = module.context.state
+            getters = module.context.getters
+          }
+          return typeof val === &apos;function&apos;
+              ? val.call(this, state, getters)
+              : state[val]
+      }
+      // mark vuex getter for devtools
+      res[key].vuex = true
+ })
+ return res
+}
+</code></pre><p>然后对传入的参数调用normalizeMap，这个函数的定义如下：</p>
+<pre><code>function normalizeMap (map) {
+ return Array.isArray(map)
+ ? map.map(key =&gt; ({ key, val: key }))
+ : Object.keys(map).map(key =&gt; ({ key, val: map[key] }))
+}
+</code></pre><p>从源码也可以看出，map是一个数组或者对象，如果map是一个数组，normalizeMap将传入的map数组的每个元素转换成一个{key, val: key}的对象，如果map是一个对象，则通过Object.keys方法遍历这个map对象的 key,把数组里的每个key都转换成一个{key, val: key}的对象，最后都会把转换后的对象数组作为normalizeMap的返回值。</p>
+<p>然后继续执行mapState的剩余代码，调用了normalizeMap函数后，把前面传入的states转换成了由{key, val: key}构成的数组，接下来就是调用forEach方法遍历这个数组，并构造了一个新的对象res，这个res对象的每个元素都返回一个新的函数mappedState，来看看mappedState函数内部的代码：</p>
+<pre><code>function mappedState () {
+ let state = this.$store.state
+ let getters = this.$store.getters
+ if (namespace) {
+     const module = getModuleByNamespace(this.$store, &apos;mapState&apos;, namespace)
+     if (!module) {
+         return
+     }
+     state = module.context.state
+     getters = module.context.getters
+ }
+ return typeof val === &apos;function&apos;
+   ? val.call(this, state, getters)
+   : state[val]
+}
+</code></pre><p>由于我们传入的namespace是空，所以会直接执行：</p>
+<pre><code>return typeof val === &apos;function&apos;
+ ? val.call(this, state, getters)
+ : state[val]
+</code></pre><p>首先会判断val是不是一个函数，如果val是一个函数，则直接调用整个函数，并把store上的state和getters作为参数，执行结果作为mappedState的返回值，如果val不是函数，就直接把this.$store.state[val]作为mappedState的返回值。</p>
+<p>回到前面的例子，我们把</p>
+<pre><code>namespace=&apos;&apos;, 
+
+state={ 
+    count: state =&gt; state.count,
+    countAlias: &apos;count&apos;,
+    countPlusLocalState (state) {
+      return state.count + this.localCount
+    } 
+}
+</code></pre><p>传入fn函数后，先经过normalizeMap函数处理后的结果为：</p>
+<pre><code>[
+    {
+        key: &apos;count&apos;, val: state =&gt; state.count 
+    },
+    {
+        key: &apos;coutAlias&apos;, val: &apos;count&apos;
+    },
+    {
+        key: &apos;countPlusLocalState&apos;, 
+        val: function countPlusLocalState (state) { return state.count + this.localCount }
+    }
+]
+</code></pre><p>然后使用forEach方法遍历上这个数组的每个元素，判断到当前元素的val是function的，则会执行：</p>
+<pre><code>return val.call(this, this.$store.state, this.$store.getters)
+</code></pre><p>也就是前面说的val.call(this, this.$store.state, this.$store.getters)的返回值会作为mappedState函数的返回值，这个返回值也就是res对象的某个key对应的value函数的返回值，比如当res的key是’count’时，它的value就是:</p>
+<pre><code>function mappedState() {
+    return this.$store.state.count
+}
+</code></pre><p>所以，最终mapState处理后的结果为：</p>
+<pre><code>export default { 
+ // ... 
+    computed: { 
+         count() { 
+             return this.$store.state.count 
+         }, 
+         countAlias() { 
+             return this.$store.state[&apos;count&apos;] 
+         }, 
+         countPlusLocalState() { 
+             return this.$store.state.count + this.localCount 
+         } 
+    } 
+}
+</code></pre><p>以上只是个人鄙见，研究还不是很深入，所以理解上可能还会有误差，如果有错误的地方，欢迎指正，感激不尽。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/05/vue-reactivity/" rel="next" title="谈谈Vue的数据绑定原理与实现">
+                <i class="fa fa-chevron-left"></i> 谈谈Vue的数据绑定原理与实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xiaoweihuang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xiaoweihuang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

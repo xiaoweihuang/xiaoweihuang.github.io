@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="作为一个勤奋的程序员，通常都会有一个自己的技术博客，用于记录日常的学习体会或总结，搭建博客的方式也有很多，如果自己没有vps服务器，那么可以在博客园、CSDN、SegmentFault等网站注册账户进行博客的写作，如果有自己的vps服务器，那么可以搭建更加灵活的wordpress、typecho等博客网站。当然，没有服务器的还可以搭建hexo博客托管在github pages上，这些教程不在本博客">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何部署hexo博客到VPS服务器上">
+<meta property="og:url" content="https://xiaoweihuang.github.io/2018/11/05/deploy-hexo-to-vps/index.html">
+<meta property="og:site_name" content="iF2E">
+<meta property="og:description" content="作为一个勤奋的程序员，通常都会有一个自己的技术博客，用于记录日常的学习体会或总结，搭建博客的方式也有很多，如果自己没有vps服务器，那么可以在博客园、CSDN、SegmentFault等网站注册账户进行博客的写作，如果有自己的vps服务器，那么可以搭建更加灵活的wordpress、typecho等博客网站。当然，没有服务器的还可以搭建hexo博客托管在github pages上，这些教程不在本博客">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-18T08:53:06.357Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何部署hexo博客到VPS服务器上">
+<meta name="twitter:description" content="作为一个勤奋的程序员，通常都会有一个自己的技术博客，用于记录日常的学习体会或总结，搭建博客的方式也有很多，如果自己没有vps服务器，那么可以在博客园、CSDN、SegmentFault等网站注册账户进行博客的写作，如果有自己的vps服务器，那么可以搭建更加灵活的wordpress、typecho等博客网站。当然，没有服务器的还可以搭建hexo博客托管在github pages上，这些教程不在本博客">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://xiaoweihuang.github.io/2018/11/05/deploy-hexo-to-vps/">
+
+
+
+
+
+  <title>如何部署hexo博客到VPS服务器上 | iF2E</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iF2E</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://xiaoweihuang.github.io/2018/11/05/deploy-hexo-to-vps/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaoweihuang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iF2E">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何部署hexo博客到VPS服务器上</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-05T21:36:35+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>作为一个勤奋的程序员，通常都会有一个自己的技术博客，用于记录日常的学习体会或总结，搭建博客的方式也有很多，如果自己没有vps服务器，那么可以在博客园、CSDN、SegmentFault等网站注册账户进行博客的写作，如果有自己的vps服务器，那么可以搭建更加灵活的wordpress、typecho等博客网站。当然，没有服务器的还可以搭建hexo博客托管在github pages上，这些教程不在本博客的讨论范围，有兴趣的可以自己去百度一下相关资料，本博客要讲的是在自己的vps服务器上搭建一个hexo博客，没有服务器的可以去Vultr官网购买：<a href="https://www.vultr.com/?ref=7122677" title="https://www.vultr.com/?ref=7122677" target="_blank" rel="noopener">vultr</a>，通过这个链接注册并购买服务器会有10美元赠送，我的博客就是托管在这家的vps服务器，如何你不舍得出这些服务器费用，把hexo博客托管在github pages也是一个不错的选择。</p>
+<h2 id="准备工作：本地安装相关工具"><a href="#准备工作：本地安装相关工具" class="headerlink" title="准备工作：本地安装相关工具"></a>准备工作：本地安装相关工具</h2><h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><p>git官网下载地址：<a href="https://git-scm.com/downloads" title="https://git-scm.com/downloads" target="_blank" rel="noopener">https://git-scm.com/downloads</a><br>安装好后，git自带一个可以在windows上运行的shell: git bash, 后面操作hexo就使用这个git自带的shell,打开方式跟cmd一模一样，在 git bash 界面输入 pwd 就能看到当前用户所在的目录。</p>
+<h3 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h3><p>node.js官网下载地址：<a href="https://nodejs.org/zh-cn/download/" title="https://nodejs.org/zh-cn/download/" target="_blank" rel="noopener">https://nodejs.org/zh-cn/download/</a> 尽量安装最新稳定版本，如果遇到报错信息，请自行检查操作步骤或者查找相关解决办法。安装成功后，执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ node -V</span><br></pre></td></tr></table></figure>
+<p>如果提示了版本号，说明安装成功了。</p>
+<h3 id="安装xshell"><a href="#安装xshell" class="headerlink" title="安装xshell"></a>安装xshell</h3><p>xshell用于远程登录你的vps服务器，官网下载地址：<a href="https://www.netsarang.com/xshell_download.html" title="https://www.netsarang.com/xshell_download.html" target="_blank" rel="noopener">https://www.netsarang.com/xshell_download.html</a> 记住选择home/school 免费版本进行下载，否则过了试用期你就用不了xshell了，具体安装教程这里也不进行阐述，请自行查阅相关教程。</p>
+<h2 id="本地配置"><a href="#本地配置" class="headerlink" title="本地配置"></a>本地配置</h2><h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>hexo的官网地址是：<a href="https://hexo.io/zh-cn/docs/index.html" title="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/index.html</a></p>
+<p>详细的文档你可以等有空的时候再看，这里只需要知道基本操作就行了，打开git bash, 然后执行安装命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<p>接下来我们就本地创建一个hexo站点：</p>
+<pre><code>$ hexo init myblog // 以myblog为目录名建立站点文件夹
+
+$ cd myblog
+
+$ npm install // 安装相关依赖
+</code></pre><p>安装完依赖后，就可以启动本地服务器进行预览了，这个我们稍后再说，因为hexo自带的默认主题不好看，这里想换成next主题，这个主题的官网地址是：<a href="http://theme-next.iissnan.com/getting-started.html" title="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">http://theme-next.iissnan.com/getting-started.html</a> 执行以下命令进行安装：</p>
+<pre><code>$ cd myblog // 先切回本地站点根目录
+
+$ git clone https://github.com/iissnan/hexo-theme-next themes/next // clone
+</code></pre><p>然后打开_config.yml hexo博客配置文件，修改theme字段的值为next:</p>
+<pre><code># Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: next // 这里讲默认值改为 next
+
+# Deployment
+</code></pre><p>另外，我个人比较喜欢next主题的侧边导航布局，所以也改了一些next主题的配置文件_config.yml，将Scheme的值改为Pisces：</p>
+<pre><code># ---------------------------------------------------------------
+# Scheme Settings
+# ---------------------------------------------------------------
+
+# Schemes
+#scheme: Mist
+scheme: Pisces // 选用这个
+#scheme: Gemini
+</code></pre><p>然后执行以下命令，来启动本地服务器进行预览，预览地址为 <a href="http://localhost:4000：" target="_blank" rel="noopener">http://localhost:4000：</a></p>
+<pre><code>$ hexo server
+</code></pre><p>好了，下一步就是实现hexo部署到服务器，部署到服务器时，依次执行以下三个命令：</p>
+<pre><code>$ hexo clean // 清楚缓存
+
+$ hexo generate
+
+$ hexo deploy
+</code></pre><p>当然，现在还不能部署，需要进行ssh相关的配置。</p>
+<h3 id="本地ssh配置"><a href="#本地ssh配置" class="headerlink" title="本地ssh配置"></a>本地ssh配置</h3><p><strong>Hexo部署是通过git来完成的，而git又是基于ssh连接的，所以需要在本地和服务端进行ssh相关配置。</strong></p>
+<p>打开git bash, 执行以下命令：</p>
+<pre><code>$ git config --global user.email &quot;你的邮箱&quot;
+
+$ git config --global user.name &quot;你的用户名&quot;
+</code></pre><p>这里的邮箱和用户名都是服务器用于记录git提交记录的，然后是本地端生成ssh Key：</p>
+<pre><code>$ ssh-keygen -t rsa -C &quot;你的邮箱&quot; // 执行这个命令会提示输入用于保存的密钥名和口令之类的，都不填，执行完后会在C:\Users\Administrator\.ssh目录下生成id_rsa和id_rsa.pub两个文件，其中id_rsa.pub文件里的内容是等会要复制到服务器那里的
+</code></pre><p>可以在git bash执行以下命令获取到id_rsa.pub文件里的内容：</p>
+<pre><code>$ cat .ssh/id_rsa.pub // 执行后可以看到公钥内容
+</code></pre><h2 id="VPS服务器配置"><a href="#VPS服务器配置" class="headerlink" title="VPS服务器配置"></a>VPS服务器配置</h2><h3 id="服务器端ssh配置"><a href="#服务器端ssh配置" class="headerlink" title="服务器端ssh配置"></a>服务器端ssh配置</h3><p>执行以下命令查看是否已经安装了ssh服务器：</p>
+<pre><code>$ rpm -qa |grep ssh
+</code></pre><p>如果返回以下结果，说明已经安装了ssh:</p>
+<pre><code>openssh-5.3p1-123.el6_9.x86_64
+openssh-server-5.3p1-123.el6_9.x86_64
+libssh2-1.4.2-2.el6_7.1.x86_64
+openssh-clients-5.3p1-123.el6_9.x86_64
+</code></pre><p>如果提示没有安装，则需要执行 yum install ssh 来安装。</p>
+<p>执行以下命令查看 ssh 服务器的状态：</p>
+<pre><code>$ service sshd status
+</code></pre><p>如果提示：</p>
+<pre><code>openssh-daemon (pid  1298) is running...
+</code></pre><p>说明ssh正在运行。</p>
+<h3 id="VPS服务器创建一个git用户"><a href="#VPS服务器创建一个git用户" class="headerlink" title="VPS服务器创建一个git用户"></a>VPS服务器创建一个git用户</h3><pre><code># adduser git    //创建用户
+
+# passwd git   //下一步会提示你设置密码
+
+# su    //检查是否有安装sudo
+</code></pre><p>如果没有安装sudo, 可以执行 yum install sudo 进行安装。</p>
+<p>接下来给予 git 用户 root 权限，编辑 /etc/sudoers文件，添加一行：</p>
+<pre><code>root        ALL=(ALL)       ALL
+git        ALL=(ALL)       ALL #这个是添加的
+</code></pre><p>然后在服务器端用户主目录下新建.ssh文件夹,拷贝本地在前面步骤生成的公钥内容到.ssh目录下的authorized_keys：</p>
+<pre><code>su git
+
+$ cd ~
+
+$ mkdir .ssh
+
+$ cd .ssh
+
+$ echo &quot;id_rsa.pub文件里的内容&quot; &gt; authorized_keys
+</code></pre><p>到了这一步，完成了本地和服务器的ssh配置，也就是说到这里一步，在本地可以在git bash通过 ssh登录服务器了，相关命令如下，可能会需要你输入git用户的密码：</p>
+<pre><code>$ ssh git@你的域名或者是你的vpsip //@前是前面在服务器创建的git用户
+</code></pre><p>当前如果要实现域名访问部署到VPS服务器的博客，还差两个步骤，一个是安装nginx web服务器，另一个就是VPS服务器里git仓库的配置。</p>
+<h3 id="nginx-安装"><a href="#nginx-安装" class="headerlink" title="nginx 安装"></a>nginx 安装</h3><p>另外，我们买了vps后可能需要托管不止一个网站，所以这里我推荐使用军哥的lnmp一键安装包，安装完后，就可以创建多个虚拟主机运行不同的网站，包括wordpress、typechoe等。</p>
+<p>安装教程可以去军哥的lnmp一键安装包官网：<a href="https://lnmp.org/install.html" title="https://lnmp.org/install.html" target="_blank" rel="noopener">https://lnmp.org/install.html</a></p>
+<p>执行以下命令就可以开始lnmp的安装，安装lnmp前先切回root用户：</p>
+<pre><code>su root
+</code></pre><p>会提示你输入root密码, 然后执行以下命令进行lnmp的安装：</p>
+<pre><code>wget -c http://soft.vpser.net/lnmp/lnmp1.5.tar.gz &amp;&amp; tar zxf lnmp1.5.tar.gz &amp;&amp; cd lnmp1.5 &amp;&amp; ./install.sh lnmp
+</code></pre><p>安装成功后会有如下提示：</p>
+<pre><code>Checking ...
+Nginx: OK
+MySQL: OK
+PHP: OK
+PHP-FPM: OK
+Clean src directory...
++------------------------------------------------------------------------+
+|          LNMP V1.5 for CentOS Linux Server, Written by Licess          |
++------------------------------------------------------------------------+
+|           For more information please visit https://lnmp.org           |
++------------------------------------------------------------------------+
+|    lnmp status manage: lnmp {start|stop|reload|restart|kill|status}    |
++------------------------------------------------------------------------+
+|  phpMyAdmin: http://IP/phpmyadmin/                                     |
+|  phpinfo: http://IP/phpinfo.php                                        |
+|  Prober:  http://IP/p.php                                              |
++------------------------------------------------------------------------+
+|  Add VirtualHost: lnmp vhost add                                       |
++------------------------------------------------------------------------+
+|  Add VirtualHost: lnmp vhost add                                       |
++------------------------------------------------------------------------+
+|  Default directory: /home/wwwroot/default                              |
++------------------------------------------------------------------------+
+|  MySQL/MariaDB root password: **********                |
++------------------------------------------------------------------------+
++-------------------------------------------+
+|    Manager for LNMP, Written by Licess    |
++-------------------------------------------+
+|              https://lnmp.org             |
++-------------------------------------------+
+nginx (pid 21333 21331) is running...
+php-fpm is runing!
+ SUCCESS! MySQL running (21856)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address               Foreign Address             State
+tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN
+tcp        0      0 0.0.0.0:80                  0.0.0.0:*                   LISTEN
+tcp        0      0 0.0.0.0:22                  0.0.0.0:*                   LISTEN
+tcp        0      0 :::22                       :::*                        LISTEN
+Install lnmp takes 32 minutes.
+Install lnmp V1.5 completed! enjoy it.
+</code></pre><p>然后我们就是要在vps服务器上添加一个虚拟主机，添加之前，可以先将你的博客域名解析到vps服务器ip，添加虚拟主机的教程，这里不进行阐述，请自行查看教程：<a href="https://lnmp.org/faq/lnmp-vhost-add-howto.html" title="https://lnmp.org/faq/lnmp-vhost-add-howto.html" target="_blank" rel="noopener">https://lnmp.org/faq/lnmp-vhost-add-howto.html</a> 里面的图文教程都比较详细，如果这都看不懂就重新审视一下自己吧。这里假定你的域名是blog.xiaoweihuang.me:</p>
+<pre><code>[root@vultr ~]# lnmp vhost add
++-------------------------------------------+
+|    Manager for LNMP, Written by Licess    |
++-------------------------------------------+
+|              https://lnmp.org             |
++-------------------------------------------+
+Please enter domain(example: www.lnmp.org): blog.xiaoweihuang.me
+ Your domain: blog.xiaoweihuang.me
+Enter more domain name(example: lnmp.org *.lnmp.org): 
+Please enter the directory for the domain: blog.xiaoweihuang.me
+Default directory: /home/wwwroot/blog.xiaoweihuang.me: 
+Virtual Host Directory: /home/wwwroot/blog.xiaoweihuang.me
+Allow Rewrite rule? (y/n) y
+Please enter the rewrite of programme, 
+wordpress,discuzx,typecho,thinkphp,laravel,codeigniter,yii2 rewrite was exist.
+(Default rewrite: other): 
+You choose rewrite: other
+Enable PHP Pathinfo? (y/n) y
+Enable pathinfo.
+Allow access log? (y/n) y
+Enter access log filename(Default:blog.xiaoweihuang.me.log): 
+You access log filename: blog.xiaoweihuang.me.log
+Create database and MySQL user with same name (y/n) y
+Enter current root password of Database (Password will not shown): 
+OK, MySQL root password correct.
+ database name: hexo_blog
+Your will create a database and MySQL user with same name: hexo_blog
+Please enter password for mysql user hexo_blog: **********
+Your password: ******** 
+Add SSL Certificate (y/n) n
+
+Press any key to start create virtul host...
+
+Create Virtul Host directory......
+set permissions of Virtual Host directory......
+You select the exist rewrite rule:/usr/local/nginx/conf/rewrite/other.conf
+Test Nginx configure file......
+nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok
+nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful
+Reload Nginx......
+Gracefully shutting down php-fpm . done
+Starting php-fpm  done
+Add database Sucessfully.
+================================================
+Virtualhost infomation:
+Your domain: blog.xiaoweihuang.me
+Home Directory: /home/wwwroot/blog.xiaoweihuang.me
+Rewrite: other
+Enable log: yes
+Database username: hexo_blog
+Database userpassword: **********
+Database Name: hexo_blog
+Create ftp account: no
+================================================
+</code></pre><p>到时放博客静态文件的网站目录即是：/home/wwwroot/blog.xiaoweihuang.me，这个目录我们要赐予git用户访问的权限，因为到时部署hexo博客时，git会使用钩子将相关静态文件复制这个虚拟主机网站根目录，执行以下命令：</p>
+<pre><code>chown git:git /home/wwwroot/bog.xiaoweihuang.me
+</code></pre><p>执行完虚拟主机的安装后，并赐予git用户相关权限后，我们就要进行git的配置了，使用以下命令切换到git用户：</p>
+<pre><code>su git
+</code></pre><h3 id="git-配置"><a href="#git-配置" class="headerlink" title="git 配置"></a>git 配置</h3><p>在xshell命令行输入git –version,然后回车,如果返回git version 1.7.1，说明已经git。然后就是初始化git仓库：</p>
+<pre><code>$ cd ~
+
+$ mkdir myblog.git
+
+$ cd myblog.git
+
+$ git init --bare    // 初始化git仓库
+</code></pre><p>接下来配置git仓库的hooks钩子，目的是实现git仓库的网站代码跟虚拟主机网站根目录的网站代码进行同步，在git仓库hooks目录下创建文件post-receive并修改权限：</p>
+<pre><code>$ cd hooks
+
+$ touch post-receive
+
+$ chmod 755 post-receive
+</code></pre><p>将以下内容添加到post-receive中：</p>
+<pre><code>#!/bin/bash
+GIT_REPO=/home/git/myblog.git
+TMP_GIT_CLONE=/tmp/myblog
+PUBLIC_WWW=/home/wwwroot/blog.xiaoweihuang.me // 这个即虚拟主机网站根目录
+rm -rf ${TMP_GIT_CLONE}
+git clone $GIT_REPO $TMP_GIT_CLONE
+rm -rf ${PUBLIC_WWW}/*
+cp -rf ${TMP_GIT_CLONE}/* ${PUBLIC_WWW}
+</code></pre><p>到了这里，配置相关的工作就做完了，当然，在部署前还有一些准备工作要做。</p>
+<h2 id="部署前准备"><a href="#部署前准备" class="headerlink" title="部署前准备"></a>部署前准备</h2><h3 id="安装hexo-git部署模块"><a href="#安装hexo-git部署模块" class="headerlink" title="安装hexo git部署模块"></a>安装hexo git部署模块</h3><p>在本地hexo站点根目录执行：</p>
+<pre><code>$ npm install hexo-deployer-git --save
+</code></pre><h3 id="修改配置文件-config-yml"><a href="#修改配置文件-config-yml" class="headerlink" title="修改配置文件_config.yml"></a>修改配置文件_config.yml</h3><blockquote>
+<p>hexo博客url配置</p>
+</blockquote>
+<pre><code># URL
+## If your site is put in a subdirectory, set url as &apos;http://yoursite.com/child&apos; and root as &apos;/child/&apos;
+url: http://blog.xiaoweihuang.me    #你的博客网址
+root: /
+</code></pre><blockquote>
+<p>hexo部署方式配置</p>
+</blockquote>
+<pre><code>deploy:
+  type: git
+  repo: git@blog.xiaoweihuang.me:/home/git/myblog.git #@ 后面可以改成你的vps服务器ip
+  branch: master
+</code></pre><h2 id="正式部署hexo博客到VPS"><a href="#正式部署hexo博客到VPS" class="headerlink" title="正式部署hexo博客到VPS"></a>正式部署hexo博客到VPS</h2><pre><code>$ hexo clean    // 清除缓存
+
+$ hexo g    // 生成静态资源
+
+$ hexo d    // 部署到VPS服务器
+</code></pre><p>然后在浏览器打开 <a href="http://blog.xiaoweihuang.me" target="_blank" rel="noopener">http://blog.xiaoweihuang.me</a> 就可以看到效果了，如果不成功，请查阅相关提示信息进行排查。</p>
+<hr>
+<p>参考资料：</p>
+<ul>
+<li><a href="https://lnmp.org/install.html" title="https://lnmp.org/install.html" target="_blank" rel="noopener">https://lnmp.org/install.html</a></li>
+<li><a href="https://hexo.io/zh-cn/docs/index.html" title="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/index.html</a></li>
+<li><a href="http://theme-next.iissnan.com/getting-started.html" title="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">http://theme-next.iissnan.com/getting-started.html</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/05/beautiful-effects-created-with-CSS/" rel="next" title="CSS2结合svg实现特殊几何形状效果">
+                <i class="fa fa-chevron-left"></i> CSS2结合svg实现特殊几何形状效果
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/05/refactoring/" rel="prev" title="你一定是闲得蛋疼才重构的吧【转载】">
+                你一定是闲得蛋疼才重构的吧【转载】 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xiaoweihuang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作：本地安装相关工具"><span class="nav-number">1.</span> <span class="nav-text">准备工作：本地安装相关工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装git"><span class="nav-number">1.1.</span> <span class="nav-text">安装git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装node-js"><span class="nav-number">1.2.</span> <span class="nav-text">安装node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装xshell"><span class="nav-number">1.3.</span> <span class="nav-text">安装xshell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地配置"><span class="nav-number">2.</span> <span class="nav-text">本地配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装hexo"><span class="nav-number">2.1.</span> <span class="nav-text">安装hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地ssh配置"><span class="nav-number">2.2.</span> <span class="nav-text">本地ssh配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VPS服务器配置"><span class="nav-number">3.</span> <span class="nav-text">VPS服务器配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务器端ssh配置"><span class="nav-number">3.1.</span> <span class="nav-text">服务器端ssh配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VPS服务器创建一个git用户"><span class="nav-number">3.2.</span> <span class="nav-text">VPS服务器创建一个git用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx-安装"><span class="nav-number">3.3.</span> <span class="nav-text">nginx 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-配置"><span class="nav-number">3.4.</span> <span class="nav-text">git 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署前准备"><span class="nav-number">4.</span> <span class="nav-text">部署前准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装hexo-git部署模块"><span class="nav-number">4.1.</span> <span class="nav-text">安装hexo git部署模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件-config-yml"><span class="nav-number">4.2.</span> <span class="nav-text">修改配置文件_config.yml</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正式部署hexo博客到VPS"><span class="nav-number">5.</span> <span class="nav-text">正式部署hexo博客到VPS</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xiaoweihuang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
