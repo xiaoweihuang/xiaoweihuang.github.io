@@ -79,19 +79,25 @@
 
 
 
-<meta name="description" content="为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能生成并发送我们需要的页面。最终效果如下图所示，代码地址 ：https://github.com/xi">
+<meta name="description" content="为了方便管理自己的代码，我在腾讯云搭建了一个gitlab服务器，但今天更新了一下git，突然就打不开了，报如图所示502错误：  百度了一下，有说是端口被占用的，也有说是服务器内存不足的，于是把百度到的解决方案都尝试了一下，整个过程内心几乎是崩溃的，最终发现确实是由于内存不足导致的502错误，这样是不是意味着就不能继续使用gitlab管理自己的代码了呢，肯定不是，可以通过给服务器建立swap分区来">
 <meta property="og:type" content="article">
-<meta property="og:title" content="React初探">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/05/2016-08-28-hello-react/index.html">
+<meta property="og:title" content="腾讯云搭建gitlab服务器，报502错误">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/10/gitlab-502-error/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能生成并发送我们需要的页面。最终效果如下图所示，代码地址 ：https://github.com/xi">
+<meta property="og:description" content="为了方便管理自己的代码，我在腾讯云搭建了一个gitlab服务器，但今天更新了一下git，突然就打不开了，报如图所示502错误：  百度了一下，有说是端口被占用的，也有说是服务器内存不足的，于是把百度到的解决方案都尝试了一下，整个过程内心几乎是崩溃的，最终发现确实是由于内存不足导致的502错误，这样是不是意味着就不能继续使用gitlab管理自己的代码了呢，肯定不是，可以通过给服务器建立swap分区来">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://images2015.cnblogs.com/blog/798982/201608/798982-20160807222900793-1499449024.png">
-<meta property="og:updated_time" content="2018-11-05T12:38:51.226Z">
+<meta property="og:image" content="https://i.imgur.com/JfPyINm.png">
+<meta property="og:image" content="https://i.imgur.com/tLA0Qls.png">
+<meta property="og:image" content="https://i.imgur.com/vcg9Qnb.png">
+<meta property="og:image" content="https://i.imgur.com/876aWvS.png">
+<meta property="og:image" content="https://i.imgur.com/REW5dW2.png">
+<meta property="og:image" content="https://i.imgur.com/kCAkkSq.png">
+<meta property="og:image" content="https://i.imgur.com/i2d1Xxn.png">
+<meta property="og:updated_time" content="2018-11-10T09:13:19.453Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="React初探">
-<meta name="twitter:description" content="为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能生成并发送我们需要的页面。最终效果如下图所示，代码地址 ：https://github.com/xi">
-<meta name="twitter:image" content="http://images2015.cnblogs.com/blog/798982/201608/798982-20160807222900793-1499449024.png">
+<meta name="twitter:title" content="腾讯云搭建gitlab服务器，报502错误">
+<meta name="twitter:description" content="为了方便管理自己的代码，我在腾讯云搭建了一个gitlab服务器，但今天更新了一下git，突然就打不开了，报如图所示502错误：  百度了一下，有说是端口被占用的，也有说是服务器内存不足的，于是把百度到的解决方案都尝试了一下，整个过程内心几乎是崩溃的，最终发现确实是由于内存不足导致的502错误，这样是不是意味着就不能继续使用gitlab管理自己的代码了呢，肯定不是，可以通过给服务器建立swap分区来">
+<meta name="twitter:image" content="https://i.imgur.com/JfPyINm.png">
 
 
 
@@ -121,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/05/2016-08-28-hello-react/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/10/gitlab-502-error/">
 
 
 
 
 
-  <title>React初探 | 前端农民工</title>
+  <title>腾讯云搭建gitlab服务器，报502错误 | 前端农民工</title>
   
 
 
@@ -234,7 +240,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2016-08-28-hello-react/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/10/gitlab-502-error/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -251,7 +257,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">React初探</h1>
+          <h1 class="post-title" itemprop="name headline">腾讯云搭建gitlab服务器，报502错误</h1>
         
 
         <div class="post-meta">
@@ -263,8 +269,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T20:38:51+08:00">
-                2018-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-10T16:44:43+08:00">
+                2018-11-10
               </time>
             
 
@@ -301,8 +307,28 @@
       
 
       
-        <p>为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能生成并发送我们需要的页面。最终效果如下图所示，代码地址 ：<a href="https://github.com/xiaoweihuang/React-Books-List" target="_blank" rel="noopener">https://github.com/xiaoweihuang/React-Books-List</a></p>
-<p><img src="http://images2015.cnblogs.com/blog/798982/201608/798982-20160807222900793-1499449024.png" alt=""></p>
+        <p>为了方便管理自己的代码，我在腾讯云搭建了一个gitlab服务器，但今天更新了一下git，突然就打不开了，报如图所示502错误：</p>
+<p><img src="https://i.imgur.com/JfPyINm.png" alt=""></p>
+<p>百度了一下，有说是端口被占用的，也有说是服务器内存不足的，于是把百度到的解决方案都尝试了一下，整个过程内心几乎是崩溃的，最终发现确实是由于内存不足导致的502错误，这样是不是意味着就不能继续使用gitlab管理自己的代码了呢，肯定不是，可以通过给服务器建立swap分区来解决内存不足的问题，首先说明一下我的服务器配置，操作系统：CentOS 6.8 64位，CPU: 1 核，内存：2GB，具体操作过程如下：</p>
+<h3 id="1-cat-proc-swaps-查看swap分区是否启动"><a href="#1-cat-proc-swaps-查看swap分区是否启动" class="headerlink" title="1.cat /proc/swaps 查看swap分区是否启动"></a>1.cat /proc/swaps 查看swap分区是否启动</h3><p><img src="https://i.imgur.com/tLA0Qls.png" alt=""></p>
+<p>这个结果即表示没有启动swap分区。</p>
+<h3 id="2-创建-swap分区"><a href="#2-创建-swap分区" class="headerlink" title="2.创建 swap分区"></a>2.创建 swap分区</h3><pre><code>dd if=/dev/zero of=/data/swap bs=512 count=8388616
+</code></pre><p>以上命令创建swap大小为bs*count=4294971392(4G)（注意：/data/swap目录若无则找 /mnt/swap，我的服务器可以直接使用/data/swap）。</p>
+<p><img src="https://i.imgur.com/vcg9Qnb.png" alt=""></p>
+<h3 id="3-通过mkswap命令将上面新建出的文件做成swap分区"><a href="#3-通过mkswap命令将上面新建出的文件做成swap分区" class="headerlink" title="3.通过mkswap命令将上面新建出的文件做成swap分区"></a>3.通过mkswap命令将上面新建出的文件做成swap分区</h3><pre><code>mkswap /data/swap
+</code></pre><p><img src="https://i.imgur.com/876aWvS.png" alt=""></p>
+<h3 id="4-查看内核参数vm-swappiness中的数值是否为0，如果为0则根据实际需要调整成60"><a href="#4-查看内核参数vm-swappiness中的数值是否为0，如果为0则根据实际需要调整成60" class="headerlink" title="4.查看内核参数vm.swappiness中的数值是否为0，如果为0则根据实际需要调整成60"></a>4.查看内核参数vm.swappiness中的数值是否为0，如果为0则根据实际需要调整成60</h3><p>查看命令：</p>
+<pre><code>cat /proc/sys/vm/swappiness
+</code></pre><p><img src="https://i.imgur.com/REW5dW2.png" alt=""></p>
+<p>由于我的服务器默认就是60，所以我的不需要改动，如果显示0，可以按照以下命令进行修改：</p>
+<pre><code>sysctl -w vm.swappiness=60
+</code></pre><p>若想永久修改，则编辑/etc/sysctl.conf文件，改文件中有vm.swappiness变量配置，默认为0。</p>
+<h3 id="5-启用分区"><a href="#5-启用分区" class="headerlink" title="5.启用分区"></a>5.启用分区</h3><pre><code>swapon /data/swap
+
+echo “/data/swap swap swap defaults 0 0” &gt;&gt; /etc/fstab
+</code></pre><h3 id="6-再次使用cat-proc-swaps-查看swap分区是否启动"><a href="#6-再次使用cat-proc-swaps-查看swap分区是否启动" class="headerlink" title="6.再次使用cat /proc/swaps 查看swap分区是否启动"></a>6.再次使用cat /proc/swaps 查看swap分区是否启动</h3><p><img src="https://i.imgur.com/kCAkkSq.png" alt=""></p>
+<p>如图，即表示swap分区启动成功。</p>
+<h3 id="7-重新打开gitlab"><a href="#7-重新打开gitlab" class="headerlink" title="7.重新打开gitlab"></a>7.重新打开gitlab</h3><p><img src="https://i.imgur.com/i2d1Xxn.png" alt=""></p>
 
       
     </div>
@@ -327,8 +353,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/05/2016-08-25-about-promise/" rel="next" title="简单理解ECMAScript2015中的Promise">
-                <i class="fa fa-chevron-left"></i> 简单理解ECMAScript2015中的Promise
+              <a href="/2018/11/05/vuex-mapState-analysis/" rel="next" title="vuex mapState 函数源码浅析">
+                <i class="fa fa-chevron-left"></i> vuex mapState 函数源码浅析
               </a>
             
           </div>
@@ -336,10 +362,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/05/2016-08-29-arrow-functions/" rel="prev" title="简单理解ECMAScript2015中的箭头函数新特性">
-                简单理解ECMAScript2015中的箭头函数新特性 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -391,8 +413,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -434,6 +465,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-cat-proc-swaps-查看swap分区是否启动"><span class="nav-number">1.</span> <span class="nav-text">1.cat /proc/swaps 查看swap分区是否启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-创建-swap分区"><span class="nav-number">2.</span> <span class="nav-text">2.创建 swap分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-通过mkswap命令将上面新建出的文件做成swap分区"><span class="nav-number">3.</span> <span class="nav-text">3.通过mkswap命令将上面新建出的文件做成swap分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-查看内核参数vm-swappiness中的数值是否为0，如果为0则根据实际需要调整成60"><span class="nav-number">4.</span> <span class="nav-text">4.查看内核参数vm.swappiness中的数值是否为0，如果为0则根据实际需要调整成60</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-启用分区"><span class="nav-number">5.</span> <span class="nav-text">5.启用分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-再次使用cat-proc-swaps-查看swap分区是否启动"><span class="nav-number">6.</span> <span class="nav-text">6.再次使用cat /proc/swaps 查看swap分区是否启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-重新打开gitlab"><span class="nav-number">7.</span> <span class="nav-text">7.重新打开gitlab</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

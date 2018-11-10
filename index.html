@@ -229,6 +229,147 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/10/gitlab-502-error/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaoweihuang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/10/gitlab-502-error/" itemprop="url">腾讯云搭建gitlab服务器，报502错误</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-10T16:44:43+08:00">
+                2018-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>为了方便管理自己的代码，我在腾讯云搭建了一个gitlab服务器，但今天更新了一下git，突然就打不开了，报如图所示502错误：</p>
+<p><img src="https://i.imgur.com/JfPyINm.png" alt=""></p>
+<p>百度了一下，有说是端口被占用的，也有说是服务器内存不足的，于是把百度到的解决方案都尝试了一下，整个过程内心几乎是崩溃的，最终发现确实是由于内存不足导致的502错误，这样是不是意味着就不能继续使用gitlab管理自己的代码了呢，肯定不是，可以通过给服务器建立swap分区来解决内存不足的问题，首先说明一下我的服务器配置，操作系统：CentOS 6.8 64位，CPU: 1 核，内存：2GB，具体操作过程如下：</p>
+<h3 id="1-cat-proc-swaps-查看swap分区是否启动"><a href="#1-cat-proc-swaps-查看swap分区是否启动" class="headerlink" title="1.cat /proc/swaps 查看swap分区是否启动"></a>1.cat /proc/swaps 查看swap分区是否启动</h3><p><img src="https://i.imgur.com/tLA0Qls.png" alt=""></p>
+<p>这个结果即表示没有启动swap分区。</p>
+<h3 id="2-创建-swap分区"><a href="#2-创建-swap分区" class="headerlink" title="2.创建 swap分区"></a>2.创建 swap分区</h3><pre><code>dd if=/dev/zero of=/data/swap bs=512 count=8388616
+</code></pre><p>以上命令创建swap大小为bs*count=4294971392(4G)（注意：/data/swap目录若无则找 /mnt/swap，我的服务器可以直接使用/data/swap）。</p>
+<p><img src="https://i.imgur.com/vcg9Qnb.png" alt=""></p>
+<h3 id="3-通过mkswap命令将上面新建出的文件做成swap分区"><a href="#3-通过mkswap命令将上面新建出的文件做成swap分区" class="headerlink" title="3.通过mkswap命令将上面新建出的文件做成swap分区"></a>3.通过mkswap命令将上面新建出的文件做成swap分区</h3><pre><code>mkswap /data/swap
+</code></pre><p><img src="https://i.imgur.com/876aWvS.png" alt=""></p>
+<h3 id="4-查看内核参数vm-swappiness中的数值是否为0，如果为0则根据实际需要调整成60"><a href="#4-查看内核参数vm-swappiness中的数值是否为0，如果为0则根据实际需要调整成60" class="headerlink" title="4.查看内核参数vm.swappiness中的数值是否为0，如果为0则根据实际需要调整成60"></a>4.查看内核参数vm.swappiness中的数值是否为0，如果为0则根据实际需要调整成60</h3><p>查看命令：</p>
+<pre><code>cat /proc/sys/vm/swappiness
+</code></pre><p><img src="https://i.imgur.com/REW5dW2.png" alt=""></p>
+<p>由于我的服务器默认就是60，所以我的不需要改动，如果显示0，可以按照以下命令进行修改：</p>
+<pre><code>sysctl -w vm.swappiness=60
+</code></pre><p>若想永久修改，则编辑/etc/sysctl.conf文件，改文件中有vm.swappiness变量配置，默认为0。</p>
+<h3 id="5-启用分区"><a href="#5-启用分区" class="headerlink" title="5.启用分区"></a>5.启用分区</h3><pre><code>swapon /data/swap
+
+echo “/data/swap swap swap defaults 0 0” &gt;&gt; /etc/fstab
+</code></pre><h3 id="6-再次使用cat-proc-swaps-查看swap分区是否启动"><a href="#6-再次使用cat-proc-swaps-查看swap分区是否启动" class="headerlink" title="6.再次使用cat /proc/swaps 查看swap分区是否启动"></a>6.再次使用cat /proc/swaps 查看swap分区是否启动</h3><p><img src="https://i.imgur.com/kCAkkSq.png" alt=""></p>
+<p>如图，即表示swap分区启动成功。</p>
+<h3 id="7-重新打开gitlab"><a href="#7-重新打开gitlab" class="headerlink" title="7.重新打开gitlab"></a>7.重新打开gitlab</h3><p><img src="https://i.imgur.com/i2d1Xxn.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/vuex-mapState-analysis/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2382,221 +2523,6 @@ console.log(adder.addThruCall(1)); // 仍然输出 2，而不是3
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2016-08-25-about-promise/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xiaoweihuang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="前端农民工">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/05/2016-08-25-about-promise/" itemprop="url">简单理解ECMAScript2015中的Promise</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T20:38:51+08:00">
-                2018-11-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>ECMAScript6中新增了Promise对象， 所谓Promise对象，即代表着一个还未完成，但将来某时会完成的操作（通常是异步操作）。使用Promise对象，我们就可以避免陷入函数层层嵌套的‘回调金字塔’里去，将异步的操作以同步的的形式展现出来。Promise对象对外提供了一整套完整的接口，方便开发者更好地控制异步操作。</p>
-<blockquote>
-<h3>Promise语法</h3>
-</blockquote>
-<p>ES6的Promise对象是一个构造函数，创建一个Promise对象实例的语法如下：</p>
-<pre><code>new Promise (function(resolve, reject){});
-</code></pre><p>Promise接受一个函数作为参数，这个函数也包含两个参数，这两个参数分别是resolve方法和reject方法，其中resolve方法在处理执行成功的时候将Promise对象的状态变为”fulfilled “，而reject方法则在处理执行失败的时候将Promise对象的状态变为”rejected”。</p>
-<pre><code>var promise = new Promise(function(resolve,reject){
-    if (/*异步操作成功*/) {
-        resolve(value)
-    } esle {
-        reject(error)
-    }
-
-});
-
-promise.then(function(value){//success},function(value){//error})
-</code></pre><p>从上面的代码我们可以看到，Promise对象实例生成后，可以使用then方法为异步操作成功或者失败的时候指定相应的处理方法。来看一个简单的例子。</p>
-<pre><code>if (window.Promise) {
-  var promise = new Promise(function(resolve,reject){
-      var request;
-      if (window.XMLHttpRequest) {
-           request = new XMLHttpRequest();
-       } else {
-           request = new ActiveXObject();
-       }
-           request.open(&apos;GET&apos;,&apos;https://cnodejs.org/api/v1/topics&apos;);
-           request.send();
-           request.onload = function() {
-               if(request.status == 200){
-                    resolve(request.response)
-                }else{
-                     reject(Error(request.statusText));
-                }
-           }
-           request.onerror = function() {
-                  reject(Error(&apos;fetch data error.&apos;))
-           }
-
-  })
- } else {
-    console.log(&apos;Promise not support.&apos;);
- }
-
- promise.then(function(value){
-        console.log(value);
-  },function(error) {
-        console.log(error.message);
-  })
-</code></pre><p>以上例子的代码即是Promise实现的异步请求。</p>
-<blockquote>
-<h3>Promise概念</h3>
-</blockquote>
-<p>理解Promise之前，先来看看Promise对象包含的几种状态：</p>
-<p>①pending:既不是fulfilled状态，也不是rejected状态<br>②fulfilled:成功的操作<br>③rejected:失败的操作</p>
-<p><img src="http://images2015.cnblogs.com/blog/798982/201608/798982-20160817171642203-1109957991.png" alt=""></p>
-<p>从上面的流程图可以看出，处于pending状态的Promise对象既可以转变为一个带有成功值的fulfill状态，也可以转变为一个带有失败信息的rejected状态。当Promise的状态发生改变时，由Promise.then绑定的回调函数就会被调用。</p>
-<h3>Promise对象的原型：Promise.prototype</h3><br>Promise.prototype即是Promise构造器的原型，所有的Promise实例对象都继承自Promise.prototype,可以通过Promise构造器的原型对象来给所有Promise实例添加属性和方法。<br><br>Promise.prototype.catch(onReject):  catch方法只用来处理Promise被拒绝的情况，同时返回一个Promise对象，这个原型方法的行为和调用跟promise.then(undefined,onReject)相同。<br><br>        promise.catch(onReject);<br>        promise.then(function(error){//拒绝})<br><br>Promise.prototype.then(onfulfilled,onRejected):then方法也会返回一个Promise对象，then方法有两个参数，它们分别是Promise成功或者失败时的回调函数。<br><br>        promise.then(onFulfilled,onRejected);<br>        promise.then(function(value){<br>            console.log(value)//成功状态<br>        }，function(reason){<br>             console.log(reason.message);//失败状态<br>        })<br><br><br>&gt;<h3>链式Promise</h3>
-
-<p>由于Promise对象的catch方法和then方法都返回一个Promise对象，所以可以实现Promise的链式调用，可以帮助我们陷入“回调金字塔”，例如当你的某个操作返回数据，然后你要基于这些数据完成另一个操作，再返回新的数据，然后再基于这些新的数据完成另一个新的操作，这时我们就可以使用Promise对象的链式调用，以增强代码的可读性，同时从一层嵌套一层的“回调金字塔”中挣脱出来。还是以异步请求举个例子。</p>
-<pre><code>function getData(url) {
-    return new Promise(function(resolve,reject){
-        var request;
-        if (window.XMLHttpRequest) {
-             request = new XMLHttpRequest();
-         } else {
-             request = new ActiveXObject();
-         }
-         request.open(&apos;GET&apos;,url);
-         request.send();
-         request.onload = function() {
-             if(request.status == 200){
-                  resolve(request.response)
-              }else{
-                   reject(Error(request.statusText));
-              }
-         }
-         request.onerror = function() {
-                reject(Error(&apos;fetch data error.&apos;))
-         }
-
-    })
-}
-
-getData(&apos;https://cnodejs.org/api/v1/topics&apos;).then(function(result){
-   var result = JSON.parse(result);
-   return getData(&apos;https://cnodejs.org/user/&apos;+result.data[0].author.loginname);//由于浏览器同源策略的原因，这个异步请求是失败的，这里只是示意
-}).then(function(result){
-   console.log(result);
-}).catch(function(error){
-   console.log(error);
-});
-</code></pre><blockquote>
-<h3>Promise的错误处理</h3>
-</blockquote>
-<p>通过前面的例子，我们也可以看到，Promise对象的错误由catch方法来捕获，传入catch方法的参数即为Promise发生错误时的回调函数。前面也提到了，catch方法的行为和调用跟Promise.prototype.then(undefined,rejected)相同，也就是说then方法里面传入的第二个参数rejected函数和传入catch方法的回调函数，都会在Promise对象状态变为”rejected”时被调用。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2647,7 +2573,7 @@ getData(&apos;https://cnodejs.org/api/v1/topics&apos;).then(function(result){
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

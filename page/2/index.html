@@ -229,6 +229,221 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2016-08-25-about-promise/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaoweihuang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/05/2016-08-25-about-promise/" itemprop="url">简单理解ECMAScript2015中的Promise</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T20:38:51+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>ECMAScript6中新增了Promise对象， 所谓Promise对象，即代表着一个还未完成，但将来某时会完成的操作（通常是异步操作）。使用Promise对象，我们就可以避免陷入函数层层嵌套的‘回调金字塔’里去，将异步的操作以同步的的形式展现出来。Promise对象对外提供了一整套完整的接口，方便开发者更好地控制异步操作。</p>
+<blockquote>
+<h3>Promise语法</h3>
+</blockquote>
+<p>ES6的Promise对象是一个构造函数，创建一个Promise对象实例的语法如下：</p>
+<pre><code>new Promise (function(resolve, reject){});
+</code></pre><p>Promise接受一个函数作为参数，这个函数也包含两个参数，这两个参数分别是resolve方法和reject方法，其中resolve方法在处理执行成功的时候将Promise对象的状态变为”fulfilled “，而reject方法则在处理执行失败的时候将Promise对象的状态变为”rejected”。</p>
+<pre><code>var promise = new Promise(function(resolve,reject){
+    if (/*异步操作成功*/) {
+        resolve(value)
+    } esle {
+        reject(error)
+    }
+
+});
+
+promise.then(function(value){//success},function(value){//error})
+</code></pre><p>从上面的代码我们可以看到，Promise对象实例生成后，可以使用then方法为异步操作成功或者失败的时候指定相应的处理方法。来看一个简单的例子。</p>
+<pre><code>if (window.Promise) {
+  var promise = new Promise(function(resolve,reject){
+      var request;
+      if (window.XMLHttpRequest) {
+           request = new XMLHttpRequest();
+       } else {
+           request = new ActiveXObject();
+       }
+           request.open(&apos;GET&apos;,&apos;https://cnodejs.org/api/v1/topics&apos;);
+           request.send();
+           request.onload = function() {
+               if(request.status == 200){
+                    resolve(request.response)
+                }else{
+                     reject(Error(request.statusText));
+                }
+           }
+           request.onerror = function() {
+                  reject(Error(&apos;fetch data error.&apos;))
+           }
+
+  })
+ } else {
+    console.log(&apos;Promise not support.&apos;);
+ }
+
+ promise.then(function(value){
+        console.log(value);
+  },function(error) {
+        console.log(error.message);
+  })
+</code></pre><p>以上例子的代码即是Promise实现的异步请求。</p>
+<blockquote>
+<h3>Promise概念</h3>
+</blockquote>
+<p>理解Promise之前，先来看看Promise对象包含的几种状态：</p>
+<p>①pending:既不是fulfilled状态，也不是rejected状态<br>②fulfilled:成功的操作<br>③rejected:失败的操作</p>
+<p><img src="http://images2015.cnblogs.com/blog/798982/201608/798982-20160817171642203-1109957991.png" alt=""></p>
+<p>从上面的流程图可以看出，处于pending状态的Promise对象既可以转变为一个带有成功值的fulfill状态，也可以转变为一个带有失败信息的rejected状态。当Promise的状态发生改变时，由Promise.then绑定的回调函数就会被调用。</p>
+<h3>Promise对象的原型：Promise.prototype</h3><br>Promise.prototype即是Promise构造器的原型，所有的Promise实例对象都继承自Promise.prototype,可以通过Promise构造器的原型对象来给所有Promise实例添加属性和方法。<br><br>Promise.prototype.catch(onReject):  catch方法只用来处理Promise被拒绝的情况，同时返回一个Promise对象，这个原型方法的行为和调用跟promise.then(undefined,onReject)相同。<br><br>        promise.catch(onReject);<br>        promise.then(function(error){//拒绝})<br><br>Promise.prototype.then(onfulfilled,onRejected):then方法也会返回一个Promise对象，then方法有两个参数，它们分别是Promise成功或者失败时的回调函数。<br><br>        promise.then(onFulfilled,onRejected);<br>        promise.then(function(value){<br>            console.log(value)//成功状态<br>        }，function(reason){<br>             console.log(reason.message);//失败状态<br>        })<br><br><br>&gt;<h3>链式Promise</h3>
+
+<p>由于Promise对象的catch方法和then方法都返回一个Promise对象，所以可以实现Promise的链式调用，可以帮助我们陷入“回调金字塔”，例如当你的某个操作返回数据，然后你要基于这些数据完成另一个操作，再返回新的数据，然后再基于这些新的数据完成另一个新的操作，这时我们就可以使用Promise对象的链式调用，以增强代码的可读性，同时从一层嵌套一层的“回调金字塔”中挣脱出来。还是以异步请求举个例子。</p>
+<pre><code>function getData(url) {
+    return new Promise(function(resolve,reject){
+        var request;
+        if (window.XMLHttpRequest) {
+             request = new XMLHttpRequest();
+         } else {
+             request = new ActiveXObject();
+         }
+         request.open(&apos;GET&apos;,url);
+         request.send();
+         request.onload = function() {
+             if(request.status == 200){
+                  resolve(request.response)
+              }else{
+                   reject(Error(request.statusText));
+              }
+         }
+         request.onerror = function() {
+                reject(Error(&apos;fetch data error.&apos;))
+         }
+
+    })
+}
+
+getData(&apos;https://cnodejs.org/api/v1/topics&apos;).then(function(result){
+   var result = JSON.parse(result);
+   return getData(&apos;https://cnodejs.org/user/&apos;+result.data[0].author.loginname);//由于浏览器同源策略的原因，这个异步请求是失败的，这里只是示意
+}).then(function(result){
+   console.log(result);
+}).catch(function(error){
+   console.log(error);
+});
+</code></pre><blockquote>
+<h3>Promise的错误处理</h3>
+</blockquote>
+<p>通过前面的例子，我们也可以看到，Promise对象的错误由catch方法来捕获，传入catch方法的参数即为Promise发生错误时的回调函数。前面也提到了，catch方法的行为和调用跟Promise.prototype.then(undefined,rejected)相同，也就是说then方法里面传入的第二个参数rejected函数和传入catch方法的回调函数，都会在Promise对象状态变为”rejected”时被调用。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2016-05-29-about-closures/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2689,6 +2904,139 @@ More info: http://facebook.github.io/react-native/docs/running-on-device-android
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2015-08-26-hello-2015/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaoweihuang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/05/2015-08-26-hello-2015/" itemprop="url">Hello World</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T20:38:51+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p><strong>“Hey It works! ”</strong></p>
+</blockquote>
+<p>今天终于把博客搭建好了。</p>
+<p>作为一个喜欢折腾的人，总也喜欢尝试一些新鲜的东西。虽然不知道自己会不会经常来这里写东西，但还是把博客搭建起来，给自己一个涨姿势的机会。很久之前就开始关注使用<a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> + <a href="http://jekyllrb.com/" target="_blank" rel="noopener">Jekyll</a> 搭建Blog，觉得挺有意思的，于是开始在网上搜集资料，结合官方文档介绍，在本地把环境搭建起来，到今天算是把整体框架搞定了。</p>
+<blockquote>
+<p><strong>“Thanks!”</strong></p>
+</blockquote>
+<p>就在一切准备就绪的时候，一执行”jekyll serve”命令,就报错”cannot load such file – hitimes/hitimes (LoadError)”。</p>
+<p>通过谷歌找到了 <a href="http://stackoverflow.com/a/28998745" target="_blank" rel="noopener">解决方案 </a> 感谢Stack Overflow社区的答主<a href="http://stackoverflow.com/users/527152/azolo" target="_blank" rel="noopener">Azolo </a>。</p>
+<blockquote>
+<p><strong>“Share!”</strong></p>
+</blockquote>
+<p>分享一篇来自Google的前端工程师 <a href="http://philipwalton.com/" title="Philip Walton" target="_blank" rel="noopener">Philip Walton</a>写的关于如何成为优秀的前端工程师的文章 <a href="http://philipwalton.com/articles/how-to-become-a-great-front-end-engineer/" title="How to Become a Great Front-End Engineer" target="_blank" rel="noopener">How to Become a Great Front-End Engineer</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2015-08-27-share-website/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2869,139 +3217,6 @@ More info: http://facebook.github.io/react-native/docs/running-on-device-android
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2015-08-26-hello-2015/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xiaoweihuang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="前端农民工">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/05/2015-08-26-hello-2015/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T20:38:51+08:00">
-                2018-11-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p><strong>“Hey It works! ”</strong></p>
-</blockquote>
-<p>今天终于把博客搭建好了。</p>
-<p>作为一个喜欢折腾的人，总也喜欢尝试一些新鲜的东西。虽然不知道自己会不会经常来这里写东西，但还是把博客搭建起来，给自己一个涨姿势的机会。很久之前就开始关注使用<a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> + <a href="http://jekyllrb.com/" target="_blank" rel="noopener">Jekyll</a> 搭建Blog，觉得挺有意思的，于是开始在网上搜集资料，结合官方文档介绍，在本地把环境搭建起来，到今天算是把整体框架搞定了。</p>
-<blockquote>
-<p><strong>“Thanks!”</strong></p>
-</blockquote>
-<p>就在一切准备就绪的时候，一执行”jekyll serve”命令,就报错”cannot load such file – hitimes/hitimes (LoadError)”。</p>
-<p>通过谷歌找到了 <a href="http://stackoverflow.com/a/28998745" target="_blank" rel="noopener">解决方案 </a> 感谢Stack Overflow社区的答主<a href="http://stackoverflow.com/users/527152/azolo" target="_blank" rel="noopener">Azolo </a>。</p>
-<blockquote>
-<p><strong>“Share!”</strong></p>
-</blockquote>
-<p>分享一篇来自Google的前端工程师 <a href="http://philipwalton.com/" title="Philip Walton" target="_blank" rel="noopener">Philip Walton</a>写的关于如何成为优秀的前端工程师的文章 <a href="http://philipwalton.com/articles/how-to-become-a-great-front-end-engineer/" title="How to Become a Great Front-End Engineer" target="_blank" rel="noopener">How to Become a Great Front-End Engineer</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3052,7 +3267,7 @@ More info: http://facebook.github.io/react-native/docs/running-on-device-android
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
