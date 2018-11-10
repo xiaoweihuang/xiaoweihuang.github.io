@@ -300,30 +300,17 @@
       
         
           
-            <p>为了方便管理自己的代码，我在腾讯云搭建了一个gitlab服务器，但今天更新了一下git，突然就打不开了，报如图所示502错误：</p>
-<p><img src="https://i.imgur.com/JfPyINm.png" alt=""></p>
-<p>百度了一下，有说是端口被占用的，也有说是服务器内存不足的，于是把百度到的解决方案都尝试了一下，整个过程内心几乎是崩溃的，最终发现确实是由于内存不足导致的502错误，这样是不是意味着就不能继续使用gitlab管理自己的代码了呢，肯定不是，可以通过给服务器建立swap分区来解决内存不足的问题，首先说明一下我的服务器配置，操作系统：CentOS 6.8 64位，CPU: 1 核，内存：2GB，具体操作过程如下：</p>
-<h3 id="1-cat-proc-swaps-查看swap分区是否启动"><a href="#1-cat-proc-swaps-查看swap分区是否启动" class="headerlink" title="1.cat /proc/swaps 查看swap分区是否启动"></a>1.cat /proc/swaps 查看swap分区是否启动</h3><p><img src="https://i.imgur.com/tLA0Qls.png" alt=""></p>
-<p>这个结果即表示没有启动swap分区。</p>
-<h3 id="2-创建-swap分区"><a href="#2-创建-swap分区" class="headerlink" title="2.创建 swap分区"></a>2.创建 swap分区</h3><pre><code>dd if=/dev/zero of=/data/swap bs=512 count=8388616
-</code></pre><p>以上命令创建swap大小为bs*count=4294971392(4G)（注意：/data/swap目录若无则找 /mnt/swap，我的服务器可以直接使用/data/swap）。</p>
-<p><img src="https://i.imgur.com/vcg9Qnb.png" alt=""></p>
-<h3 id="3-通过mkswap命令将上面新建出的文件做成swap分区"><a href="#3-通过mkswap命令将上面新建出的文件做成swap分区" class="headerlink" title="3.通过mkswap命令将上面新建出的文件做成swap分区"></a>3.通过mkswap命令将上面新建出的文件做成swap分区</h3><pre><code>mkswap /data/swap
-</code></pre><p><img src="https://i.imgur.com/876aWvS.png" alt=""></p>
-<h3 id="4-查看内核参数vm-swappiness中的数值是否为0，如果为0则根据实际需要调整成60"><a href="#4-查看内核参数vm-swappiness中的数值是否为0，如果为0则根据实际需要调整成60" class="headerlink" title="4.查看内核参数vm.swappiness中的数值是否为0，如果为0则根据实际需要调整成60"></a>4.查看内核参数vm.swappiness中的数值是否为0，如果为0则根据实际需要调整成60</h3><p>查看命令：</p>
-<pre><code>cat /proc/sys/vm/swappiness
-</code></pre><p><img src="https://i.imgur.com/REW5dW2.png" alt=""></p>
-<p>由于我的服务器默认就是60，所以我的不需要改动，如果显示0，可以按照以下命令进行修改：</p>
-<pre><code>sysctl -w vm.swappiness=60
-</code></pre><p>若想永久修改，则编辑/etc/sysctl.conf文件，改文件中有vm.swappiness变量配置，默认为0。</p>
-<h3 id="5-启用分区"><a href="#5-启用分区" class="headerlink" title="5.启用分区"></a>5.启用分区</h3><pre><code>swapon /data/swap
+          为了方便管理自己的代码，我在腾讯云搭建了一个gitlab服务器，但今天更新了一下git，突然就打不开了，报如图所示502错误：
 
-echo “/data/swap swap swap defaults 0 0” &gt;&gt; /etc/fstab
-</code></pre><h3 id="6-再次使用cat-proc-swaps-查看swap分区是否启动"><a href="#6-再次使用cat-proc-swaps-查看swap分区是否启动" class="headerlink" title="6.再次使用cat /proc/swaps 查看swap分区是否启动"></a>6.再次使用cat /proc/swaps 查看swap分区是否启动</h3><p><img src="https://i.imgur.com/kCAkkSq.png" alt=""></p>
-<p>如图，即表示swap分区启动成功。</p>
-<h3 id="7-重新打开gitlab"><a href="#7-重新打开gitlab" class="headerlink" title="7.重新打开gitlab"></a>7.重新打开gitlab</h3><p><img src="https://i.imgur.com/i2d1Xxn.png" alt=""></p>
-
-          
+百度了一下，有说是端口被占用的，也有说是服务器内存不足的，于是把百度到的解决方案都尝试了一下，整个过程内心几乎是崩溃的，最终发现确实是由于内存不足导致的502错误，这样是
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/10/gitlab-502-error/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -441,276 +428,16 @@ echo “/data/swap swap swap defaults 0 0” &gt;&gt; /etc/fstab
       
         
           
-            <p>为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。</p>
-<p>对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余：</p>
-<pre><code>// 在单独构建的版本中辅助函数为 Vuex.mapState
-import { mapState } from &apos;vuex&apos;
-
-export default {
- computed: mapState({
-
-     count: state =&gt; state.count,
-
-     // 传字符串参数 &apos;count&apos; 等同于 `state =&gt; state.count`
-     countAlias: &apos;count&apos;,
-
-     // 为了能够使用 `this` 获取局部状态，这里要使用常规函数，而不能使用箭头函数
-     countPlusLocalState (state) {
-         return state.count + this.localCount
-     }
- })
-}
-</code></pre><p>上述代码将count和countPlusLocalState映射为组件的计算属性，如果组件的计算属性跟state的子节点的名称相同时，也可以给mapState传入一个字符串数组：</p>
-<pre><code>// 在单独构建的版本中辅助函数为 Vuex.mapState
-import { mapState } from &apos;vuex&apos;
-
-export default {
- // ...
- computed: mapState([
-     &apos;count&apos;,
-     &apos;coutPlusLocalState&apos;
- ])
-}
-</code></pre><p>回顾了mapState的具体用法，接下来就分析一下它的源码吧，vuex辅助函数的源码地址在这里：<a href="https://github.com/vuejs/vuex/blob/dev/src/helpers.js" title="https://github.com/vuejs/vuex/blob/dev/src/helpers.js" target="_blank" rel="noopener">https://github.com/vuejs/vuex/blob/dev/src/helpers.js</a></p>
-<p>这里主要分析mapState函数的源码，其他辅助函数的源码也差不多，分析懂了其中一个，其他也就信手拈来了。需要读懂mapState的源码，必须要有以下三个基础知识点的储备，如果自己忘记了或者记忆不太清了，可以自行去温习一下：</p>
-<ul>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray" target="_blank" rel="noopener">Array.isArray()</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map" target="_blank" rel="noopener">Array.prototype.map()</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys" target="_blank" rel="noopener">Object.keys()</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call" target="_blank" rel="noopener">Function.prototype.call()</a></li>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment" target="_blank" rel="noopener">解构赋值</a></li>
-</ul>
-<p>下面我把mapState源码相关的代码先抽出来：</p>
-<pre><code>/**
- * Reduce the code which written in Vue.js for getting the state.
- * @param {String} [namespace] - Module&apos;s namespace
- * @param {Object|Array} states # Object&apos;s item can be a function 
- * which accept state and getters for param, you can do something for state and getters in it.
- * @param {Object}
- */
-export const mapState = normalizeNamespace((namespace, states) =&gt; {
- const res = {}
- normalizeMap(states).forEach(({ key, val }) =&gt; {
-     res[key] = function mappedState () {
-         let state = this.$store.state
-         let getters = this.$store.getters
-         if (namespace) {
-              const module = getModuleByNamespace(this.$store, &apos;mapState&apos;, namespace)
-              if (!module) {
-                 return
-              }
-              state = module.context.state
-              getters = module.context.getters
-         }
-         return typeof val === &apos;function&apos;
-                    ? val.call(this, state, getters)
-                        : state[val]
-     }
-     // mark vuex getter for devtools
-     res[key].vuex = true
- })
- return res
-})
-
-
-/**
- * Return a function expect two param contains namespace and map. 
- * it will normalize the namespace and then the param&apos;s function will handle the new namespace and the map.
- * @param {Function} fn
- * @return {Function}
- */
-function normalizeNamespace (fn) {
- return (namespace, map) =&gt; {
-   if (typeof namespace !== &apos;string&apos;) {
-        map = namespace
-        namespace = &apos;&apos;
-   } else if (namespace.charAt(namespace.length - 1) !== &apos;/&apos;) {
-        namespace += &apos;/&apos;
-   }
-   return fn(namespace, map)
- }
-}
-
-**
- * Normalize the map
- * normalizeMap([1, 2, 3]) =&gt; [ { key: 1, val: 1 }, { key: 2, val: 2 }, { key: 3, val: 3 } ]
- * normalizeMap({a: 1, b: 2, c: 3}) =&gt; [ { key: &apos;a&apos;, val: 1 }, { key: &apos;b&apos;, val: 2 }, { key: &apos;c&apos;, val: 3 } ]
- * @param {Array|Object} map
- * @return {Object}
- */
-function normalizeMap (map) {
- return Array.isArray(map)
- ? map.map(key =&gt; ({ key, val: key }))
- : Object.keys(map).map(key =&gt; ({ key, val: map[key] }))
-}
-
-/**
- * Search a special module from store by namespace. if module not exist, print error message.
- * @param {Object} store
- * @param {String} helper
- * @param {String} namespace
- * @return {Object}
- */
-function getModuleByNamespace (store, helper, namespace) {
-    const module = store._modulesNamespaceMap[namespace]
-    if (process.env.NODE_ENV !== &apos;production&apos; &amp;&amp; !module) {
-        console.error(`[vuex] module namespace not found in ${helper}(): ${namespace}`)
-    }
-    return module
-}
-</code></pre><p>其实上面的代码，除了export 方法 mapState 外的其他函数都是所有辅助函数所共用的。第一步需要先分析normalizeNamespace 方法，从源码可以看到，它传入了一个参数，这个参数是一个函数fn，调用normalizeNamespace 后会return回一个匿名函数，这个匿名函数可以传入两个参数：一个是namespace, 一个是map, 这两个参数其实就是用来接收我们在组件中调用mapState方法时要传入的参数，通常情况下我们的应用没有那么复杂，不需要使用命名空间，所以一般都是只传入一个参数，也就是那些被映射为组件计算属性的一些值，但是有时候我们的应用会比较庞大，为了后期便于维护，我们会使用到vuex 支持的 module，这时就会有命名空间的设置，这种情况下传入的两个参数就要严格按照这个匿名函数定义时给出的参数列表顺序进行传值，第一个参数必须是命名空间，而第二个参数就是需要被映射给组件的值，看看源码：</p>
-<pre><code>function normalizeNamespace (fn) {
- return (namespace, map) =&gt; {
-     if (typeof namespace !== &apos;string&apos;) {
-         map = namespace
-         namespace = &apos;&apos;
-     } else if (namespace.charAt(namespace.length - 1) !== &apos;/&apos;) {
-         namespace += &apos;/&apos;
-     }
-     return fn(namespace, map)
- }
-}
-</code></pre><p>第一步会先判断mapState那里传入的第一个参数是不是字符串，如果不是字符串，说明没有使用命名空间，于是会把传进来的实参赋值给map，然后将namespace设置为空字符串，接下来讲就分析一下没有命名空间时，mapState的整个执行流程，涉及命名空间的请自行去分析，也差不多，仅仅是多了一个作用域。回到前面的例子，给mapState传入一个对象：</p>
-<pre><code>export default {
- computed: mapState({
-     count: state =&gt; state.count,
-     countAlias: &apos;count&apos;,
-     countPlusLocalState (state) {
-         return state.count + this.localCount
-     }
- })
-}
-</code></pre><p>经过mapState工具函数的处理后，结果如下：</p>
-<pre><code>export default { 
- // ... 
-    computed: { 
-         count() { 
-             return this.$store.state.count 
-         }, 
-         countAlias() { 
-             return this.$store.state[&apos;count&apos;] 
-         }, 
-         countPlusLocalState() { 
-             return this.$store.state.count + this.localCount 
-         } 
-    } 
-}
-</code></pre><p>整个处理的过程是这样的，mapState首先对传入的参数调用 normalizeNamespace，也就是 :</p>
-<pre><code>normalizeNamespace({
- count: state =&gt; state.count,
- countAlias: &apos;count&apos;,
- countPlusLocalState (state) {
-     return state.count + this.localCount
- }
-})
-</code></pre><p>此时typeof namespace !== ‘string’ 为true，所以接来下会执行：</p>
-<pre><code>map = {
- count: state =&gt; state.count,
- countAlias: &apos;count&apos;,
- countPlusLocalState (state) {
-     return state.count + this.localCount
- }
-}
-namespace = &apos;&apos;
-</code></pre><p>接下来会把上面的namespace=”作为第一个参数，map={…} 作为第二个参数传入下面这个函数【后面简称整个函数为fn】：</p>
-<pre><code>(namespace, states) =&gt; {
- const res = {}
- normalizeMap(states).forEach(({ key, val }) =&gt; {
-     res[key] = function mappedState () {
-         let state = this.$store.state
-         let getters = this.$store.getters
-         if (namespace) {
-            const module = getModuleByNamespace(this.$store, &apos;mapState&apos;, namespace)
-            if (!module) {
-                return
-            }
-            state = module.context.state
-            getters = module.context.getters
-          }
-          return typeof val === &apos;function&apos;
-              ? val.call(this, state, getters)
-              : state[val]
-      }
-      // mark vuex getter for devtools
-      res[key].vuex = true
- })
- return res
-}
-</code></pre><p>然后对传入的参数调用normalizeMap，这个函数的定义如下：</p>
-<pre><code>function normalizeMap (map) {
- return Array.isArray(map)
- ? map.map(key =&gt; ({ key, val: key }))
- : Object.keys(map).map(key =&gt; ({ key, val: map[key] }))
-}
-</code></pre><p>从源码也可以看出，map是一个数组或者对象，如果map是一个数组，normalizeMap将传入的map数组的每个元素转换成一个{key, val: key}的对象，如果map是一个对象，则通过Object.keys方法遍历这个map对象的 key,把数组里的每个key都转换成一个{key, val: key}的对象，最后都会把转换后的对象数组作为normalizeMap的返回值。</p>
-<p>然后继续执行mapState的剩余代码，调用了normalizeMap函数后，把前面传入的states转换成了由{key, val: key}构成的数组，接下来就是调用forEach方法遍历这个数组，并构造了一个新的对象res，这个res对象的每个元素都返回一个新的函数mappedState，来看看mappedState函数内部的代码：</p>
-<pre><code>function mappedState () {
- let state = this.$store.state
- let getters = this.$store.getters
- if (namespace) {
-     const module = getModuleByNamespace(this.$store, &apos;mapState&apos;, namespace)
-     if (!module) {
-         return
-     }
-     state = module.context.state
-     getters = module.context.getters
- }
- return typeof val === &apos;function&apos;
-   ? val.call(this, state, getters)
-   : state[val]
-}
-</code></pre><p>由于我们传入的namespace是空，所以会直接执行：</p>
-<pre><code>return typeof val === &apos;function&apos;
- ? val.call(this, state, getters)
- : state[val]
-</code></pre><p>首先会判断val是不是一个函数，如果val是一个函数，则直接调用整个函数，并把store上的state和getters作为参数，执行结果作为mappedState的返回值，如果val不是函数，就直接把this.$store.state[val]作为mappedState的返回值。</p>
-<p>回到前面的例子，我们把</p>
-<pre><code>namespace=&apos;&apos;, 
-
-state={ 
-    count: state =&gt; state.count,
-    countAlias: &apos;count&apos;,
-    countPlusLocalState (state) {
-      return state.count + this.localCount
-    } 
-}
-</code></pre><p>传入fn函数后，先经过normalizeMap函数处理后的结果为：</p>
-<pre><code>[
-    {
-        key: &apos;count&apos;, val: state =&gt; state.count 
-    },
-    {
-        key: &apos;coutAlias&apos;, val: &apos;count&apos;
-    },
-    {
-        key: &apos;countPlusLocalState&apos;, 
-        val: function countPlusLocalState (state) { return state.count + this.localCount }
-    }
-]
-</code></pre><p>然后使用forEach方法遍历上这个数组的每个元素，判断到当前元素的val是function的，则会执行：</p>
-<pre><code>return val.call(this, this.$store.state, this.$store.getters)
-</code></pre><p>也就是前面说的val.call(this, this.$store.state, this.$store.getters)的返回值会作为mappedState函数的返回值，这个返回值也就是res对象的某个key对应的value函数的返回值，比如当res的key是’count’时，它的value就是:</p>
-<pre><code>function mappedState() {
-    return this.$store.state.count
-}
-</code></pre><p>所以，最终mapState处理后的结果为：</p>
-<pre><code>export default { 
- // ... 
-    computed: { 
-         count() { 
-             return this.$store.state.count 
-         }, 
-         countAlias() { 
-             return this.$store.state[&apos;count&apos;] 
-         }, 
-         countPlusLocalState() { 
-             return this.$store.state.count + this.localCount 
-         } 
-    } 
-}
-</code></pre><p>以上只是个人鄙见，研究还不是很深入，所以理解上可能还会有误差，如果有错误的地方，欢迎指正，感激不尽。</p>
-
-          
+          为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。
+对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/05/vuex-mapState-analysis/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -828,169 +555,16 @@ state={
       
         
           
-            <p>Vue 有两个比较核心的特性，一个是非侵入式的响应式数据绑定系统，另一个是组件系统。由于这两个功能非常重要，所以在求职面试的时候，面试官也通常会围绕这两部分进行提问，如数据绑定的底层实现，组件之间的通讯等等。接下来，本篇博客将主要探讨一下Vue的数据绑定原理与实现。</p>
-<h3 id="Vue是如何监听数据变化的"><a href="#Vue是如何监听数据变化的" class="headerlink" title="Vue是如何监听数据变化的"></a>Vue是如何监听数据变化的</h3><p>当实例化一个Vue组件的时候，我们会把一个普通的JavaScript对象传递给Vue实例的data选项，然后Vue会对这个对象里面的每个属性进行遍历，然后使用ES5的Object.defineProperty给这些属性设置getter和setter。由于Object.defineProperty是ES5无法shim的一个特性，所以Vue也不支持IE8以及更低版本的浏览器。Vue通过getter和setter劫持传入对象的属性后，然后在内部会跟踪依赖，当属性被访问或者被修改时通知变化。</p>
-<h3 id="Vue数据绑定原理"><a href="#Vue数据绑定原理" class="headerlink" title="Vue数据绑定原理"></a>Vue数据绑定原理</h3><p>先看一张摘自Vue官方文档的图片：</p>
-<p><img src="https://cn.vuejs.org/images/data.png" alt=""></p>
-<p>Vue的数据绑定是通过Object.defineProperty劫持数据并结合发布者-订阅者的设计模式来实现的。前面也已经提到了，Vue劫持数据后会对数据进行跟踪依赖，也就是监听它们的变化，所以我们需要设置一个Obsver监听器，用来监听所有劫持到的属性，当属性发生变化时，会通知Watcher订阅者来重新计算判断是否需要更新。由于会有很多订阅者，所以需要一个消息订阅器Dependency，用来专门收集这些订阅者，然后Vue在监听器Observer和订阅者Watcher之间进行统一管理。由于要更新组件视图，所以还需要有一个指令解析器Compile,它将对每个节点元素进行解析，识别出绑定在这些元素上的相关指令，同时将这些指令分别初始化为一个订阅者Watcher,并替换掉模板的数据或者绑定相应的更新函数，此时，如果订阅者Watcher计算到到属性的变化，就会执行相应的更新函数，从而更新视图。</p>
-<p>从上面的分析，我们知道要实现数据绑定，可以通过以下三个步骤完成：</p>
-<ol>
-<li>实现一个监听器Observer,借助Object.defindProperty劫持所有属性，如果有变化，就会通知订阅者</li>
-<li>实现一个订阅者Watcher,每一个订阅者都绑定一个更新函数，订阅者计算属性变化并执行相应的更新函数，从而更新视图</li>
-<li>实现一个解析器Compile，解析和识别每个元素上的指令，并初始化这些包含指令的元素的模板数据以更新视图，并初始化相应的订阅者Watcher</li>
-</ol>
-<h3 id="Vue数据绑定的实现"><a href="#Vue数据绑定的实现" class="headerlink" title="Vue数据绑定的实现"></a>Vue数据绑定的实现</h3><blockquote>
-<p>监听器Observer</p>
-</blockquote>
-<p>核心功能是监听数据的变化，实现的核心方法是Object.defineProperty,劫持每个属性的setter和getter属性：</p>
-<pre><code>// Dep用于订阅者的存储和收集，将在下面实现
-import Dep from &apos;Dep&apos;
-// Observer类用于给data属性添加set&amp;get方法
-export default class Observer{
-    constructor(value){
-        this.value = value
-        this.walk(value)
-    }
-    walk(value){
-        Object.keys(value).forEach(key =&gt; this.convert(key, value[key]))
-    }
-    convert(key, val){
-        defineReactive(this.value, key, val)
-    }
-}
-export function defineReactive(obj, key, val){
-    var dep = new Dep()
-    // 给当前属性的值添加监听
-    var chlidOb = observe(val)
-    Object.defineProperty(obj, key, {
-        enumerable: true,
-        configurable: true,
-        get: ()=&gt; {
-            console.log(&apos;get value&apos;)
-            // 如果Dep类存在target属性，将其添加到dep实例的subs数组中
-            // target指向一个Watcher实例，每个Watcher都是一个订阅者
-            // Watcher实例在实例化过程中，会读取data中的某个属性，从而触发当前get方法
-            // 此处的问题是：并不是每次Dep.target有值时都需要添加到订阅者管理员中去管理，需要对订阅者去重，不影响整体思路，不去管它
-            if(Dep.target){
-                dep.addSub(Dep.target)
-            }
-            return val
-        },
-        set: (newVal) =&gt; {
-            console.log(&apos;new value seted&apos;)
-            if(val === newVal) return
-            val = newVal
-            // 对新值进行监听
-            chlidOb = observe(newVal)
-            // 通知所有订阅者，数值被改变了
-            dep.notify()
-        }
-    })
-}
-export function observe(value){
-    // 当值不存在，或者不是复杂数据类型时，不再需要继续深入监听
-    if(!value || typeof value !== &apos;object&apos;){
-        return
-    }
-    return new Observer(value)
-}
-</code></pre><blockquote>
-<p>消息订阅器Dependency</p>
-</blockquote>
-<p>用于对订阅者进行收集和通知</p>
-<pre><code>export default class Dep{
-    constructor(){
-        this.subs = []
-    }
-    addSub(sub){
-        this.subs.push(sub)
-    }
-    notify(){
-        // 通知所有的订阅者(Watcher)，触发订阅者的相应逻辑处理
-        this.subs.forEach((sub) =&gt; sub.update())
-    }
-}
-</code></pre><blockquote>
-<p>订阅者Watcher</p>
-</blockquote>
-<p>每个被劫持的属性都对应一个订阅者，当属性被访问时，订阅者会对新旧数据进行比较，如果发生了变化，则会执行相应的更新函数，从而更新视图</p>
-<pre><code>import Dep from &apos;Dep&apos;
-export default class Watcher{
-    constructor(vm, expOrFn, cb){
-        this.vm = vm // 被订阅的数据一定来自于当前Vue实例
-        this.cb = cb // 当数据更新时想要做的事情
-        this.expOrFn = expOrFn // 被订阅的数据
-        this.val = this.get() // 维护更新之前的数据
-    }
-    // 对外暴露的接口，用于在订阅的数据被更新时，由订阅者管理员(Dep)调用
-    update(){
-        this.run()
-    }
-    run(){
-        const val = this.get()
-        if(val !== this.val){
-            this.val = val;
-            this.cb.call(this.vm)
-        }
-    }
-    get(){
-        // 当前订阅者(Watcher)读取被订阅数据的最新更新后的值时，通知订阅者管理员收集当前订阅者
-        Dep.target = this
-        const val = this.vm._data[this.expOrFn]
-        // 置空，用于下一个Watcher使用
-        Dep.target = null
-        return val;
-    }
-}
-</code></pre><blockquote>
-<p>解析器Compile</p>
-</blockquote>
-<p>解析每个元素上的指令，并将它们对应的节点绑定相应的更新函数，初始化相应的订阅者，或者替换模板数据，初始化视图。</p>
-<ul>
-<li><p>先创建一个fragment片段，并将要解析的dom节点存入fragment片段：</p>
-<pre><code>function nodeToFragment (el) {
-  var fragment = document.createDocumentFragment();
-  var child = el.firstChild;
-  while (child) {
-      // 将Dom元素移入fragment中
-      fragment.appendChild(child);
-      child = el.firstChild
-  }
-  return fragment;
-}
-</code></pre></li>
-<li><p>遍历各个节点，对包含相关指令的节点进行处理：</p>
-<pre><code>function compileElement (el) {
-  var childNodes = el.childNodes;
-  var self = this;
-  [].slice.call(childNodes).forEach(function(node) {
-      var reg = /\{\{(.*)\}\}/;
-      var text = node.textContent;
-
-      if (self.isTextNode(node) &amp;&amp; reg.test(text)) {  // 判断是否是符合这种形式{{}}的指令
-          self.compileText(node, reg.exec(text)[1]);
-      }
-
-      if (node.childNodes &amp;&amp; node.childNodes.length) {
-          self.compileElement(node);  // 继续递归遍历子节点
-      }
-  });
-},
-function compileText (node, exp) {
-  var self = this;
-  var initText = this.vm[exp];
-  this.updateText(node, initText);  // 将初始化的数据初始化到视图中
-  new Watcher(this.vm, exp, function (value) {  // 生成订阅器并绑定更新函数
-      self.updateText(node, value);
-  });
-},
-function (node, value) {
-  node.textContent = typeof value == &apos;undefined&apos; ? &apos;&apos; : value;
-}
-</code></pre></li>
-</ul>
-
-          
+          Vue 有两个比较核心的特性，一个是非侵入式的响应式数据绑定系统，另一个是组件系统。由于这两个功能非常重要，所以在求职面试的时候，面试官也通常会围绕这两部分进行提问，如数据绑定的底层实现，组件之间的通讯等等。接下来，本篇博客将主要探讨一下Vue的数据绑定原理与实现。
+Vue是如何监听数据变化的当实例
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/05/vue-reactivity/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1108,205 +682,18 @@ function (node, value) {
       
         
           
-            <blockquote>
-<p>前言</p>
-</blockquote>
-<p>今天周末，浏览订阅的公众号的时候，发现了这篇非常具有指导意义的文章。因为自己最近几个月的工作一直都是维护一个老旧的项目，想要重构它需要一定的魄力和资源允许，而且这个项目跟奇舞团技术团队重构的项目具有一定的相似度，所以我把这篇文章转载到自己的博客之下，希望在将来如果要重构项目可以拿它作为参考，本篇博客的结尾有标记文章来源，在此感谢奇舞团技术团队。以下是正文。</p>
-<blockquote>
-<p>随着“发布”进度条走到100%，重构的代码终于上线了。我露出了老母亲般的围笑……</p>
-</blockquote>
-<p>最近看了一篇文章，叫《史上最烂的开发项目长啥样：苦撑12年，600多万行代码》，讲的是法国的一个软件项目，因为各种奇葩的原因，导致代码质量惨不忍睹，项目多年无法交付，最终还有公司领导入狱。里面有一些细节让人哭笑不得：一个右键响应事件需要花45分钟；读取700MB的数据，需要花7天时间。足见这个软件的性能有多糟心。</p>
-<p>如果让笔者来接手这“坨”代码，内心早就飘过无数个敏感词。其实，笔者自己也维护着一套陈酿了将近7年的代码，随着后辈的添油加醋……哦不，添砖加瓦，功能逻辑日益复杂，代码也变得臃肿，维护起来步履维艰，性能也不尽如人意。终于有一天，我听见了内心的魔鬼在呼唤：“重构吧～～”</p>
-<p>重构是一件磨人的事情，轻易使不得。好在兄弟们齐心协力，各方资源也配合到位。我们小步迭代了大半年，最后一鼓作气，终于完成了。今天跟大家分享一下这次重构的经验和收益。</p>
-<h2 id="挑战"><a href="#挑战" class="headerlink" title="挑战"></a>挑战</h2><p>此次重构的对象是一个大型单页应用。它实现了云端文件管理功能，共有10个路由页面，涉及文件上传、音视频播放、图片预览、套餐购买等几十个功能。前端使用QWrap、jQuery、RequireJS搭建，HTML使用PHP模板引擎Smarty编写。</p>
-<p>我们选择了Vue.js、vue-router、vuex来改造代码，用webpack完成模块打包的工作。仿佛一下子从原始社会迈向了新世纪，是不是很完美？</p>
-<p><img src="https://p1.ssl.qhimg.com/t018a67719fac2e633c.jpg" alt=""><br>（图片来自网络）</p>
-<p>由于项目比较庞大，为了快速迭代，重构的过渡期允许新旧代码并存，开发完一部分就测试上线一部分，直到最终完全替代旧代码。</p>
-<p>然鹅，我们很快就意识到一个问题：重构部分跟新增需求无法保证一致。比如重构到一半，线上功能变了……产品不会等重构完再往前发展。难不成要在新老代码中并行迭代相同的需求？</p>
-<p>别慌，一定能想出更高效的解决办法。稍微分析一下，发现我们要处理三种情况：</p>
-<p><strong>1. 产品需要新增一个功能。比如一个活动弹窗或路由页面。</strong></p>
-<p>解决方法：新功能用vue组件实现，然后手动加载到页面。比如:</p>
-<pre><code>const wrap = document.createElement(&apos;div&apos;)
-document.body.appendChild(wrap)
-new Vue({
-  el: wrap,
-  template: &apos;&lt;App /&gt;&apos;,
-  components: { App }
-})
-</code></pre><p>如果这个组件必须跟老代码交互，就将组件暴露给全局变量，然后由老代码调用全局变量的方法。比如：</p>
-<pre><code>// someApp.js
-window.someApp = new Vue({
-  ...
-  methods: {
-    funcA() {
-      // do somthing
-    }
-  }
-})
-
-// 老代码.js
-...
-window.someApp.funcA()
-</code></pre><p>注意：全局变量名需要人工协调，避免命名冲突。PS：这是过渡期的妥协，不是最终状态。</p>
-<p>新增一个路由页面时更棘手。聪明的读者一定会想到让新增的路由页面独立于已有的单页应用，单独分配一个URL，这样代码会更干净。</p>
-<p>假如新增的路由页面需要实现十几个功能，而这些功能已经存在于旧代码中呢？权衡了需求的紧急性和对代码整洁度的追求，我们再次妥协（PS：这也是过渡期，不是最终状态）。大家不要轻易模仿，如果条件允许，还是新起一个页面吧，心情会舒畅很多哦。</p>
-<p><strong>2. 产品需要修改老代码里的独立组件。</strong></p>
-<p>解决方法：如果这个组件不是特别复杂，我们会以“夹带私货”的方式重构上线，这样还能顺便让测试童鞋帮忙验一下重构后有没有bug。具体实现参考第一种情况。<br>**</p>
-<ol start="3">
-<li>产品需要修改整站的公共部分。**</li>
-</ol>
-<p>我们的网站包含好几个页面，此次重构的单页应用只是其中之一。它们共用了顶部导航栏。在这些页面模板中通过Smarty的include语法加载：</p>
-<pre><code>{%include file="topPanel.inc"%}
-</code></pre><p>产品在一次界面改版中提出要给导航栏加上一些功能的快捷入口，比如导入文件，购买套餐等。而这些功能在单页应用中已经用vue实现了。所以还得将导航栏实现为vue组件。</p>
-<p>为了更快渲染导航栏，需要保留它原有的标签，而不是在JS里以组件的形式渲染。所以需要用到特殊手段：</p>
-<ul>
-<li><p>在topPanel.inc里写上自定义标签，对应到vue组件，比如下面代码里的<import-button>。当JS未加载时，会立即渲染导航栏的常规标签以及自定义标签。</import-button></p>
-<pre><code>&lt;div id=&quot;topPanelMountee&quot;&gt;
-  &lt;div id=&quot;topPanel&quot;&gt;
-  &lt;div&gt;一些页面直出的内容&lt;/div&gt;
-  ...
-  &lt;import-button&gt;
-&lt;button class=&quot;btn-import&quot;&gt;
-  导入
-&lt;/button&gt;
-  &lt;/import-button&gt;
-  ...
-  &lt;/div&gt;
-&lt;/div&gt;
-</code></pre></li>
-<li><p>导航栏组件：topPanel.js，它包含了ImportButton等子组件（对应上面的<import-button>）。等JS加载后，ImportButton组件就会挂载到<import-button>上并为这个按钮绑定行为。另外，注意下面代码中的template并不是<app>，而是一个ID选择器，这样topPanel组件就会以#topPanelMountee里的内容作为模板挂载到#topPanelMountee元素中，是不是很机智～</app></import-button></import-button></p>
-<pre><code>// topPanel.js
-new Vue({
-  el: &apos;#topPanelMountee&apos;,
-  template: &apos;#topPanelMountee&apos;,
-  components: {
-    //···
-    ImportButton
-  }
-})
-</code></pre></li>
-</ul>
-<p>彻底重构后，我们还做了进一步的性能优化。</p>
-<h2 id="进一步优化"><a href="#进一步优化" class="headerlink" title="进一步优化"></a>进一步优化</h2><ol>
-<li>HTML瘦身</li>
-</ol>
-<p>在采用组件化开发之前，HTML中预置了许多标签元素，比如：</p>
-<pre><code>&lt;button data-cn=&quot;del&quot; class=&quot;del&quot;&gt;删除&lt;/button&gt;
-&lt;button data-cn=&quot;rename&quot; class=&quot;rename&quot;&gt;重命名&lt;/button&gt;
-...
-</code></pre><p>当状态改变时，通过JS操作DOM来控制预置标签的内容或显示隐藏状态。这种做法不仅让HTML很臃肿，JS跟DOM的紧耦合也让人头大。改成组件化开发后，将这些元素统统删掉。</p>
-<p>之前还使用了很多全局变量存放服务端输出的数据。比如：</p>
-<pre><code>&lt;script&gt;
-    var SYS_CONF = {
-        userName: {%$userInfo.name%}
-        ...
-    }
-&lt;/script&gt;
-</code></pre><p>随着时间的推移，这些全局变量越来越多，管理起来很费劲。还有一些已经废弃的变量，对HTML的体积做出了“贡献”。所以重构时只保留了必需的变量。更多数据则在运行时加载。</p>
-<p>另外，在没有模板字面量的年代，HTML里大量使用了script标签存放运行时所需的模板元素。比如:</p>
-<pre><code>&lt;script type=&quot;text/template&quot; id=&quot;sharePanel&quot;&gt;
-    &lt;div class=&quot;share&quot;&gt;
-        ...
-    &lt;/div&gt;
-&lt;/script&gt;
-</code></pre><p>虽然上线时会把这些标签内的字符串提取成JS变量，以减小HTML的体积，但在开发时，这些script标签会增加代码阅读的难度，因为要不停地切换HTML和JS目录查找。所以重构后删掉了大量的script标签，使用vue的<template>以及ES6的模板字面量来管理模板字符串。</template></p>
-<ol start="2">
-<li>渐进渲染</li>
-</ol>
-<p>首屏想要更快渲染，还要确保文档加载的CSS和JS尽量少，因为它们会阻塞文档加载。所以我们尽可能延迟加载非关键组件。比如：</p>
-<ul>
-<li>延迟非默认路由</li>
-</ul>
-<p>单页应用有很多路由组件。所以除了默认跳转的路由组件，将非默认路由组件打包成单独的chunk。使用import()的方式动态加载。只有命中该路由时，才加载组件。比如：</p>
-<pre><code>const AsyncComp = () =&gt; import(/* webpackChunkName: &quot;AsyncCompName&quot; */ &apos;AsyncComp.vue&apos;)
-const routes = [{
-  path: &apos;/some/path&apos;,
-  meta: {
-    type: &apos;sharelink&apos;,
-    isValid: true,
-    listKey: &apos;sharelink&apos;
-  },
-  component: AsyncComp
-}]
-...
-</code></pre><ul>
-<li>延迟不重要的展示型组件</li>
-</ul>
-<p>这些组件其实可以延迟到主要内容渲染完毕再加载。将这些组件单独打包为一个chunk。比如：</p>
-<pre><code>import(/* webpackChunkName: &quot;lazy_load&quot; */ &apos;a.js&apos;)
-import(/* webpackChunkName: &quot;lazy_load&quot; */ &apos;b.js&apos;)
-</code></pre><ul>
-<li>延迟低频的功能</li>
-</ul>
-<p>如果某些功能属于低频操作，或者不是所有用户都需要。则可以选择延迟到需要的时候再加载。比如：</p>
-<pre><code>async handler () {
-  await const {someFunc} = import(&apos;someFuncModule&apos;)
-  someFunc()
-}
-</code></pre><ol start="3">
-<li>优化图片</li>
-</ol>
-<p>虽然代码做了很多优化，但是动辄几十到几百KB的图片瞬间碾压了辛苦重构带来的提升。所以图片的优化也是至关重要滴～</p>
-<ul>
-<li>PNG改成SVG</li>
-</ul>
-<p>由于项目曾经支持IE6-8，大量使用了PNG，JPEG等格式的图片。随着历史的车轮滚滚向前，IE6-8的用户占比已经大大降低，我们在去年放弃了对IE8-的支持。这样一来就能采取更优的解决方案啦～</p>
-<p>我们的页面上有各种大小的图标和不同种类的占位图。原先使用位图并不能很好的适配retina显示器。现在改成SVG，只需要一套图片即可。相比PNG，SVG有以下优点：</p>
-<pre><code>1、压缩后体积小
-2、无限缩放，不失真
-3、retina显示器上清晰
-</code></pre><ul>
-<li>进一步“压榨”SVG</li>
-</ul>
-<p>虽然换成SVG，但是还远远不够，使用webpack的loader可以有效地压缩SVG体积。</p>
-<ol>
-<li>用svgo-loader去除无用属性</li>
-</ol>
-<p>SVG本身既是文本也是图片。设计师提供的SVG大多有冗余的内容，比如一些无用的defs，title等，删除后并不会降低图片质量，还能减小图片体积。</p>
-<p>我们使用svgo-loader对SVG做了一些优化，比如去掉无用属性，去掉空格换行等。这里就不细数它能提供的优化项目。大家可以对照svgo-loader的选项配置。</p>
-<ol start="2">
-<li>用svg-sprite-loader合并多个SVG</li>
-</ol>
-<p>另外，SVG有多种用法，比如：img，background，inline，inline + <use>。如果某些图反复出现并且对页面渲染很关键，可以使用svg-sprite-loader将多个图合并成一个大的SVG，避免逐个发起图片请求。然后使用内联或者JS加载的方式将这个SVG引入页面，然后在需要的地方使用SVG的<use>标签引用该图标。合并后的大SVG如下图：</use></use></p>
-<p><img src="https://p4.ssl.qhimg.com/t01da09d0698869183f.png" alt=""></p>
-<p>使用时：</p>
-<pre><code>&lt;svg&gt;
-  &lt;use xlink:href=&quot;#icon-add&quot;&gt;&lt;/use&gt;
-&lt;/svg&gt;
-</code></pre><p>即可在使用的位置展现该图标。</p>
-<p>以上是一些优化手段，下面给大家分享一下重构后的收益。</p>
-<h2 id="重构的收益"><a href="#重构的收益" class="headerlink" title="重构的收益"></a>重构的收益</h2><p>以下是重构带来的收益：</p>
-<p><img src="https://i.imgur.com/WRowDRV.png" alt=""></p>
-<ul>
-<li>组件化：从0到100%</li>
-</ul>
-<p>老代码没有组件的概念，都是指令式的编程模式以及对DOM的直接操作。重构后，改为组件化以后，可以充分利用组件的高复用性，以及虚拟DOM的性能优化，带来更愉悦的开发体验。</p>
-<ul>
-<li>模块化：从50%到100%</li>
-</ul>
-<p>老代码中也用RequireJS做了一定程度的模块化，但是仅限于业务模块，没有解决第三方依赖的安装和升级问题。重构后，借助webpack和npm，只需要npm install安装第三方依赖，然后用import的方式加载。极大地提高了开发效率。</p>
-<ul>
-<li>规范化：从0到1</li>
-</ul>
-<p>老代码几乎没有代码规范，甚至连同一份文件里都有不同的代码缩进，强迫症根本无法忍受。重构后，使用ESLint对代码格式进行了统一，代码看起来更加赏心悦目。</p>
-<ul>
-<li>ES6+语法：从0到大量使用</li>
-</ul>
-<p>老代码所使用的库因为历史悠久，加上没有引入转译流程，只能使用ES5语法。重构后，能够尽情使用箭头函数、解构、async/await等语言新特性来简化代码，从而提升开发体验。</p>
-<ul>
-<li>性能提升</li>
-</ul>
-<p>根据上线前后Lighthouse的性能检测数据，首次有效渲染时间（First Meaningful Paint，FMP）提升 19% 。该指标表示用户看到有用信息的时间（比如文件列表）。首次交互（First Interactive，FI）提升 39%。该指标表示用户可以开始跟网页进行交互的时间 。</p>
-<p>以上就是这次重构的总结。不要容忍代码里的坏味道，更不要容忍低效的开发模式。及时发现，勇敢改进吧～</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://meixg.cn/2017/08/01/first-meaningful-paint/" title="Chrome 中的 First Meaningful Paint" target="_blank" rel="noopener">https://meixg.cn/2017/08/01/first-meaningful-paint/</a></li>
-<li><a href="https://css-tricks.com/using-svg/" title="Using SVG" target="_blank" rel="noopener">https://css-tricks.com/using-svg/</a></li>
-<li><a href="https://medium.com/the-node-js-collection/modern-javascript-explained-for-dinosaurs-f695e9747b70?source=userActivityShare-5c73882d22bf-1532143179" title="Modern JavaScript Explained For Dinosaurs" target="_blank" rel="noopener">https://medium.com/the-node-js-collection/modern-javascript-explained-for-dinosaurs-f695e9747b70?source=userActivityShare-5c73882d22bf-1532143179</a></li>
-</ul>
-<p>本文链接：<a href="https://75team.com/post/yunpan_refactoring.html" title="https://75team.com/post/yunpan_refactoring.html" target="_blank" rel="noopener">https://75team.com/post/yunpan_refactoring.html</a></p>
-<p>– EOF –</p>
-
           
+前言
+
+今天周末，浏览订阅的公众号的时候，发现了这篇非常具有指导意义的文章。因为自己最近几个月的工作一直都是维护一个老旧的项目，想要重构它需要一定的魄力和资源允许，而且这个项目跟奇舞团技术团队重构的项目具有一定的相似度，所以我把这篇文章转载到自己的博客之下，希望在将来如果要重构项目可以拿它作为参考
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/05/refactoring/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1424,256 +811,15 @@ import(/* webpackChunkName: &quot;lazy_load&quot; */ &apos;b.js&apos;)
       
         
           
-            <p>作为一个勤奋的程序员，通常都会有一个自己的技术博客，用于记录日常的学习体会或总结，搭建博客的方式也有很多，如果自己没有vps服务器，那么可以在博客园、CSDN、SegmentFault等网站注册账户进行博客的写作，如果有自己的vps服务器，那么可以搭建更加灵活的wordpress、typecho等博客网站。当然，没有服务器的还可以搭建hexo博客托管在github pages上，这些教程不在本博客的讨论范围，有兴趣的可以自己去百度一下相关资料，本博客要讲的是在自己的vps服务器上搭建一个hexo博客，没有服务器的可以去Vultr官网购买：<a href="https://www.vultr.com/?ref=7122677" title="https://www.vultr.com/?ref=7122677" target="_blank" rel="noopener">vultr</a>，通过这个链接注册并购买服务器会有10美元赠送，我的博客就是托管在这家的vps服务器，如何你不舍得出这些服务器费用，把hexo博客托管在github pages也是一个不错的选择。</p>
-<h2 id="准备工作：本地安装相关工具"><a href="#准备工作：本地安装相关工具" class="headerlink" title="准备工作：本地安装相关工具"></a>准备工作：本地安装相关工具</h2><h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><p>git官网下载地址：<a href="https://git-scm.com/downloads" title="https://git-scm.com/downloads" target="_blank" rel="noopener">https://git-scm.com/downloads</a><br>安装好后，git自带一个可以在windows上运行的shell: git bash, 后面操作hexo就使用这个git自带的shell,打开方式跟cmd一模一样，在 git bash 界面输入 pwd 就能看到当前用户所在的目录。</p>
-<h3 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h3><p>node.js官网下载地址：<a href="https://nodejs.org/zh-cn/download/" title="https://nodejs.org/zh-cn/download/" target="_blank" rel="noopener">https://nodejs.org/zh-cn/download/</a> 尽量安装最新稳定版本，如果遇到报错信息，请自行检查操作步骤或者查找相关解决办法。安装成功后，执行如下命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ node -V</span><br></pre></td></tr></table></figure>
-<p>如果提示了版本号，说明安装成功了。</p>
-<h3 id="安装xshell"><a href="#安装xshell" class="headerlink" title="安装xshell"></a>安装xshell</h3><p>xshell用于远程登录你的vps服务器，官网下载地址：<a href="https://www.netsarang.com/xshell_download.html" title="https://www.netsarang.com/xshell_download.html" target="_blank" rel="noopener">https://www.netsarang.com/xshell_download.html</a> 记住选择home/school 免费版本进行下载，否则过了试用期你就用不了xshell了，具体安装教程这里也不进行阐述，请自行查阅相关教程。</p>
-<h2 id="本地配置"><a href="#本地配置" class="headerlink" title="本地配置"></a>本地配置</h2><h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>hexo的官网地址是：<a href="https://hexo.io/zh-cn/docs/index.html" title="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/index.html</a></p>
-<p>详细的文档你可以等有空的时候再看，这里只需要知道基本操作就行了，打开git bash, 然后执行安装命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-<p>接下来我们就本地创建一个hexo站点：</p>
-<pre><code>$ hexo init myblog // 以myblog为目录名建立站点文件夹
-
-$ cd myblog
-
-$ npm install // 安装相关依赖
-</code></pre><p>安装完依赖后，就可以启动本地服务器进行预览了，这个我们稍后再说，因为hexo自带的默认主题不好看，这里想换成next主题，这个主题的官网地址是：<a href="http://theme-next.iissnan.com/getting-started.html" title="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">http://theme-next.iissnan.com/getting-started.html</a> 执行以下命令进行安装：</p>
-<pre><code>$ cd myblog // 先切回本地站点根目录
-
-$ git clone https://github.com/iissnan/hexo-theme-next themes/next // clone
-</code></pre><p>然后打开_config.yml hexo博客配置文件，修改theme字段的值为next:</p>
-<pre><code># Extensions
-## Plugins: https://hexo.io/plugins/
-## Themes: https://hexo.io/themes/
-theme: next // 这里讲默认值改为 next
-
-# Deployment
-</code></pre><p>另外，我个人比较喜欢next主题的侧边导航布局，所以也改了一些next主题的配置文件_config.yml，将Scheme的值改为Pisces：</p>
-<pre><code># ---------------------------------------------------------------
-# Scheme Settings
-# ---------------------------------------------------------------
-
-# Schemes
-#scheme: Mist
-scheme: Pisces // 选用这个
-#scheme: Gemini
-</code></pre><p>然后执行以下命令，来启动本地服务器进行预览，预览地址为 <a href="http://localhost:4000：" target="_blank" rel="noopener">http://localhost:4000：</a></p>
-<pre><code>$ hexo server
-</code></pre><p>好了，下一步就是实现hexo部署到服务器，部署到服务器时，依次执行以下三个命令：</p>
-<pre><code>$ hexo clean // 清楚缓存
-
-$ hexo generate
-
-$ hexo deploy
-</code></pre><p>当然，现在还不能部署，需要进行ssh相关的配置。</p>
-<h3 id="本地ssh配置"><a href="#本地ssh配置" class="headerlink" title="本地ssh配置"></a>本地ssh配置</h3><p><strong>Hexo部署是通过git来完成的，而git又是基于ssh连接的，所以需要在本地和服务端进行ssh相关配置。</strong></p>
-<p>打开git bash, 执行以下命令：</p>
-<pre><code>$ git config --global user.email &quot;你的邮箱&quot;
-
-$ git config --global user.name &quot;你的用户名&quot;
-</code></pre><p>这里的邮箱和用户名都是服务器用于记录git提交记录的，然后是本地端生成ssh Key：</p>
-<pre><code>$ ssh-keygen -t rsa -C &quot;你的邮箱&quot; // 执行这个命令会提示输入用于保存的密钥名和口令之类的，都不填，执行完后会在C:\Users\Administrator\.ssh目录下生成id_rsa和id_rsa.pub两个文件，其中id_rsa.pub文件里的内容是等会要复制到服务器那里的
-</code></pre><p>可以在git bash执行以下命令获取到id_rsa.pub文件里的内容：</p>
-<pre><code>$ cat .ssh/id_rsa.pub // 执行后可以看到公钥内容
-</code></pre><h2 id="VPS服务器配置"><a href="#VPS服务器配置" class="headerlink" title="VPS服务器配置"></a>VPS服务器配置</h2><h3 id="服务器端ssh配置"><a href="#服务器端ssh配置" class="headerlink" title="服务器端ssh配置"></a>服务器端ssh配置</h3><p>执行以下命令查看是否已经安装了ssh服务器：</p>
-<pre><code>$ rpm -qa |grep ssh
-</code></pre><p>如果返回以下结果，说明已经安装了ssh:</p>
-<pre><code>openssh-5.3p1-123.el6_9.x86_64
-openssh-server-5.3p1-123.el6_9.x86_64
-libssh2-1.4.2-2.el6_7.1.x86_64
-openssh-clients-5.3p1-123.el6_9.x86_64
-</code></pre><p>如果提示没有安装，则需要执行 yum install ssh 来安装。</p>
-<p>执行以下命令查看 ssh 服务器的状态：</p>
-<pre><code>$ service sshd status
-</code></pre><p>如果提示：</p>
-<pre><code>openssh-daemon (pid  1298) is running...
-</code></pre><p>说明ssh正在运行。</p>
-<h3 id="VPS服务器创建一个git用户"><a href="#VPS服务器创建一个git用户" class="headerlink" title="VPS服务器创建一个git用户"></a>VPS服务器创建一个git用户</h3><pre><code># adduser git    //创建用户
-
-# passwd git   //下一步会提示你设置密码
-
-# su    //检查是否有安装sudo
-</code></pre><p>如果没有安装sudo, 可以执行 yum install sudo 进行安装。</p>
-<p>接下来给予 git 用户 root 权限，编辑 /etc/sudoers文件，添加一行：</p>
-<pre><code>root        ALL=(ALL)       ALL
-git        ALL=(ALL)       ALL #这个是添加的
-</code></pre><p>然后在服务器端用户主目录下新建.ssh文件夹,拷贝本地在前面步骤生成的公钥内容到.ssh目录下的authorized_keys：</p>
-<pre><code>su git
-
-$ cd ~
-
-$ mkdir .ssh
-
-$ cd .ssh
-
-$ echo &quot;id_rsa.pub文件里的内容&quot; &gt; authorized_keys
-</code></pre><p>到了这一步，完成了本地和服务器的ssh配置，也就是说到这里一步，在本地可以在git bash通过 ssh登录服务器了，相关命令如下，可能会需要你输入git用户的密码：</p>
-<pre><code>$ ssh git@你的域名或者是你的vpsip //@前是前面在服务器创建的git用户
-</code></pre><p>当前如果要实现域名访问部署到VPS服务器的博客，还差两个步骤，一个是安装nginx web服务器，另一个就是VPS服务器里git仓库的配置。</p>
-<h3 id="nginx-安装"><a href="#nginx-安装" class="headerlink" title="nginx 安装"></a>nginx 安装</h3><p>另外，我们买了vps后可能需要托管不止一个网站，所以这里我推荐使用军哥的lnmp一键安装包，安装完后，就可以创建多个虚拟主机运行不同的网站，包括wordpress、typechoe等。</p>
-<p>安装教程可以去军哥的lnmp一键安装包官网：<a href="https://lnmp.org/install.html" title="https://lnmp.org/install.html" target="_blank" rel="noopener">https://lnmp.org/install.html</a></p>
-<p>执行以下命令就可以开始lnmp的安装，安装lnmp前先切回root用户：</p>
-<pre><code>su root
-</code></pre><p>会提示你输入root密码, 然后执行以下命令进行lnmp的安装：</p>
-<pre><code>wget -c http://soft.vpser.net/lnmp/lnmp1.5.tar.gz &amp;&amp; tar zxf lnmp1.5.tar.gz &amp;&amp; cd lnmp1.5 &amp;&amp; ./install.sh lnmp
-</code></pre><p>安装成功后会有如下提示：</p>
-<pre><code>Checking ...
-Nginx: OK
-MySQL: OK
-PHP: OK
-PHP-FPM: OK
-Clean src directory...
-+------------------------------------------------------------------------+
-|          LNMP V1.5 for CentOS Linux Server, Written by Licess          |
-+------------------------------------------------------------------------+
-|           For more information please visit https://lnmp.org           |
-+------------------------------------------------------------------------+
-|    lnmp status manage: lnmp {start|stop|reload|restart|kill|status}    |
-+------------------------------------------------------------------------+
-|  phpMyAdmin: http://IP/phpmyadmin/                                     |
-|  phpinfo: http://IP/phpinfo.php                                        |
-|  Prober:  http://IP/p.php                                              |
-+------------------------------------------------------------------------+
-|  Add VirtualHost: lnmp vhost add                                       |
-+------------------------------------------------------------------------+
-|  Add VirtualHost: lnmp vhost add                                       |
-+------------------------------------------------------------------------+
-|  Default directory: /home/wwwroot/default                              |
-+------------------------------------------------------------------------+
-|  MySQL/MariaDB root password: **********                |
-+------------------------------------------------------------------------+
-+-------------------------------------------+
-|    Manager for LNMP, Written by Licess    |
-+-------------------------------------------+
-|              https://lnmp.org             |
-+-------------------------------------------+
-nginx (pid 21333 21331) is running...
-php-fpm is runing!
- SUCCESS! MySQL running (21856)
-Active Internet connections (only servers)
-Proto Recv-Q Send-Q Local Address               Foreign Address             State
-tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN
-tcp        0      0 0.0.0.0:80                  0.0.0.0:*                   LISTEN
-tcp        0      0 0.0.0.0:22                  0.0.0.0:*                   LISTEN
-tcp        0      0 :::22                       :::*                        LISTEN
-Install lnmp takes 32 minutes.
-Install lnmp V1.5 completed! enjoy it.
-</code></pre><p>然后我们就是要在vps服务器上添加一个虚拟主机，添加之前，可以先将你的博客域名解析到vps服务器ip，添加虚拟主机的教程，这里不进行阐述，请自行查看教程：<a href="https://lnmp.org/faq/lnmp-vhost-add-howto.html" title="https://lnmp.org/faq/lnmp-vhost-add-howto.html" target="_blank" rel="noopener">https://lnmp.org/faq/lnmp-vhost-add-howto.html</a> 里面的图文教程都比较详细，如果这都看不懂就重新审视一下自己吧。这里假定你的域名是blog.xiaoweihuang.me:</p>
-<pre><code>[root@vultr ~]# lnmp vhost add
-+-------------------------------------------+
-|    Manager for LNMP, Written by Licess    |
-+-------------------------------------------+
-|              https://lnmp.org             |
-+-------------------------------------------+
-Please enter domain(example: www.lnmp.org): blog.xiaoweihuang.me
- Your domain: blog.xiaoweihuang.me
-Enter more domain name(example: lnmp.org *.lnmp.org): 
-Please enter the directory for the domain: blog.xiaoweihuang.me
-Default directory: /home/wwwroot/blog.xiaoweihuang.me: 
-Virtual Host Directory: /home/wwwroot/blog.xiaoweihuang.me
-Allow Rewrite rule? (y/n) y
-Please enter the rewrite of programme, 
-wordpress,discuzx,typecho,thinkphp,laravel,codeigniter,yii2 rewrite was exist.
-(Default rewrite: other): 
-You choose rewrite: other
-Enable PHP Pathinfo? (y/n) y
-Enable pathinfo.
-Allow access log? (y/n) y
-Enter access log filename(Default:blog.xiaoweihuang.me.log): 
-You access log filename: blog.xiaoweihuang.me.log
-Create database and MySQL user with same name (y/n) y
-Enter current root password of Database (Password will not shown): 
-OK, MySQL root password correct.
- database name: hexo_blog
-Your will create a database and MySQL user with same name: hexo_blog
-Please enter password for mysql user hexo_blog: **********
-Your password: ******** 
-Add SSL Certificate (y/n) n
-
-Press any key to start create virtul host...
-
-Create Virtul Host directory......
-set permissions of Virtual Host directory......
-You select the exist rewrite rule:/usr/local/nginx/conf/rewrite/other.conf
-Test Nginx configure file......
-nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok
-nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful
-Reload Nginx......
-Gracefully shutting down php-fpm . done
-Starting php-fpm  done
-Add database Sucessfully.
-================================================
-Virtualhost infomation:
-Your domain: blog.xiaoweihuang.me
-Home Directory: /home/wwwroot/blog.xiaoweihuang.me
-Rewrite: other
-Enable log: yes
-Database username: hexo_blog
-Database userpassword: **********
-Database Name: hexo_blog
-Create ftp account: no
-================================================
-</code></pre><p>到时放博客静态文件的网站目录即是：/home/wwwroot/blog.xiaoweihuang.me，这个目录我们要赐予git用户访问的权限，因为到时部署hexo博客时，git会使用钩子将相关静态文件复制这个虚拟主机网站根目录，执行以下命令：</p>
-<pre><code>chown git:git /home/wwwroot/bog.xiaoweihuang.me
-</code></pre><p>执行完虚拟主机的安装后，并赐予git用户相关权限后，我们就要进行git的配置了，使用以下命令切换到git用户：</p>
-<pre><code>su git
-</code></pre><h3 id="git-配置"><a href="#git-配置" class="headerlink" title="git 配置"></a>git 配置</h3><p>在xshell命令行输入git –version,然后回车,如果返回git version 1.7.1，说明已经git。然后就是初始化git仓库：</p>
-<pre><code>$ cd ~
-
-$ mkdir myblog.git
-
-$ cd myblog.git
-
-$ git init --bare    // 初始化git仓库
-</code></pre><p>接下来配置git仓库的hooks钩子，目的是实现git仓库的网站代码跟虚拟主机网站根目录的网站代码进行同步，在git仓库hooks目录下创建文件post-receive并修改权限：</p>
-<pre><code>$ cd hooks
-
-$ touch post-receive
-
-$ chmod 755 post-receive
-</code></pre><p>将以下内容添加到post-receive中：</p>
-<pre><code>#!/bin/bash
-GIT_REPO=/home/git/myblog.git
-TMP_GIT_CLONE=/tmp/myblog
-PUBLIC_WWW=/home/wwwroot/blog.xiaoweihuang.me // 这个即虚拟主机网站根目录
-rm -rf ${TMP_GIT_CLONE}
-git clone $GIT_REPO $TMP_GIT_CLONE
-rm -rf ${PUBLIC_WWW}/*
-cp -rf ${TMP_GIT_CLONE}/* ${PUBLIC_WWW}
-</code></pre><p>到了这里，配置相关的工作就做完了，当然，在部署前还有一些准备工作要做。</p>
-<h2 id="部署前准备"><a href="#部署前准备" class="headerlink" title="部署前准备"></a>部署前准备</h2><h3 id="安装hexo-git部署模块"><a href="#安装hexo-git部署模块" class="headerlink" title="安装hexo git部署模块"></a>安装hexo git部署模块</h3><p>在本地hexo站点根目录执行：</p>
-<pre><code>$ npm install hexo-deployer-git --save
-</code></pre><h3 id="修改配置文件-config-yml"><a href="#修改配置文件-config-yml" class="headerlink" title="修改配置文件_config.yml"></a>修改配置文件_config.yml</h3><blockquote>
-<p>hexo博客url配置</p>
-</blockquote>
-<pre><code># URL
-## If your site is put in a subdirectory, set url as &apos;http://yoursite.com/child&apos; and root as &apos;/child/&apos;
-url: http://blog.xiaoweihuang.me    #你的博客网址
-root: /
-</code></pre><blockquote>
-<p>hexo部署方式配置</p>
-</blockquote>
-<pre><code>deploy:
-  type: git
-  repo: git@blog.xiaoweihuang.me:/home/git/myblog.git #@ 后面可以改成你的vps服务器ip
-  branch: master
-</code></pre><h2 id="正式部署hexo博客到VPS"><a href="#正式部署hexo博客到VPS" class="headerlink" title="正式部署hexo博客到VPS"></a>正式部署hexo博客到VPS</h2><pre><code>$ hexo clean    // 清除缓存
-
-$ hexo g    // 生成静态资源
-
-$ hexo d    // 部署到VPS服务器
-</code></pre><p>然后在浏览器打开 <a href="http://blog.xiaoweihuang.me" target="_blank" rel="noopener">http://blog.xiaoweihuang.me</a> 就可以看到效果了，如果不成功，请查阅相关提示信息进行排查。</p>
-<hr>
-<p>参考资料：</p>
-<ul>
-<li><a href="https://lnmp.org/install.html" title="https://lnmp.org/install.html" target="_blank" rel="noopener">https://lnmp.org/install.html</a></li>
-<li><a href="https://hexo.io/zh-cn/docs/index.html" title="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/index.html</a></li>
-<li><a href="http://theme-next.iissnan.com/getting-started.html" title="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">http://theme-next.iissnan.com/getting-started.html</a></li>
-</ul>
-
-          
+          作为一个勤奋的程序员，通常都会有一个自己的技术博客，用于记录日常的学习体会或总结，搭建博客的方式也有很多，如果自己没有vps服务器，那么可以在博客园、CSDN、SegmentFault等网站注册账户进行博客的写作，如果有自己的vps服务器，那么可以搭建更加灵活的wordpress、typecho等博
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/05/deploy-hexo-to-vps/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1791,112 +937,21 @@ $ hexo d    // 部署到VPS服务器
       
         
           
-            <p>要实现如下图所示的效果，如果我们使用css3来制作的话，那是轻而易举的事情，</p>
-<p><img src="https://i.imgur.com/YZLhhws.png" alt=""></p>
-<p>但是现在这里，我要演示的是借助css2和svg来实现，具体代码如下，如果你感兴趣的话可以研究一下：</p>
-<pre><code>&lt;!DOCTYPE html&gt;
+          要实现如下图所示的效果，如果我们使用css3来制作的话，那是轻而易举的事情，
+
+但是现在这里，我要演示的是借助css2和svg来实现，具体代码如下，如果你感兴趣的话可以研究一下：
+&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
-    &lt;title&gt;CSS effects&lt;/title&gt;
-    &lt;meta charset=&quot;utf-8&quot;&gt;
-    &lt;style type=&quot;text/css&quot;&gt;
-        body{
-            padding: 0;
-            margin: 0;
-            background-color: #1c1c1c;
-        }
-        a {
-            text-decoration: none;
-            color: #000;
-        }
-        .container {
-            max-width: 370px;
-            min-width: 250px;
-            margin: 100px auto;
-        }
-        .content-inner {
-            padding: 15px;
-            background-color: #fff;
-        }
-        .read-more {
-            padding: 15px 30px 30px;
-            color: #fff;
-            background-color: #23b6b6;
-            -webkit-transition: background-color 0.3s;
-            transition: background-color 0.3s;
-            box-sizing: border-box;
-        }
-        .svg-container {
-            position: relative;
-            z-index: 11;
-        }
-        .svg-block {
-            fill: #1c1c1c;
-            stroke: none;
-        }
-        .svg-container {
-            bottom: 0;
-            width: 100%;
-            height: 0;
-            padding-top: 7.93650794%;
-        }
-        svg:not(:root) {
-            overflow: hidden;
-        }
-        svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 9;
-        }
-        .content-bottom-svg {
-            margin-top: -7.78%;
-        }
-        .content-svg {
-            margin-top: 0;
-            margin-left: -3px;
-            margin-bottom: -7.74%;
-        }
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;div class=&quot;container&quot;&gt;
-    &lt;div class=&quot;content-inner&quot;&gt;            
-        &lt;header class=&quot;entry-header&quot;&gt;
-            &lt;h2 class=&quot;entry-title&quot;&gt;
-                &lt;a href=&quot;#&quot; rel=&quot;bookmark&quot;&gt;Dome Title&lt;/a&gt;
-            &lt;/h2&gt;
-        &lt;/header&gt;
-
-        &lt;div class=&quot;entry-content&quot;&gt;
-            &lt;p&gt;Scaevola tribunus plebis ferret ad plebem vellentne de ea re quaeri. Comprehensum, quod cognitum non habet? Omnia contraria, quos etiam insanos esse vultis. Quae in controversiam veniunt, de iis, si placet, disseramus. Ego vero volo in virtute vim esse quam maximam; Facile est hoc cernere in primis puerorum aetatulis. Ut enim consuetudo loquitur, id solum dicitur honestum, quod est populari fama gloriosum.
-            &lt;/p&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;read-more&quot;&gt;
-        Continue reading …            
-    &lt;/div&gt;
-    &lt;div class=&quot;svg-container content-bottom-svg svg-block&quot;&gt;        
-        &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 1890 150&quot;&gt;
-            &lt;g transform=&quot;translate(0,-902.36218)&quot;&gt;&lt;/g&gt;
-              &lt;path d=&quot;m 898.41609,-33.21176 0.01,0 -0.005,-0.009 -0.005,0.009 z&quot;&gt;&lt;/path&gt;
-              &lt;path d=&quot;m 898.41609,-33.21176 0.01,0 -0.005,-0.009 -0.005,0.009 z&quot;&gt;&lt;/path&gt;
-              &lt;path d=&quot;m 1925,0 0,150 -1925,0&quot;&gt;&lt;/path&gt;
-        &lt;/svg&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;svg-container content-svg svg-block&quot;&gt;        
-            &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 1950 150&quot;&gt;
-              &lt;g transform=&quot;translate(0,-902.36218)&quot;&gt;&lt;/g&gt;
-              &lt;path d=&quot;m 898.41609,-33.21176 0.01,0 -0.005,-0.009 -0.005,0.009 z&quot;&gt;&lt;/path&gt;
-              &lt;path d=&quot;m 898.41609,-33.21176 0.01,0 -0.005,-0.009 -0.005,0.009 z&quot;&gt;&lt;/path&gt;
-              &lt;path d=&quot;M 0,150 0,0 1950,0&quot;&gt;&lt;/path&gt;
-            &lt;/svg&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-          
+    &lt;titl
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/05/beautiful-effects-created-with-CSS/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2014,17 +1069,15 @@ $ hexo d    // 部署到VPS服务器
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
+          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/05/hello-world/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2142,10 +1195,15 @@ $ hexo d    // 部署到VPS服务器
       
         
           
-            <p>不知不觉，这个搭建在github page的博客已经被晾在这里两年多了，两年的时间说短不短，说长也不长，但转眼间它就过去了。两年的时间没有来更新这个博客，原因之一是我自己有在维护另一个技术博客，但是那个博客基本是用来收藏一些写得比较好的技术文章，以及个人的一些小感悟或者心情随感，总的来说关于技术这一块总结得还是比较少，还有一个原因是自己犯了大部分程序员都会有的毛病吧，贪多但是没有深入和总结相关知识点，在过去的两年时间里，我在前端框架方面，从react到vue，angularjs，再到angular，都是有学的，其中工作中使用到的框架是vue跟react，我感觉框架与框架之间都是相通的，掌握了其中一个框架，要上手另一个框其实是非常快的，就拿我自己的经历来说吧，我在上一份工作中用的是react，然后换到这家公司，直接就使用nuxt重构项目了，基本是入职当天就开始写代码了，遇到不会的直接查文档，花几分钟理解一下就懂了，当然能快速上手的原因是平时下完班也有去翻阅vue相关的技术文章以及官方的文档。除了前端方面，我也利用下班的时间或者周末，从java到php、python、golang、c语言也都学习了一遍，目前来说，欠缺的是写些能放上简历的项目以及学习过后的总结。</p>
-<p>所以今天，我决定重启这个博客，也对博客进行了改头换面，从之前的jekyll博客系统改为hexo博客系统，理由也有两个，其一是我希望在接下来的日子里，能有个崭新的自己，平时多学习多总结多思考，努力成为更专业的前端工程师，其二是hexo博客系统有个next主题非常好看，我很喜欢，所以今天就正式采取行动，将这个沉睡两年多的博客重新唤醒过来。</p>
-
-          
+          不知不觉，这个搭建在github page的博客已经被晾在这里两年多了，两年的时间说短不短，说长也不长，但转眼间它就过去了。两年的时间没有来更新这个博客，原因之一是我自己有在维护另一个技术博客，但是那个博客基本是用来收藏一些写得比较好的技术文章，以及个人的一些小感悟或者心情随感，总的来说关于技术这一
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/05/from-jekyll-to-hexo/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2263,112 +1321,15 @@ $ hexo d    // 部署到VPS服务器
       
         
           
-            <p>箭头函数（Arrow functions）,是ECMAScript2015中新加的特性，它的产生，主要有以下两个原因：一是使得函数表达式（匿名函数）有更简洁的语法，二是它拥有词法作用域的this值，也就是说它跟父作用域共享this，不会新产生自己作用域下的this, arguments, super 和 new,target 等对象。</p>
-<blockquote>
-<h3>使用箭头函数特性</h3>
-</blockquote>
-<p>在JavaScript代码中，函数无处不在。假设页面上有一个特定的按钮，它的id是‘clickMe’,点击它后，页面弹出“Hello，Arrow functions!”,为实现这个效果，我们会像下面这样编写JavaScript代码：</p>
-<pre><code>$(function(){
-    $(&apos;#clickMe&apos;).click(function(){
-            alert(&apos;Hello，Arrow functions!&apos;);
-    })
-})
-</code></pre><p>以上是传统的JavaScript写法，给click方法传入一个函数作为参数，这个函数通常都需要按照以下格式输入：function(){}。使用箭头函数后，代码如下：</p>
-<pre><code>$(function(){
-    $(&apos;#clickMe&apos;).click(()=&gt;{alert(&apos;Hello，Arrow functions!&apos;)});
-})
-</code></pre><p>上面的例子比较简单，再来看一个Promise链的例子：</p>
-<pre><code>function getUserInfo(id){
-    return getUsers(id).
-            then(function(users){return users[0]}).
-            then(checkUser).
-            then(function(user,userInfo){return userInfo }).
-            catch(function(error){console.log(error.message)})
-}
-</code></pre><p>使用箭头函数简化上面的例子，代码如下：</p>
-<pre><code>function getUserInfo(id){
-    return getUsers(id).
-        then(users =&gt; users[0]).
-        then(checkUser).
-        then((user,userInfo)=&gt;userInfo).
-        catch(error=&gt;console.log(error.message))
-}      
-</code></pre><p>从简化后的代码来看，不难发现，所有回调函数中的function 和 {}不见了，而且回调函数都在一行表示，当只有一个参数时，（）也消失了；由于{}消失了，里面的return也消失了，代码看起来更加清晰、简洁了。前面提到单行表示回调函数的时候，{}被省略了，假如这时候我们要返回一个对象（包括空对象）的话，该怎么处理呢？这是个坑，一般按如下方式书写代码：</p>
-<pre><code>const emptyObject = ()=&gt;({})
-</code></pre><blockquote>
-<h3>箭头函数里面的this</h3>
-</blockquote>
-<p>开头那里已经提到了，箭头函数没有自己的this值，它跟父作用域共享this,箭头函数内部也没有constructor方法，也没有prototype,所以箭头函数不支持new操作。</p>
-<p>在箭头函数之前，每个新定义的函数都有自己的this值，例如，构造函数的this指向一个新的对象，如果是‘严格模式’，则this值为undefined,如果函数作为对象的方法被调用，则该函数的this指向了那个调用它的对象。在JavaScript面向对象编程中，this的指向是让新手很头疼的问题。</p>
-<pre><code>function Person()｛
-    //构造函数的this指向实例对象自己
-    this.age = 25;
-    setInterval(function growUp(){
-        //在非严格模式下，growUp函数定义了其内部的this,其指向window对象，不同于构造函数Person()定义的this
-        this.age++;
-    },1000);
-}
-var p = new Person();
-</code></pre><p>在箭头函数之前，我们是如何使growUp函数内部的this也指向构造函数Person（）的实例对象的呢？如下：</p>
-<pre><code>function Person() {
-    var self = this;
-    self.age = 25;
-    setInterval(function growUp(){
-        self.age++;
-    });
-}
-var p = new Person();
-</code></pre><p>也就是通过新增一个变量来指向期望的this对象，除此之外，还可以使用 bind 函数，把期望的 this 值传递给 growUp() 函数。</p>
-<pre><code>function Person() {
-    this.age = 25;
-    setInterval(function growUp(){
-        this.age++;
-        console.log(this.age);
-    }.bind(this),1000);
-}
-var p = new Person();
-</code></pre><p>由于箭头函数会捕获其所在上下文的this值，来作为自己的this值，所以我们可以这样修改上述例子的代码：</p>
-<pre><code>function Person() {
-    this.age = 25;
-    setInterval(()=&gt;{
-        this.age++;//这里的this也指向Person对象
-    },1000);
-}
-</code></pre><blockquote>
-<h3>使用 call 或 apply 调用</h3>
-</blockquote>
-<p>箭头函数的 this 始终指向函数定义时的 this，而非执行时。下面看一个试图改变箭头函数 this 指针的例子：</p>
-<pre><code>var x = 1,
-o = {
-    x : 10,
-    test : () =&gt; this.x
-};
-
-o.test(); // 1
-o.test.call(o); // 仍旧是1
-</code></pre><p>由于 this 已经在词法层面完成了绑定，通过 call() 或 apply() 方法调用一个函数时，只是传入了参数而已，对 this 并没有什么影响：</p>
-<pre><code>var adder = {
-  base : 1,
-
-  add : function(a) {
-    var f = v =&gt; v + this.base;
-    return f(a);
-  },
-
-  addThruCall: function(a) {
-    var f = v =&gt; v + this.base;
-    var b = {
-      base : 2
-    };
-
-    return f.call(b, a);
-  }
-};
-
-console.log(adder.add(1));         // 输出 2
-console.log(adder.addThruCall(1)); // 仍然输出 2，而不是3
-</code></pre>
-          
+          箭头函数（Arrow functions）,是ECMAScript2015中新加的特性，它的产生，主要有以下两个原因：一是使得函数表达式（匿名函数）有更简洁的语法，二是它拥有词法作用域的this值，也就是说它跟父作用域共享this，不会新产生自己作用域下的this, arguments, super
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/05/2016-08-29-arrow-functions/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2486,10 +1447,15 @@ console.log(adder.addThruCall(1)); // 仍然输出 2，而不是3
       
         
           
-            <p>为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能生成并发送我们需要的页面。最终效果如下图所示，代码地址 ：<a href="https://github.com/xiaoweihuang/React-Books-List" target="_blank" rel="noopener">https://github.com/xiaoweihuang/React-Books-List</a></p>
-<p><img src="http://images2015.cnblogs.com/blog/798982/201608/798982-20160807222900793-1499449024.png" alt=""></p>
-
-          
+          为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/05/2016-08-28-hello-react/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
