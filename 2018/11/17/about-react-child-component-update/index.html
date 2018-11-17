@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能生成并发送我们需要的页面。最终效果如下图所示，代码地址 ：https://github.com/xi">
+<meta name="description" content="今天写 React 项目的时候，遇到一个比较奇怪的问题，这个问题应该常见于新手身上，问题我简单描述一下，我写了一个列表组件，然后这个列表组件引入了另一个PositionedSnackbar 组件, 这个PositionedSnackbar 组件是用于请求数据成功或者失败时给与用户提示的，起初这个PositionedSnackbar 组件是这样写的： import React from &amp;apos;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="React初探">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/05/2016-08-28-hello-react/index.html">
+<meta property="og:title" content="React子组件从父组件接收到新的props时，没有重新渲染的问题">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/17/about-react-child-component-update/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能生成并发送我们需要的页面。最终效果如下图所示，代码地址 ：https://github.com/xi">
+<meta property="og:description" content="今天写 React 项目的时候，遇到一个比较奇怪的问题，这个问题应该常见于新手身上，问题我简单描述一下，我写了一个列表组件，然后这个列表组件引入了另一个PositionedSnackbar 组件, 这个PositionedSnackbar 组件是用于请求数据成功或者失败时给与用户提示的，起初这个PositionedSnackbar 组件是这样写的： import React from &amp;apos;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://images2015.cnblogs.com/blog/798982/201608/798982-20160807222900793-1499449024.png">
-<meta property="og:updated_time" content="2018-11-05T12:38:51.226Z">
+<meta property="og:image" content="https://i.imgur.com/7XK1DnG.png">
+<meta property="og:updated_time" content="2018-11-17T10:53:44.327Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="React初探">
-<meta name="twitter:description" content="为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能生成并发送我们需要的页面。最终效果如下图所示，代码地址 ：https://github.com/xi">
-<meta name="twitter:image" content="http://images2015.cnblogs.com/blog/798982/201608/798982-20160807222900793-1499449024.png">
+<meta name="twitter:title" content="React子组件从父组件接收到新的props时，没有重新渲染的问题">
+<meta name="twitter:description" content="今天写 React 项目的时候，遇到一个比较奇怪的问题，这个问题应该常见于新手身上，问题我简单描述一下，我写了一个列表组件，然后这个列表组件引入了另一个PositionedSnackbar 组件, 这个PositionedSnackbar 组件是用于请求数据成功或者失败时给与用户提示的，起初这个PositionedSnackbar 组件是这样写的： import React from &amp;apos;">
+<meta name="twitter:image" content="https://i.imgur.com/7XK1DnG.png">
 
 
 
@@ -121,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/05/2016-08-28-hello-react/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/17/about-react-child-component-update/">
 
 
 
 
 
-  <title>React初探 | 前端农民工</title>
+  <title>React子组件从父组件接收到新的props时，没有重新渲染的问题 | 前端农民工</title>
   
 
 
@@ -234,7 +234,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2016-08-28-hello-react/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/17/about-react-child-component-update/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -251,7 +251,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">React初探</h1>
+          <h1 class="post-title" itemprop="name headline">React子组件从父组件接收到新的props时，没有重新渲染的问题</h1>
         
 
         <div class="post-meta">
@@ -263,8 +263,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T20:38:51+08:00">
-                2018-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-17T18:45:16+08:00">
+                2018-11-17
               </time>
             
 
@@ -301,8 +301,70 @@
       
 
       
-        <p>为了方便测试，我们将需要一个运行的服务器，提供一个 API 接口，仅用于获取和保存书单数据。为了简单，服务器将会使用一个 JSON 文件作为数据库(只是为了简化模拟后端api的工作，实际生产环境中则是使用mongoDB等数据库保存)，一旦启动了这个服务器，它就能提供我们需要的 API 接口，同时也能生成并发送我们需要的页面。最终效果如下图所示，代码地址 ：<a href="https://github.com/xiaoweihuang/React-Books-List" target="_blank" rel="noopener">https://github.com/xiaoweihuang/React-Books-List</a></p>
-<p><img src="http://images2015.cnblogs.com/blog/798982/201608/798982-20160807222900793-1499449024.png" alt=""></p>
+        <p>今天写 React 项目的时候，遇到一个比较奇怪的问题，这个问题应该常见于新手身上，问题我简单描述一下，我写了一个列表组件，然后这个列表组件引入了另一个PositionedSnackbar 组件, 这个PositionedSnackbar 组件是用于请求数据成功或者失败时给与用户提示的，起初这个PositionedSnackbar 组件是这样写的：</p>
+<pre><code>import React from &apos;react&apos;;
+import Snackbar from &apos;@material-ui/core/Snackbar&apos;;
+
+class PositionedSnackbar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state= {
+            open:props.open||false,
+            message:props.message||&apos;message&apos;,
+            vertical:props.vertical||null, // 水平方向：&apos;left&apos;, &apos;center&apos; or &apos;right&apos;
+            horizontal:props.horizontal||null, // 垂直方向：&apos;top&apos; or &apos;bottom&apos;
+        }
+    }
+
+    render() {
+    const { vertical, horizontal, open, message } =this.state;
+    return (
+        &lt;div&gt;
+
+            &lt;Snackbar
+
+            anchorOrigin={{ vertical, horizontal }}
+
+            open={open}
+
+            onClose={this.handleClose}
+
+            ContentProps={{
+	
+	                'aria-describedby':'message-id',
+	
+	            }}
+
+            message={&lt;spanid=&quot;message-id&quot;&gt;{message}&lt;/span&gt;}
+
+            /&gt;
+
+        &lt;/div&gt;
+    );
+    }
+}
+
+export default PositionedSnackbar;
+</code></pre><p>通过上面的代码可以知道，子组件把父组件传递过来的props转换成了自己的state，但是我在调试的过程中发现子组件只重新渲染了一次，每次父组件传入了新的props，子组件也不会更新，我在父组件里面是这样写的：</p>
+<p><img src="https://i.imgur.com/7XK1DnG.png" alt=""></p>
+<p>加载下一页，请求数据成功的时候，我在父组件里面setState设置openSnackBar的值为true，snackMessage的值为‘加载成功’，但是子组件没有再更新了。百思不得姐，于是百度一番，终于找出原因，自己对React的constructor理解的不够透彻，constructor方法里面通过props的值去设置子组件的state只会发生在组件初始化阶段，如果在组件渲染出来以后还需要更新它，我们需要在 react 的 componentWillReceiveProps 生命周期里手动更新state，最后解决办法是在子组件加上下面一段代码：</p>
+<pre><code>componentWillReceiveProps(nextProps) {
+
+    this.setState({
+
+        open: nextProps.open,
+
+        message: nextProps.message,
+
+        vertical: nextProps.vertical,
+
+       horizontal: nextProps.horizontal,
+
+    });
+
+}
+</code></pre><p>然后子组件在接收到父组件传递过来的新的rpops，子组件就可以正常更新了。</p>
+<p>另外，子组件在接收到父组件传递过来的新的rpops，要让子组件正常更新还有一种方法，就是这些props不要存到子组件的state里面，而是在子组件的render方法里，通过 this.props.xxxx 直接访问。</p>
 
       
     </div>
@@ -327,8 +389,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/05/2016-08-25-about-promise/" rel="next" title="简单理解ECMAScript2015中的Promise">
-                <i class="fa fa-chevron-left"></i> 简单理解ECMAScript2015中的Promise
+              <a href="/2018/11/14/two-ways-to-import-antd-into-react-app/" rel="next" title="create-react-app工具两种按需引入antd组件的方式">
+                <i class="fa fa-chevron-left"></i> create-react-app工具两种按需引入antd组件的方式
               </a>
             
           </div>
@@ -336,10 +398,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/05/2016-08-29-arrow-functions/" rel="prev" title="简单理解ECMAScript2015中的箭头函数新特性">
-                简单理解ECMAScript2015中的箭头函数新特性 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
