@@ -79,17 +79,24 @@
 
 
 
-<meta name="description" content="不知不觉，这个搭建在github page的博客已经被晾在这里两年多了，两年的时间说短不短，说长也不长，但转眼间它就过去了。两年的时间没有来更新这个博客，原因之一是我自己有在维护另一个技术博客，但是那个博客基本是用来收藏一些写得比较好的技术文章，以及个人的一些小感悟或者心情随感，总的来说关于技术这一块总结得还是比较少，还有一个原因是自己犯了大部分程序员都会有的毛病吧，贪多但是没有深入和总结相关知识">
+<meta name="description" content="说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。  ###构造函数创建对象###  我们先使用构造函数创建一个对象： function Dog() {} var dog = new Dog(); do">
 <meta property="og:type" content="article">
-<meta property="og:title" content="将个人博客从jekyll迁移至hexo">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/05/from-jekyll-to-hexo/index.html">
+<meta property="og:title" content="JavaScript基础回顾(一)：原型与原型链">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/17/about-javascript-prototype/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="不知不觉，这个搭建在github page的博客已经被晾在这里两年多了，两年的时间说短不短，说长也不长，但转眼间它就过去了。两年的时间没有来更新这个博客，原因之一是我自己有在维护另一个技术博客，但是那个博客基本是用来收藏一些写得比较好的技术文章，以及个人的一些小感悟或者心情随感，总的来说关于技术这一块总结得还是比较少，还有一个原因是自己犯了大部分程序员都会有的毛病吧，贪多但是没有深入和总结相关知识">
+<meta property="og:description" content="说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。  ###构造函数创建对象###  我们先使用构造函数创建一个对象： function Dog() {} var dog = new Dog(); do">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-05T12:38:51.266Z">
+<meta property="og:image" content="https://i.imgur.com/zfwnHak.png">
+<meta property="og:image" content="https://i.imgur.com/8Cwov8x.png">
+<meta property="og:image" content="https://i.imgur.com/2qVYJ2e.png">
+<meta property="og:image" content="https://i.imgur.com/DOiXEcX.png">
+<meta property="og:image" content="https://i.imgur.com/jHhpsJe.png">
+<meta property="og:image" content="https://i.imgur.com/GPlpqkO.png">
+<meta property="og:updated_time" content="2018-11-18T06:06:28.060Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="将个人博客从jekyll迁移至hexo">
-<meta name="twitter:description" content="不知不觉，这个搭建在github page的博客已经被晾在这里两年多了，两年的时间说短不短，说长也不长，但转眼间它就过去了。两年的时间没有来更新这个博客，原因之一是我自己有在维护另一个技术博客，但是那个博客基本是用来收藏一些写得比较好的技术文章，以及个人的一些小感悟或者心情随感，总的来说关于技术这一块总结得还是比较少，还有一个原因是自己犯了大部分程序员都会有的毛病吧，贪多但是没有深入和总结相关知识">
+<meta name="twitter:title" content="JavaScript基础回顾(一)：原型与原型链">
+<meta name="twitter:description" content="说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。  ###构造函数创建对象###  我们先使用构造函数创建一个对象： function Dog() {} var dog = new Dog(); do">
+<meta name="twitter:image" content="https://i.imgur.com/zfwnHak.png">
 
 
 
@@ -119,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/05/from-jekyll-to-hexo/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/17/about-javascript-prototype/">
 
 
 
 
 
-  <title>将个人博客从jekyll迁移至hexo | 前端农民工</title>
+  <title>JavaScript基础回顾(一)：原型与原型链 | 前端农民工</title>
   
 
 
@@ -232,7 +239,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/from-jekyll-to-hexo/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/17/about-javascript-prototype/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -249,7 +256,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">将个人博客从jekyll迁移至hexo</h1>
+          <h1 class="post-title" itemprop="name headline">JavaScript基础回顾(一)：原型与原型链</h1>
         
 
         <div class="post-meta">
@@ -261,8 +268,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T20:38:51+08:00">
-                2018-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-17T22:52:33+08:00">
+                2018-11-17
               </time>
             
 
@@ -299,8 +306,62 @@
       
 
       
-        <p>不知不觉，这个搭建在github page的博客已经被晾在这里两年多了，两年的时间说短不短，说长也不长，但转眼间它就过去了。两年的时间没有来更新这个博客，原因之一是我自己有在维护另一个技术博客，但是那个博客基本是用来收藏一些写得比较好的技术文章，以及个人的一些小感悟或者心情随感，总的来说关于技术这一块总结得还是比较少，还有一个原因是自己犯了大部分程序员都会有的毛病吧，贪多但是没有深入和总结相关知识点，在过去的两年时间里，我在前端框架方面，从react到vue，angularjs，再到angular，都是有学的，其中工作中使用到的框架是vue跟react，我感觉框架与框架之间都是相通的，掌握了其中一个框架，要上手另一个框其实是非常快的，就拿我自己的经历来说吧，我在上一份工作中用的是react，然后换到这家公司，直接就使用nuxt重构项目了，基本是入职当天就开始写代码了，遇到不会的直接查文档，花几分钟理解一下就懂了，当然能快速上手的原因是平时下完班也有去翻阅vue相关的技术文章以及官方的文档。除了前端方面，我也利用下班的时间或者周末，从java到php、python、golang、c语言也都学习了一遍，目前来说，欠缺的是写些能放上简历的项目以及学习过后的总结。</p>
-<p>所以今天，我决定重启这个博客，也对博客进行了改头换面，从之前的jekyll博客系统改为hexo博客系统，理由也有两个，其一是我希望在接下来的日子里，能有个崭新的自己，平时多学习多总结多思考，努力成为更专业的前端工程师，其二是hexo博客系统有个next主题非常好看，我很喜欢，所以今天就正式采取行动，将这个沉睡两年多的博客重新唤醒过来。</p>
+        <p>说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。</p>
+<blockquote>
+<p>###构造函数创建对象###</p>
+</blockquote>
+<p>我们先使用构造函数创建一个对象：</p>
+<pre><code>function Dog() {}
+var dog = new Dog();
+dog.name = &apos;Yamy&apos;;
+console.log(dog.name); // Yamy
+</code></pre><p>在这个例子中，Dog就是一个构造函数，我们通过new创建了一个实例对象dog。</p>
+<blockquote>
+<p>###原型prototype###</p>
+</blockquote>
+<p>每个函数都有一个prototype属性，看下面的一个例子：</p>
+<pre><code>function Dog() {}
+Dog.prototype.name = &apos;Tom&apos;;
+var dog1 = new Dog();
+var dog2 = new Dog();
+console.log(dog1.name); // Tom
+console.log(dog2.name); // Tom
+</code></pre><p>我们通过构造函数Dog创建了两个实例dog1和dog2，然后分别打印这两个实例的name属性，发现打印结果是相同的，都是从Dog的prototype属性指向的对象继承而来，那么函数的prototype属性是指向谁呢？其实，这个对象就是我们在调用的构造函数的原型对象，也就是上面例子中Dog的原型。</p>
+<p>那么什么是原型呢？可以简单理解成：每一个对象（null除外）在创建的时候就会与之关联的另一个对象，这个对象就是原型，每一个对象都会从原型里面继承属性。</p>
+<p>所以构造函数与原型对象的关系可以用如下图所示：</p>
+<p><img src="https://i.imgur.com/zfwnHak.png" alt=""></p>
+<p>前面也提到，构造函数的prototype属性指向了它的原型，那么通过构造函数创建的实例对象是通过什么属性指向原型的呢？那就是我们接下来要说的__proto__。</p>
+<blockquote>
+<p>###__proto__###</p>
+</blockquote>
+<p>在JavaScript中，每个对象被创建时，不管是普通对象还是函数对象，都拥有一个__proto__属性，这个属性也指向构造函数的原型对象。举个栗子：</p>
+<pre><code>function Dog() {}
+var dog = new Dog();
+dog.__proto__ === Dog.prototype; // true
+</code></pre><p>所以构造函数、实例对象与原型对象的关系可以用如下图表示：</p>
+<p><img src="https://i.imgur.com/8Cwov8x.png" alt=""></p>
+<p>既然构造函数和实例对象都有指向了原型对象的属性，那么原型对象有没有相关的属性能指向构造函数或者实例对象呢？</p>
+<blockquote>
+<p>###constructor###</p>
+</blockquote>
+<p>由于一个构造函数可以创建多个实例，所以原型对象是没有指向实例对象的属性的，但是有一个属性指向了构造函数。这个属性就是constructor，为了验证这一个结论，我们可以通过以下例子进行验证：</p>
+<pre><code>function Dog() {}
+console.log(Dog === Dog.prototype.constructor) // true
+</code></pre><p>到了这里，构造函数、实例对象与原型对象的关系可以更新为如下图所示：</p>
+<p><img src="https://i.imgur.com/2qVYJ2e.png" alt=""></p>
+<blockquote>
+<p>###原型链###</p>
+</blockquote>
+<p>由于原型对象也是一个对象，我们可以试着探索，这个对象又是怎么创建而来的呢？</p>
+<p>我们在浏览器控制台执行如下代码：</p>
+<pre><code>function Dog() {}
+console.log(Dog.prototype.__proto__)
+</code></pre><p>运行结果如下：</p>
+<p><img src="https://i.imgur.com/DOiXEcX.png" alt=""></p>
+<p>在前面我们已经得出了结论，实例对象的__proto__属性指向了构造函数的原型对象，也就是说，刚刚在浏览器控制台打印出来的对象就是Dog.prototype的构造函数的原型对象，由于构造函数的原型对象的constructor属性又指向了与之关联的构造函数，所以我们从控制台打印出来的结果可以看出，Dog.prototype.__proto__的constructor属性是Object对象，所以我们可以把构造函数、实例对象与原型对象跟Object的关系用下图表示：</p>
+<p><img src="https://i.imgur.com/jHhpsJe.png" alt=""></p>
+<p>同样地，我们在浏览器控制台打印一下Object.prototype.__proto__,输出的结果是null,由于__proto__是任何对象都有的属性，在JavaScript中一切都是对象，所以会有一条通过__proto__连起来的链条，递归访问__proto__最终会到尽头，尽头的值就是null,当JavaScript引擎查找对象的属性时，先在对象自身查找是否存在该属性，如果不存在，就会沿着__proto__原型链查找，但不会查找自身的prototype，直到找到顶层为止。</p>
+<p><img src="https://i.imgur.com/GPlpqkO.png" alt=""></p>
 
       
     </div>
@@ -325,8 +386,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/05/2016-08-29-arrow-functions/" rel="next" title="简单理解ECMAScript2015中的箭头函数新特性">
-                <i class="fa fa-chevron-left"></i> 简单理解ECMAScript2015中的箭头函数新特性
+              <a href="/2018/11/17/about-react-child-component-update/" rel="next" title="React子组件从父组件接收到新的props时，没有重新渲染的问题">
+                <i class="fa fa-chevron-left"></i> React子组件从父组件接收到新的props时，没有重新渲染的问题
               </a>
             
           </div>
@@ -334,10 +395,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/05/hello-world/" rel="prev" title="Hello World">
-                Hello World <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
