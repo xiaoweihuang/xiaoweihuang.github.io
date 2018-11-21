@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  一、React 与 mi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈Vue高阶组件">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/21/about-vue-HigherOrderComponent/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  一、React 与 mi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-21T14:01:53.894Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅谈Vue高阶组件">
+<meta name="twitter:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  一、React 与 mi">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/21/about-vue-HigherOrderComponent/">
+
+
+
+
+
+  <title>浅谈Vue高阶组件 | 前端农民工</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">前端农民工</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/21/about-vue-HigherOrderComponent/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaoweihuang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">浅谈Vue高阶组件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T21:56:15+08:00">
+                2018-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。</p>
+<blockquote>
+<p>一、React 与 mixins</p>
+</blockquote>
+<p>在使用ES6写React之前，我们有可能需要在多个不同的组件之间复用一些代码，这时候我们的做法通常是使用React的mixins属性。举个简单的例子，假如我们需要给多个不同组件的componentDidMount生命周期，也就是在组件挂载完后打印一段日志，我们通常会使用以下的写法：</p>
+<pre><code>const myMixins = {
+    componentDidMount: function() { console.log(&quot;component componentDidMount.&quot;) }
+}
+
+const HelloWorld = React.createClass({
+    mixins:[myMixins],
+    componentDidMount: function() {
+      console.log(&quot;HelloWorld componentDidMount.&quot;)
+    },
+    render: function() {
+      return &lt;h1&gt;Hello World!&lt;/h1&gt;;
+    }
+});
+</code></pre><p>ReactDOM.render(<helloworld>, document.getElementById(“example”));</helloworld></p>
+<p>上面的代码在执行后，会先输出“component componentDidMount.”，然后再输出”HelloWorld componentDidMount.”，由此也可以发现，minxins里面的方法不会覆盖组件生命周期里的方法，并且minxins里的方法优先于组件生命周期里的方法。另外如果组件需要引入多个mixins的话，只需要将要引入的mixinx逐个加入到组件的mixins数组里面，这些mixins执行的顺序就是它们在mixins数组里面的加入顺序。</p>
+<p>当我们使用ES6写React组件的时候，我们就不能使用mixins引入公用代码了，一般是借助高阶组件的写法来实现代码的复用，而且官方也不再推荐使用mixins了，详情可见：<a href="https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html。" target="_blank" rel="noopener">https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html。</a></p>
+<blockquote>
+<p>二、React 高阶组件</p>
+</blockquote>
+<p>同样借助上面的例子，我们可能会使用以下的写法封装一个高阶组件：</p>
+<pre><code>export const HigherOrderComponent = (WrappedComponent) =&gt; {
+  return class extends Component {
+        componentDidMount() {
+            console.log(&quot;component componentDidMount.&quot;)
+        }
+        render() {
+          return (&lt;div&gt;
+            &lt;WrappedComponent {...this.props}/&gt;
+          &lt;/div&gt;)
+    }
+  }
+}
+
+@HigherOrderComponent
+class HelloWorld extends Component {
+    componentDidMount() {
+      console.log(&quot;HelloWorld componentDidMount.&quot;)
+    },
+    render() {
+      return &lt;h1&gt;Hello World!&lt;/h1&gt;;
+    }
+}
+
+ReactDOM.render(&lt;HelloWorld /&gt;, document.getElementById(&quot;example&quot;));
+</code></pre><p>另外需要说一下的是：在上面的代码中使用到了ES7的装饰器语法@HigherOrderComponent，所以在webpack的配置文件进行相关的修改，添加插件：</p>
+<pre><code>[ &quot;@babel/plugin-proposal-decorators&quot;, { &quot;legacy&quot;: true } ]
+</code></pre><p>如果是通过 create-react-app 生成的项目，可以在webpack.config.dev.js和webpack.config.pro.js进行如下的修改：</p>
+<pre><code>// Process application JS with Babel.
+// The preset includes JSX, Flow, and some ESnext features.
+{
+  test: /\.(js|mjs|jsx|ts|tsx)$/,
+  include: paths.appSrc,
+  loader: require.resolve(&apos;babel-loader&apos;),
+  options: {
+    customize: require.resolve(
+      &apos;babel-preset-react-app/webpack-overrides&apos;
+    ),
+
+    plugins: [
+      [
+        require.resolve(&apos;babel-plugin-named-asset-import&apos;),
+        {
+          loaderMap: {
+            svg: {
+              ReactComponent: &apos;@svgr/webpack?-prettier,-svgo![path]&apos;,
+            },
+          },
+        },
+      ],
+      [ &quot;@babel/plugin-proposal-decorators&quot;, { &quot;legacy&quot;: true } ] // 添加这一行配置
+    ],
+    // This is a feature of `babel-loader` for webpack (not Babel itself).
+    // It enables caching results in ./node_modules/.cache/babel-loader/
+    // directory for faster rebuilds.
+    cacheDirectory: true,
+    // Don&apos;t waste time on Gzipping the cache
+    cacheCompression: false,
+  },
+},
+</code></pre><p>前面的示例代码执行后，我们可以发现控制台会先输出”HelloWorld componentDidMount.”，然后再输出”component componentDidMount.”，可见跟使用mixins的写法的执行结果不一样，如果我们使用了高阶组件的写法，高阶组件里面的生命周期函数会晚于组件生命周期函数的执行，通过高阶组件，我们可以实现对组件的个性化封装以及对通用逻辑的抽离，以让这些通用的逻辑更好地在各个组件之间复用，关于React高阶组件更加详细的介绍，可以看看这篇官方的文档：<a href="https://reactjs.org/docs/higher-order-components.html" target="_blank" rel="noopener">https://reactjs.org/docs/higher-order-components.html</a> 。</p>
+<blockquote>
+<p>二、Vue 高阶组件</p>
+</blockquote>
+<p>通过前面的回顾，我们大体了解到了什么是React高阶组件，以及React高阶组件能给我们的项目带来什么价值，但由于Vue跟React底层设计的差别，Vue并不推荐使用高阶组件，而是使用mixins的形式实现功能的复用，大概也是因为使用Vue高阶组件带给我们的收益跟直接使用mixins带来的收益相差不多。关于Vue中mixins的用法可以看看下面这个例子：</p>
+<pre><code>var myMixin = {
+  created: function () {
+    this.hello()
+  },
+  methods: {
+    hello: function () {
+      console.log(&apos;mixin hello!&apos;)
+    }
+  }
+}
+
+var Component = Vue.extend({
+  mixins: [myMixin],
+  created: function() {
+      console.log(&apos;component hello!&apos;)
+  }
+})
+
+var component = new Component()
+</code></pre><p>上面的代码执行后，会先输出”mixin hello!”，然后再输出”component helllo!”，从运行结果也可以看出，在Vue中，mixins里面的生命周期钩子函数也不会覆盖组件的生命周期钩子函数，而且mixins里面的钩子会优先于组件的钩子先执行。当然，mixins还有许多其他的特性，可以通过官方文档去了解：<a href="https://cn.vuejs.org/v2/guide/mixins.html" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/mixins.html</a> 。但是通过mixins复用功能的写法是侵入式的，只是通过浅合并的形式改变原有的组件对象，所以同时引入了mixin的所有组件都会依赖它，而我们使用高阶组件的话就可以避免这种副作用，接下来就简单探索一下在Vue中该如何写高阶组件。</p>
+<p>我们可以这样认为，组件的本质就是一个函数，所以高阶组件也可以认为是一个高阶函数。但是我们平时写Vue单文件组件的时候，通常是按照如下格式进行编写：</p>
+<pre><code>export default {
+  name: &apos;MyComponent&apos;,
+  props: {...},
+  mixins: [...]
+  methods: {...}
+}
+</code></pre><p>从写法来看，Vue组件只是一个普通的对象，但为什么又说组件的本质是一个函数呢？原因就是，Vue在底层会以这个普通对象作为参数创建一个构造函数，然后这个构造函数就是我们用来实例化组件的构造函数，所以说，Vue组件的本质也是一个函数。既然这样，我们可以认为Vue高阶组件是这样的一种组件，就是传入一个纯对象，然后返回一个新的纯对象的函数。如下：</p>
+<pre><code>export default function HigherOrderComponent (WrappedComponent) {
+  return {
+    template: &apos;&lt;wrapped v-on=&quot;$listeners&quot; v-bind=&quot;$attrs&quot;/&gt;&apos;,
+    components: {
+      wrapped: WrappedComponent
+    },
+    created: function () {
+        this.hello()
+    },
+    methods: {
+      hello: function () {
+        console.log(&apos;hoc hello!&apos;)
+      }
+    }
+  }
+}
+</code></pre><p>这个HigherOrderComponent组件就是高阶组件，它接受WrappedComponent作为参数，并返回了一个新的组件。这样，我们就使用高阶组件完成了前面mixins实现的功能，但是我们没有对原组件进行修改，所以是非侵入式的。但是需要注意的是下面这一行代码里面的$listeners和$attrs：</p>
+<pre><code>&lt;wrapped v-on=&quot;$listeners&quot; v-bind=&quot;$attrs&quot;/&gt;
+</code></pre><p>这一行代码的作用类似于我们在React写高阶组件时的：</p>
+<pre><code>&lt;WrappedComponent {...this.props}/&gt;
+</code></pre><p>也就是将props和事件传递到wrapped组件。</p>
+<p>另外，在运行时版本的Vue中，我们是使用不了template选项的，所以我们需要将template选项替换成render函数，如下：</p>
+<pre><code>export default function HigherOrderComponent (WrappedComponent) {
+  return {
+    components: {
+      wrapped: WrappedComponent
+    },
+    created: function () {
+        this.hello()
+    },
+    methods: {
+      hello: function () {
+        console.log(&apos;hoc hello!&apos;)
+      }
+    },
+    render: function(h) {
+        return h(WrappedComponent, {
+            on: this.$listeners,
+            attrs: this.$attrs,
+        })
+    }
+  }
+}
+</code></pre><p>由于$attrs只代表的是那些没有被声明为props的属性，所以上面的render函数中，还需要添加props：</p>
+<pre><code>export default function HigherOrderComponent (WrappedComponent) {
+  return {
+    components: {
+      wrapped: WrappedComponent
+    },
+    created: function () {
+        this.hello()
+    },
+    methods: {
+      hello: function () {
+        console.log(&apos;hoc hello!&apos;)
+      }
+    },
+    render: function(h) {
+        return h(WrappedComponent, {
+            on: this.$listeners,
+            attrs: this.$attrs,
+            props: this.$props
+        })
+    }
+  }
+}
+</code></pre><p>上面这样添加props后，但取到的值仍然是一个空对象，这是因为this.$props代表的是高阶组件接收到的props，然而高阶组件没有声明任何的props，所以this.$props就是一个空对象，解决办法就是我们让高阶组件的props指向传入组件的props:</p>
+<pre><code>export default function HigherOrderComponent (WrappedComponent) {
+  return {
+    components: {
+      wrapped: WrappedComponent
+    },
+    created: function () {
+        this.hello()
+    },
+    methods: {
+      hello: function () {
+        console.log(&apos;hoc hello!&apos;)
+      }
+    },
+    props: WrappedComponent.props,
+    render: function(h) {
+        return h(WrappedComponent, {
+            on: this.$listeners,
+            attrs: this.$attrs,
+            props: this.$props
+        })
+    }
+  }
+}
+</code></pre><p>到了这一步，我们的Vue高阶组件可以实现props、事件以及没有被声明为props的$attrs的传递了。但是Vue高阶组件还有可以完善的空间，当我有空的时候再继续研究，现在的重点工作是找工作，因为遇到坑爹的汇桔网，让我失业了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/17/about-javascript-prototype/" rel="next" title="JavaScript基础回顾(一)：原型与原型链">
+                <i class="fa fa-chevron-left"></i> JavaScript基础回顾(一)：原型与原型链
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xiaoweihuang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xiaoweihuang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
