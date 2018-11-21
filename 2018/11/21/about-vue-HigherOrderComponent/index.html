@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  一、React 与 mi">
+<meta name="description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  React 与 mixi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浅谈Vue高阶组件">
 <meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/21/about-vue-HigherOrderComponent/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  一、React 与 mi">
+<meta property="og:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  React 与 mixi">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-21T14:17:56.477Z">
+<meta property="og:updated_time" content="2018-11-21T14:20:54.944Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Vue高阶组件">
-<meta name="twitter:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  一、React 与 mi">
+<meta name="twitter:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  React 与 mixi">
 
 
 
@@ -301,7 +301,7 @@
       
         <p>说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。</p>
 <blockquote>
-<h3 id="一、React-与-mixins"><a href="#一、React-与-mixins" class="headerlink" title="一、React 与 mixins"></a>一、React 与 mixins</h3></blockquote>
+<h3 id="React-与-mixins"><a href="#React-与-mixins" class="headerlink" title="React 与 mixins"></a>React 与 mixins</h3></blockquote>
 <p>在使用ES6写React之前，我们有可能需要在多个不同的组件之间复用一些代码，这时候我们的做法通常是使用React的mixins属性。举个简单的例子，假如我们需要给多个不同组件的componentDidMount生命周期，也就是在组件挂载完后打印一段日志，我们通常会使用以下的写法：</p>
 <pre><code>const myMixins = {
     componentDidMount: function() { console.log(&quot;component componentDidMount.&quot;) }
@@ -321,7 +321,7 @@ ReactDOM.render(&lt;HelloWorld /&gt;, document.getElementById(&quot;example&quot
 </code></pre><p>上面的代码在执行后，会先输出“component componentDidMount.”，然后再输出”HelloWorld componentDidMount.”，由此也可以发现，minxins里面的方法不会覆盖组件生命周期里的方法，并且minxins里的方法优先于组件生命周期里的方法。另外如果组件需要引入多个mixins的话，只需要将要引入的mixinx逐个加入到组件的mixins数组里面，这些mixins执行的顺序就是它们在mixins数组里面的加入顺序。</p>
 <p>当我们使用ES6写React组件的时候，我们就不能使用mixins引入公用代码了，一般是借助高阶组件的写法来实现代码的复用，而且官方也不再推荐使用mixins了，详情可见：<a href="https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html。" target="_blank" rel="noopener">https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html。</a></p>
 <blockquote>
-<h3 id="二、React-高阶组件"><a href="#二、React-高阶组件" class="headerlink" title="二、React 高阶组件"></a>二、React 高阶组件</h3></blockquote>
+<h3 id="React-高阶组件"><a href="#React-高阶组件" class="headerlink" title="React 高阶组件"></a>React 高阶组件</h3></blockquote>
 <p>同样借助上面的例子，我们可能会使用以下的写法封装一个高阶组件：</p>
 <pre><code>export const HigherOrderComponent = (WrappedComponent) =&gt; {
   return class extends Component {
@@ -384,7 +384,7 @@ ReactDOM.render(&lt;HelloWorld /&gt;, document.getElementById(&quot;example&quot
 },
 </code></pre><p>前面的示例代码执行后，我们可以发现控制台会先输出”HelloWorld componentDidMount.”，然后再输出”component componentDidMount.”，可见跟使用mixins的写法的执行结果不一样，如果我们使用了高阶组件的写法，高阶组件里面的生命周期函数会晚于组件生命周期函数的执行，通过高阶组件，我们可以实现对组件的个性化封装以及对通用逻辑的抽离，以让这些通用的逻辑更好地在各个组件之间复用，关于React高阶组件更加详细的介绍，可以看看这篇官方的文档：<a href="https://reactjs.org/docs/higher-order-components.html" target="_blank" rel="noopener">https://reactjs.org/docs/higher-order-components.html</a> 。</p>
 <blockquote>
-<h3 id="二、Vue-高阶组件"><a href="#二、Vue-高阶组件" class="headerlink" title="二、Vue 高阶组件"></a>二、Vue 高阶组件</h3></blockquote>
+<h3 id="Vue-高阶组件"><a href="#Vue-高阶组件" class="headerlink" title="Vue 高阶组件"></a>Vue 高阶组件</h3></blockquote>
 <p>通过前面的回顾，我们大体了解到了什么是React高阶组件，以及React高阶组件能给我们的项目带来什么价值，但由于Vue跟React底层设计的差别，Vue并不推荐使用高阶组件，而是使用mixins的形式实现功能的复用，大概也是因为使用Vue高阶组件带给我们的收益跟直接使用mixins带来的收益相差不多。关于Vue中mixins的用法可以看看下面这个例子：</p>
 <pre><code>var myMixin = {
   created: function () {
@@ -651,7 +651,7 @@ var component = new Component()
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、React-与-mixins"><span class="nav-number">1.</span> <span class="nav-text">一、React 与 mixins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、React-高阶组件"><span class="nav-number">2.</span> <span class="nav-text">二、React 高阶组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Vue-高阶组件"><span class="nav-number">3.</span> <span class="nav-text">二、Vue 高阶组件</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#React-与-mixins"><span class="nav-number">1.</span> <span class="nav-text">React 与 mixins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React-高阶组件"><span class="nav-number">2.</span> <span class="nav-text">React 高阶组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-高阶组件"><span class="nav-number">3.</span> <span class="nav-text">Vue 高阶组件</span></a></li></ol></div>
             
 
           </div>
