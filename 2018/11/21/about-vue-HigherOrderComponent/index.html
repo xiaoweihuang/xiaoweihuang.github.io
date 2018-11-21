@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="前端农民工">
 <meta property="og:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  一、React 与 mi">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-21T14:01:53.894Z">
+<meta property="og:updated_time" content="2018-11-21T14:15:58.858Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Vue高阶组件">
 <meta name="twitter:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  一、React 与 mi">
@@ -317,8 +317,9 @@ const HelloWorld = React.createClass({
       return &lt;h1&gt;Hello World!&lt;/h1&gt;;
     }
 });
-</code></pre><p>ReactDOM.render(<helloworld>, document.getElementById(“example”));</helloworld></p>
-<p>上面的代码在执行后，会先输出“component componentDidMount.”，然后再输出”HelloWorld componentDidMount.”，由此也可以发现，minxins里面的方法不会覆盖组件生命周期里的方法，并且minxins里的方法优先于组件生命周期里的方法。另外如果组件需要引入多个mixins的话，只需要将要引入的mixinx逐个加入到组件的mixins数组里面，这些mixins执行的顺序就是它们在mixins数组里面的加入顺序。</p>
+
+ReactDOM.render(&lt;HelloWorld /&gt;, document.getElementById(&quot;example&quot;));
+</code></pre><p>上面的代码在执行后，会先输出“component componentDidMount.”，然后再输出”HelloWorld componentDidMount.”，由此也可以发现，minxins里面的方法不会覆盖组件生命周期里的方法，并且minxins里的方法优先于组件生命周期里的方法。另外如果组件需要引入多个mixins的话，只需要将要引入的mixinx逐个加入到组件的mixins数组里面，这些mixins执行的顺序就是它们在mixins数组里面的加入顺序。</p>
 <p>当我们使用ES6写React组件的时候，我们就不能使用mixins引入公用代码了，一般是借助高阶组件的写法来实现代码的复用，而且官方也不再推荐使用mixins了，详情可见：<a href="https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html。" target="_blank" rel="noopener">https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html。</a></p>
 <blockquote>
 <p>二、React 高阶组件</p>
