@@ -89,7 +89,7 @@
 <meta property="og:image" content="https://i.imgur.com/ZGkUdgO.png">
 <meta property="og:image" content="https://i.imgur.com/tpmgSfn.png">
 <meta property="og:image" content="https://i.imgur.com/6sj9SAv.png">
-<meta property="og:updated_time" content="2018-11-17T10:07:13.652Z">
+<meta property="og:updated_time" content="2018-11-21T14:10:13.515Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="create-react-app工具两种按需引入antd组件的方式">
 <meta name="twitter:description" content="create-react-app是react官方提供的快速搭建react项目的脚手架工具，它的安装和使用都非常方便，在命令行工具执行以下命令即可完成create-react-app的安装： npm install -g create-react-app 然后执行以下命令即可创建一个react项目： create-react-app helloworld 初始化后的react项目目录结构如下图所示：">
@@ -311,7 +311,8 @@
 <p><img src="https://i.imgur.com/ZGkUdgO.png" alt=""></p>
 <p>然后执行npm start即可启动项目。</p>
 <p>antd是一个非常好用的框架，有时我们可能会需要在使用create-react-app创建的项目中使用它，但是如果把antd全局引入了的话，打包后的体积会特别大，所以比较好的方式是按需引入项目中需要使用的组件。如何实现按需引入呢？下面我介绍两种方式，其中一种是antd官方提供的方法，另一种则是执行npm run eject后在webpack配置文件中配置按需引入。</p>
-<p>###方式一</p>
+<blockquote>
+<h3 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h3></blockquote>
 <p>首先安装react-app-rewired：</p>
 <pre><code>npm install --save react-app-rewired
 </code></pre><p>安装完后修改package.json文件里的配置：</p>
@@ -337,7 +338,8 @@
 };
 </code></pre><p>接下来重启一下项目，即可在组件中使用以来命令按需引入antd里面的组件：</p>
 <pre><code>import { Button } from &apos;antd&apos; // 引入antd的Button组件
-</code></pre><p>###方式二</p>
+</code></pre><blockquote>
+<h3 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h3></blockquote>
 <p>使用create-react-app创建好项目后，我们需要先执行npm run eject以让webpack的配置文件显示出来，这个过程是不可逆的，执行这个命令后，在项目的根目录下面会多一个config文件夹，里面存放的是webpack相关的配置文件：</p>
 <p><img src="https://i.imgur.com/tpmgSfn.png" alt=""></p>
 <p>接下来需要对webpack.config.dev.js和webpack.config.prod.js两个文件做相同的修改：</p>
@@ -545,8 +547,17 @@ export default App;
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -588,6 +599,22 @@ export default App;
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#方式一"><span class="nav-number">1.</span> <span class="nav-text">方式一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方式二"><span class="nav-number">2.</span> <span class="nav-text">方式二</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

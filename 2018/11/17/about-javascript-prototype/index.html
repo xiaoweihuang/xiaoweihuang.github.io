@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。  ###构造函数创建对象###  我们先使用构造函数创建一个对象： function Dog() {} var dog = new Dog(); do">
+<meta name="description" content="说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。  构造函数创建对象 我们先使用构造函数创建一个对象： function Dog() {} var dog = new Dog(); dog.name">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript基础回顾(一)：原型与原型链">
 <meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/17/about-javascript-prototype/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。  ###构造函数创建对象###  我们先使用构造函数创建一个对象： function Dog() {} var dog = new Dog(); do">
+<meta property="og:description" content="说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。  构造函数创建对象 我们先使用构造函数创建一个对象： function Dog() {} var dog = new Dog(); dog.name">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/zfwnHak.png">
 <meta property="og:image" content="https://i.imgur.com/8Cwov8x.png">
@@ -92,10 +92,10 @@
 <meta property="og:image" content="https://i.imgur.com/DOiXEcX.png">
 <meta property="og:image" content="https://i.imgur.com/jHhpsJe.png">
 <meta property="og:image" content="https://i.imgur.com/GPlpqkO.png">
-<meta property="og:updated_time" content="2018-11-18T06:06:28.060Z">
+<meta property="og:updated_time" content="2018-11-21T14:09:15.896Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript基础回顾(一)：原型与原型链">
-<meta name="twitter:description" content="说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。  ###构造函数创建对象###  我们先使用构造函数创建一个对象： function Dog() {} var dog = new Dog(); do">
+<meta name="twitter:description" content="说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。  构造函数创建对象 我们先使用构造函数创建一个对象： function Dog() {} var dog = new Dog(); dog.name">
 <meta name="twitter:image" content="https://i.imgur.com/zfwnHak.png">
 
 
@@ -308,8 +308,7 @@
       
         <p>说到基础知识，其实很重要，在面试的过程中也基本都会被问到。俗话说，万丈高楼平地起。没有足够扎实的基础，是不可能筑起高楼大厦的。所以为了巩固自己的基础知识，我决定对JavaScript的各个知识点进行深入理解和总结，今日要回顾和探索的是原型与原型链。</p>
 <blockquote>
-<p>###构造函数创建对象###</p>
-</blockquote>
+<h3 id="构造函数创建对象"><a href="#构造函数创建对象" class="headerlink" title="构造函数创建对象"></a>构造函数创建对象</h3></blockquote>
 <p>我们先使用构造函数创建一个对象：</p>
 <pre><code>function Dog() {}
 var dog = new Dog();
@@ -317,8 +316,7 @@ dog.name = &apos;Yamy&apos;;
 console.log(dog.name); // Yamy
 </code></pre><p>在这个例子中，Dog就是一个构造函数，我们通过new创建了一个实例对象dog。</p>
 <blockquote>
-<p>###原型prototype###</p>
-</blockquote>
+<h3 id="原型prototype"><a href="#原型prototype" class="headerlink" title="原型prototype"></a>原型prototype</h3></blockquote>
 <p>每个函数都有一个prototype属性，看下面的一个例子：</p>
 <pre><code>function Dog() {}
 Dog.prototype.name = &apos;Tom&apos;;
@@ -332,8 +330,7 @@ console.log(dog2.name); // Tom
 <p><img src="https://i.imgur.com/zfwnHak.png" alt=""></p>
 <p>前面也提到，构造函数的prototype属性指向了它的原型，那么通过构造函数创建的实例对象是通过什么属性指向原型的呢？那就是我们接下来要说的__proto__。</p>
 <blockquote>
-<p>###__proto__###</p>
-</blockquote>
+<h3 id="proto"><a href="#proto" class="headerlink" title="__proto__"></a>__proto__</h3></blockquote>
 <p>在JavaScript中，每个对象被创建时，不管是普通对象还是函数对象，都拥有一个__proto__属性，这个属性也指向构造函数的原型对象。举个栗子：</p>
 <pre><code>function Dog() {}
 var dog = new Dog();
@@ -342,16 +339,14 @@ dog.__proto__ === Dog.prototype; // true
 <p><img src="https://i.imgur.com/8Cwov8x.png" alt=""></p>
 <p>既然构造函数和实例对象都有指向了原型对象的属性，那么原型对象有没有相关的属性能指向构造函数或者实例对象呢？</p>
 <blockquote>
-<p>###constructor###</p>
-</blockquote>
+<h3 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h3></blockquote>
 <p>由于一个构造函数可以创建多个实例，所以原型对象是没有指向实例对象的属性的，但是有一个属性指向了构造函数。这个属性就是constructor，为了验证这一个结论，我们可以通过以下例子进行验证：</p>
 <pre><code>function Dog() {}
 console.log(Dog === Dog.prototype.constructor) // true
 </code></pre><p>到了这里，构造函数、实例对象与原型对象的关系可以更新为如下图所示：</p>
 <p><img src="https://i.imgur.com/2qVYJ2e.png" alt=""></p>
 <blockquote>
-<p>###原型链###</p>
-</blockquote>
+<h3 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h3></blockquote>
 <p>由于原型对象也是一个对象，我们可以试着探索，这个对象又是怎么创建而来的呢？</p>
 <p>我们在浏览器控制台执行如下代码：</p>
 <pre><code>function Dog() {}
@@ -450,8 +445,17 @@ console.log(Dog.prototype.__proto__)
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -493,6 +497,22 @@ console.log(Dog.prototype.__proto__)
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数创建对象"><span class="nav-number">1.</span> <span class="nav-text">构造函数创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原型prototype"><span class="nav-number">2.</span> <span class="nav-text">原型prototype</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proto"><span class="nav-number">3.</span> <span class="nav-text">__proto__</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#constructor-NaN"><span class="nav-number">4.</span> <span class="nav-text">constructor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原型链"><span class="nav-number">5.</span> <span class="nav-text">原型链</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
