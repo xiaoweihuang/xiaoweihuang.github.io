@@ -3,7 +3,7 @@ window.onload = function() {
         event.preventDefault(); // 取消默认的复制事件
         let textFont, copyFont = window.getSelection(0).toString();
         if (copyFont.length > 10) {
-            textFont = copyFont + '\n'
+            textFont = copyFont + '\n\n'
                 + '作者：xiaoweihuang\n'
                 + '链接：'+ window.location.href +'\n'
                 + '来源：前端农民工\n'
