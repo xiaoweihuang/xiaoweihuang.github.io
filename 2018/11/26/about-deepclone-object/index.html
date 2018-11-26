@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="前端农民工">
 <meta property="og:description" content="我们在面试或者笔试的过程中，对象的深复制问题经常会被问到，说难不难，说简单也不简单，要弄清楚这个问题，我们首先需要明确的是在JavaScript中的数据类型有哪些，通常分为两大类，一类是基本数据类型，包括Boolean、Null、Number、undefined、String、Symbol，还有一类是复杂数据类型，即Object类型。在这篇博客中，我们主要来回顾一下对象的深度复制，也就是如何实现对">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-26T12:34:25.632Z">
+<meta property="og:updated_time" content="2018-11-26T12:46:40.215Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript基础回顾（三）：如何实现对象的深度复制">
 <meta name="twitter:description" content="我们在面试或者笔试的过程中，对象的深复制问题经常会被问到，说难不难，说简单也不简单，要弄清楚这个问题，我们首先需要明确的是在JavaScript中的数据类型有哪些，通常分为两大类，一类是基本数据类型，包括Boolean、Null、Number、undefined、String、Symbol，还有一类是复杂数据类型，即Object类型。在这篇博客中，我们主要来回顾一下对象的深度复制，也就是如何实现对">
@@ -354,13 +354,8 @@ a.x = 1;
 var b = deepClone(a);
 b.x = 2;
 console.log(a.x) // =&gt; 2
-
-
-
-很显然，我们不能使用浅复制的方式对function进行复制，而是以对象的形式对它进行复制，所以isObject修改一下: 
-
-
-function isObject(obj) {
+</code></pre><p>很显然，我们不能使用浅复制的方式对function进行复制，而是以对象的形式对它进行复制，所以isObject修改一下: </p>
+<pre><code>function isObject(obj) {
     var type = typeof obj;
     return type === &apos;object&apos; &amp;&amp; !!obj || type === &apos;function&apos;;
 }
