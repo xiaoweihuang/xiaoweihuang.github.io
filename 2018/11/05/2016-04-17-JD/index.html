@@ -86,21 +86,20 @@
 <meta property="og:site_name" content="前端农民工">
 <meta property="og:description" content="2016年3月28日，京东资深前端架构师刘威在ITA1024前端精英群分享了前端工程化在2015年京东PC新首页的一些开发实践，分享实录如下： ##  大家好，我是京东用户体验设计部前端架构团队的刘威，网上ID是putaoshu，非常高兴 “ITA1024团队”的邀请，有这样的一个机会与大家分享下我们团队关于2015年京东PC新首页的一些前端开发实践，希望通过今天的讲解能为大家以后在大型前端项目开">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F1.jpg">
-<meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F2.jpg">
-<meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F3.jpg">
-<meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F4.jpg">
-<meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F5.jpg">
-<meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F6.jpg">
-<meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/10.png">
+<meta property="og:image" content="https://www.xiaoweihuang.me/images/jd/1.png">
+<meta property="og:image" content="https://www.xiaoweihuang.me/images/jd/2.png">
+<meta property="og:image" content="https://www.xiaoweihuang.me/images/jd/3.png">
+<meta property="og:image" content="https://www.xiaoweihuang.me/images/jd/4.png">
+<meta property="og:image" content="https://www.xiaoweihuang.me/images/jd/5.png">
+<meta property="og:image" content="https://www.xiaoweihuang.me/images/jd/6.png">
 <meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F7.png">
-<meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F8.png">
-<meta property="og:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F9.jpg">
-<meta property="og:updated_time" content="2018-11-05T12:38:51.223Z">
+<meta property="og:image" content="https://www.xiaoweihuang.me/images/jd/7.png">
+<meta property="og:image" content="https://www.xiaoweihuang.me/images/jd/8.png">
+<meta property="og:updated_time" content="2018-12-02T03:51:01.775Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="京东资深前端架构师分享前端工程化在2015年京东PC新首页的一些开发实践(转载)">
 <meta name="twitter:description" content="2016年3月28日，京东资深前端架构师刘威在ITA1024前端精英群分享了前端工程化在2015年京东PC新首页的一些开发实践，分享实录如下： ##  大家好，我是京东用户体验设计部前端架构团队的刘威，网上ID是putaoshu，非常高兴 “ITA1024团队”的邀请，有这样的一个机会与大家分享下我们团队关于2015年京东PC新首页的一些前端开发实践，希望通过今天的讲解能为大家以后在大型前端项目开">
-<meta name="twitter:image" content="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F1.jpg">
+<meta name="twitter:image" content="https://www.xiaoweihuang.me/images/jd/1.png">
 
 
 
@@ -380,12 +379,12 @@
 <p>接入层：CDN—&gt;HAProxy—&gt;nginx</p>
 <p>应用层：PHP Redis</p>
 <p>存储层：Mysql</p>
-<p><img src="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F1.jpg" alt=""></p>
+<p><img src="https://www.xiaoweihuang.me/images/jd/1.png" alt=""></p>
 <p>首先，用户访问首页实际是请求CDN上拼接好的静态页面，往下会到达Nginx动态缓存，然后到达Nginx，Nginx再把请求转发给PHP进行处理，并通过HTTP头来精确控制缓存；接着到了PHP应用层，使用了Redis作为缓存，并用MySQL存储数据；定时2分钟循环任务生成静态文件，从源服务器同布分发至各地CDN结点。这样用户访问时，会访问到离当前用户最近CDN结点机器上拼装好的静态文件。</p>
 <blockquote>
 <p>3.前端页面整体架构</p>
 </blockquote>
-<p><img src="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F2.jpg" alt=""></p>
+<p><img src="https://www.xiaoweihuang.me/images/jd/2.png" alt=""></p>
 <ul>
 <li>JS部分</li>
 </ul>
@@ -415,11 +414,11 @@
 <li><p>其中用户到达当前楼层时，请求楼层数据(包括楼层的html结构和当前楼层的脚本)，渲染数据到楼层元素中，同时初始化楼层脚本。另外楼层有提前预加载逻辑，即用户在第一二楼层时，提前加载好第三四五楼层的数据，到达楼层即显示当前楼层数据。</p>
 </li>
 </ul>
-<p><img src="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F3.jpg" alt=""></p>
+<p><img src="https://www.xiaoweihuang.me/images/jd/3.png" alt=""></p>
 <ul>
 <li>楼层异步加载和本地缓存方式的好处：页面大约共有3288个元素，首屏大约仅900左右，楼层数据lazyload，只渲染首屏元素，大大降低首屏页面内容大小，极大的缩短页面首屏加载完成时间，当时测算首屏约1.6s即加载完，时间比旧版和竞品缩短很多。</li>
 </ul>
-<p><img src="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F4.jpg" alt=""></p>
+<p><img src="https://www.xiaoweihuang.me/images/jd/4.png" alt=""></p>
 <ul>
 <li>数据接口优先请求走本地localStorage，减少后台服务器压力，节约成本。请求数据时延时查看成功与否，同时二次请求保证高可用性。楼层之间数据和脚本完全解耦，有利于后期维护，可随意定时上线和下线运营楼层。</li>
 </ul>
@@ -427,11 +426,11 @@
 <p>5.前端基础架构</p>
 </blockquote>
 <p>如下图：</p>
-<p><img src="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F5.jpg" alt=""></p>
+<p><img src="https://www.xiaoweihuang.me/images/jd/5.png" alt=""></p>
 <blockquote>
 <p>6.前端工具和系统</p>
 </blockquote>
-<p><img src="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F6.jpg" alt=""></p>
+<p><img src="https://www.xiaoweihuang.me/images/jd/6.png" alt=""></p>
 <p>主要是以JDF命令行工具为核心进行开发，工具和系统的具体使用步骤如下：</p>
 <ul>
 <li><p>在代码共享平台新建项目工程</p>
@@ -562,8 +561,8 @@
 </li>
 </ul>
 <p>页面中引用widget用如下代码片断：</p>
-<p><img src="http://7xt2wo.com1.z0.glb.clouddn.com/10.png" alt=""></p>
-<p>很明显html不支持，此时会用到jdf的编译命令”jdf  build”，核心是把ui-product-list.json中的json数据打到ui-product-list.vm模板上，最后输出静态html片断；同时.scss编译成.css，并且在header头增加样式引用：</p>
+<pre><code>{%widgetname="ui-product-list"%}
+</code></pre><p>很明显html不支持，此时会用到jdf的编译命令”jdf  build”，核心是把ui-product-list.json中的json数据打到ui-product-list.vm模板上，最后输出静态html片断；同时.scss编译成.css，并且在header头增加样式引用：</p>
 <pre><code>&lt;linktype=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;/widget/ui-product-list/ui-product-list.css&quot;source=&quot;widget&quot;/&gt;
 </code></pre><p>页面尾部增加js引用:</p>
 <pre><code>&lt;scripttype=&quot;text/javascript&quot; src=&quot;/widget/ui-product-list/ui-product-list.js&quot;source=&quot;widget&quot;&gt;&lt;/script&gt;
@@ -594,7 +593,7 @@
 <blockquote>
 <p>5.前端开发流程</p>
 </blockquote>
-<p><img src="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F8.png" alt=""></p>
+<p><img src="https://www.xiaoweihuang.me/images/jd/7.png" alt=""></p>
 <ul>
 <li><p>使用JDFinit进行项目构建，生成标准化的文件目录和工程</p>
 </li>
@@ -615,7 +614,7 @@
 <ul>
 <li>前端文档-规范</li>
 </ul>
-<p><img src="http://7xt2wo.com1.z0.glb.clouddn.com/%3CKeyPrefix%3Eimg%2F2016-04-17%2F9.jpg" alt=""></p>
+<p><img src="https://www.xiaoweihuang.me/images/jd/8.png" alt=""></p>
 <p>   文档请参考: <a href="https://github.com/putaoshu/jdf/tree/master/doc" target="_blank" rel="noopener">https://github.com/putaoshu/jdf/tree/master/doc</a></p>
 <ul>
 <li><p>前端文档-组件API</p>
