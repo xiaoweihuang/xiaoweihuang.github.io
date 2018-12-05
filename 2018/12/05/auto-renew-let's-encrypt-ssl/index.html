@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="关于设计  Pinterest：https://www.pinterest.com Dribbble:https://dribbble.com Behance:http://www.behance.net F-I:http://www.f-i.com uehtml:http://www.uehtml.com reeoo:http://reeoo.com inspired-ui：http://in">
+<meta name="description" content="之前给网站部署了Let’s Encrypt的免费SSL证书，但这个证书的有效期是90天，到期的时候需要自己手动续签，否则的话网站会打不开。但是每次都手动续签的话不仅很麻烦而且很容易忘记掉，所以还是借助linux的crontab自动任务靠谱一些。 证书的续签命令是： 1/root/letsencrypt/certbot-auto renew --force-renew 续签完需要reload一下ng">
 <meta property="og:type" content="article">
-<meta property="og:title" content="推荐一些网站">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/05/2015-08-27-share-website/index.html">
+<meta property="og:title" content="linux设置自动续签Let&#39;s Encrypt SSL证书">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2018/12/05/auto-renew-let's-encrypt-ssl/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="关于设计  Pinterest：https://www.pinterest.com Dribbble:https://dribbble.com Behance:http://www.behance.net F-I:http://www.f-i.com uehtml:http://www.uehtml.com reeoo:http://reeoo.com inspired-ui：http://in">
+<meta property="og:description" content="之前给网站部署了Let’s Encrypt的免费SSL证书，但这个证书的有效期是90天，到期的时候需要自己手动续签，否则的话网站会打不开。但是每次都手动续签的话不仅很麻烦而且很容易忘记掉，所以还是借助linux的crontab自动任务靠谱一些。 证书的续签命令是： 1/root/letsencrypt/certbot-auto renew --force-renew 续签完需要reload一下ng">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-05T12:38:51.215Z">
+<meta property="og:image" content="https://www.xiaoweihuang.me/images/ssl-crontab.png">
+<meta property="og:updated_time" content="2018-12-05T15:44:04.889Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="推荐一些网站">
-<meta name="twitter:description" content="关于设计  Pinterest：https://www.pinterest.com Dribbble:https://dribbble.com Behance:http://www.behance.net F-I:http://www.f-i.com uehtml:http://www.uehtml.com reeoo:http://reeoo.com inspired-ui：http://in">
+<meta name="twitter:title" content="linux设置自动续签Let&#39;s Encrypt SSL证书">
+<meta name="twitter:description" content="之前给网站部署了Let’s Encrypt的免费SSL证书，但这个证书的有效期是90天，到期的时候需要自己手动续签，否则的话网站会打不开。但是每次都手动续签的话不仅很麻烦而且很容易忘记掉，所以还是借助linux的crontab自动任务靠谱一些。 证书的续签命令是： 1/root/letsencrypt/certbot-auto renew --force-renew 续签完需要reload一下ng">
+<meta name="twitter:image" content="https://www.xiaoweihuang.me/images/ssl-crontab.png">
 
 
 
@@ -119,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/05/2015-08-27-share-website/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/12/05/auto-renew-let's-encrypt-ssl/">
 
 
 
 
 
-  <title>推荐一些网站 | 前端农民工</title>
+  <title>linux设置自动续签Let's Encrypt SSL证书 | 前端农民工</title>
   
 
 
@@ -243,7 +245,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2015-08-27-share-website/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/12/05/auto-renew-let's-encrypt-ssl/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -260,7 +262,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">推荐一些网站</h1>
+          <h1 class="post-title" itemprop="name headline">linux设置自动续签Let's Encrypt SSL证书</h1>
         
 
         <div class="post-meta">
@@ -272,8 +274,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T20:38:51+08:00">
-                2018-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-05T23:25:29+08:00">
+                2018-12-05
               </time>
             
 
@@ -310,80 +312,16 @@
       
 
       
-        <blockquote>
-<p><strong>关于设计</strong></p>
-</blockquote>
-<p>Pinterest：<a href="https://www.pinterest.com" target="_blank" rel="noopener">https://www.pinterest.com</a></p>
-<p>Dribbble:<a href="https://dribbble.com" target="_blank" rel="noopener">https://dribbble.com</a></p>
-<p>Behance:<a href="http://www.behance.net" target="_blank" rel="noopener">http://www.behance.net</a></p>
-<p>F-I:<a href="http://www.f-i.com" target="_blank" rel="noopener">http://www.f-i.com</a></p>
-<p>uehtml:<a href="http://www.uehtml.com" target="_blank" rel="noopener">http://www.uehtml.com</a></p>
-<p>reeoo:<a href="http://reeoo.com" target="_blank" rel="noopener">http://reeoo.com</a></p>
-<p>inspired-ui：<a href="http://inspired-ui.com" target="_blank" rel="noopener">http://inspired-ui.com</a></p>
-<p>uiparade：<a href="http://www.uiparade.com" target="_blank" rel="noopener">http://www.uiparade.com </a></p>
-<p>freebiesbooth：<a href="http://freebiesbooth.com" target="_blank" rel="noopener">http://freebiesbooth.com </a></p>
-<p>webdesignledger.com：<a href="https://webdesignledger.com/" target="_blank" rel="noopener">https://webdesignledger.com/</a></p>
-<p>onepagelove：<a href="https://onepagelove.com/" target="_blank" rel="noopener">https://onepagelove.com/</a></p>
-<blockquote>
-<p><strong>关于前端开发</strong></p>
-</blockquote>
-<p>script-tutrials: <a href="http://www.script-tutorials.com" target="_blank" rel="noopener">http://www.script-tutorials.com</a></p>
-<p>tutsplus: <a href="http://code.tutsplus.com/" target="_blank" rel="noopener">http://code.tutsplus.com/</a></p>
-<p>css-tricks:<a href="https://css-tricks.com/" target="_blank" rel="noopener">https://css-tricks.com/</a></p>
-<p>smashingmagazine:<a href="http://www.smashingmagazine.com/category/coding/" target="_blank" rel="noopener">http://www.smashingmagazine.com/category/coding/</a></p>
-<p>webmonkey:<a href="http://www.webmonkey.com/" target="_blank" rel="noopener">http://www.webmonkey.com/</a></p>
-<p>tutorialzine:<a href="http://tutorialzine.com/" target="_blank" rel="noopener">http://tutorialzine.com/</a></p>
-<p>24ways:<a href="https://24ways.org/" target="_blank" rel="noopener">https://24ways.org/</a></p>
-<p>developerdrive:<a href="http://www.developerdrive.com/" target="_blank" rel="noopener">http://www.developerdrive.com/</a></p>
-<p>teamtreehouse:<a href="http://blog.teamtreehouse.com/" target="_blank" rel="noopener">http://blog.teamtreehouse.com/</a></p>
-<p>yyyweb:<a href="http://www.yyyweb.com/" target="_blank" rel="noopener">http://www.yyyweb.com/</a></p>
-<p>sitepoint:<a href="http://www.sitepoint.com/" target="_blank" rel="noopener">http://www.sitepoint.com/</a></p>
-<p>studentguidewebdesign:<a href="http://www.studentguidewebdesign.com/" target="_blank" rel="noopener">http://www.studentguidewebdesign.com/</a></p>
-<p>alistapart:<a href="http://alistapart.com/" target="_blank" rel="noopener">http://alistapart.com/</a></p>
-<p>instantshift:<a href="http://www.instantshift.com/" target="_blank" rel="noopener">http://www.instantshift.com/</a></p>
-<p>fuelyourcreativity:<a href="http://www.fuelyourcreativity.com/" target="_blank" rel="noopener">http://www.fuelyourcreativity.com/</a></p>
-<p>wefunction:<a href="http://wefunction.com/" target="_blank" rel="noopener">http://wefunction.com/</a></p>
-<p>webdesignerwall:<a href="http://webdesignerwall.com/" target="_blank" rel="noopener">http://webdesignerwall.com/</a></p>
-<p>CodeOpen:<a href="http://codepen.io/" target="_blank" rel="noopener">http://codepen.io/</a></p>
-<p>jsfiddle:<a href="https://jsfiddle.net/" target="_blank" rel="noopener">https://jsfiddle.net/</a></p>
-<p>RunJS:<a href="http://runjs.cn" target="_blank" rel="noopener">http://runjs.cn</a></p>
-<p>javascripting:<a href="https://www.javascripting.com/" target="_blank" rel="noopener">https://www.javascripting.com/</a></p>
-<p>Web Fundamentals:<a href="https://developers.google.com/web/fundamentals/?hl=en" target="_blank" rel="noopener">https://developers.google.com/web/fundamentals/?hl=en</a></p>
-<p>echojs:<a href="http://www.echojs.com/" target="_blank" rel="noopener">http://www.echojs.com/</a></p>
-<p>microjs:<a href="http://microjs.com/#" target="_blank" rel="noopener">http://microjs.com/</a></p>
-<blockquote>
-<p><strong>关于UED</strong></p>
-</blockquote>
-<p>TaoBaoUED:<a href="http://ued.taobao.org/blog/" target="_blank" rel="noopener">http://ued.taobao.org/blog/</a></p>
-<p>阿里巴巴（中国站）用户体验设计部博客:<a href="http://www.aliued.cn/" target="_blank" rel="noopener">http://www.aliued.cn/ </a></p>
-<p>Tencent CDC Blog:<a href="http://cdc.tencent.com/" target="_blank" rel="noopener">http://cdc.tencent.com/ </a></p>
-<p>腾讯ISUX – 互联网用户体验设计:<a href="http://isux.tencent.com/" target="_blank" rel="noopener">http://isux.tencent.com/ </a></p>
-<p>新浪UED:<a href="http://ued.sina.com/" target="_blank" rel="noopener">http://ued.sina.com/ </a></p>
-<p>微博UDC:<a href="http://udc.weibo.com/" target="_blank" rel="noopener">http://udc.weibo.com/ </a></p>
-<p>网易用户体验设计中心:<a href="http://uedc.163.com/" target="_blank" rel="noopener">http://uedc.163.com/</a></p>
-<p>FEX 做最专业的前端:<a href="http://fex.baidu.com/" target="_blank" rel="noopener">http://fex.baidu.com/ </a></p>
-<p>百度MUX:<a href="http://mux.baidu.com/" target="_blank" rel="noopener">http://mux.baidu.com/ </a></p>
-<blockquote>
-<p><strong>关于产品</strong></p>
-</blockquote>
-<p>woshipm：<a href="http://www.woshipm.com/" target="_blank" rel="noopener">http://www.woshipm.com/</a></p>
-<p>chanpin100：<a href="http://www.chanpin100.com/" target="_blank" rel="noopener">http://www.chanpin100.com/</a></p>
-<p>产品中国：<a href="http://www.86pm.cn/" target="_blank" rel="noopener">http://www.86pm.cn/</a></p>
-<p>互联网早读课：<a href="http://zaodula.com/" target="_blank" rel="noopener">http://zaodula.com/</a></p>
-<p>pmcaff产品经理社区:<a href="http://www.pmcaff.com/portal.php" target="_blank" rel="noopener">http://www.pmcaff.com/portal.php</a></p>
-<p>XIDC:<a href="http://ixdc.org/" target="_blank" rel="noopener">http://ixdc.org/</a></p>
-<p>原型工具Axure:<a href="http://www.axure.com/" target="_blank" rel="noopener">http://www.axure.com/</a></p>
-<p>原型工具justinmind:<a href="http://www.justinmind.com/" target="_blank" rel="noopener">http://www.justinmind.com/</a></p>
-<p>互联网的一些事：<a href="http://www.yixieshi.com/" target="_blank" rel="noopener">http://www.yixieshi.com/</a></p>
-<p>极客公园：<a href="http://www.geekpark.net/" target="_blank" rel="noopener">http://www.geekpark.net/</a></p>
-<p>36氪：<a href="http://36kr.com/" target="_blank" rel="noopener">http://36kr.com/</a></p>
-<p>爱范儿：<a href="http://www.ifanr.com/" target="_blank" rel="noopener">http://www.ifanr.com/</a></p>
-<p>TechWeb中文网：<a href="http://www.techweb.com.cn/" target="_blank" rel="noopener">http://www.techweb.com.cn/</a></p>
-<p>雷锋网：<a href="http://www.leiphone.com/" target="_blank" rel="noopener">http://www.leiphone.com/</a></p>
-<p>钛媒体：<a href="http://www.tmtpost.com/" target="_blank" rel="noopener">http://www.tmtpost.com/</a></p>
-<p>虎嗅网：<a href="http://www.huxiu.com/" target="_blank" rel="noopener">http://www.huxiu.com/</a></p>
-<hr>
-<p>未完待续</p>
+        <p>之前给网站部署了Let’s Encrypt的免费SSL证书，但这个证书的有效期是90天，到期的时候需要自己手动续签，否则的话网站会打不开。但是每次都手动续签的话不仅很麻烦而且很容易忘记掉，所以还是借助linux的crontab自动任务靠谱一些。</p>
+<p>证书的续签命令是：</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/root/letsencrypt/certbot-auto renew --force-renew</span><br></pre></td></tr></table></figure>
+</code></pre><p>续签完需要reload一下nginx，然后续签的证书才会生效:</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/nginx reload</span><br></pre></td></tr></table></figure>
+</code></pre><p>上面的两个命令我们可以借助crontab设置自动任务，每月1号0点自动续签证书，执行：</p>
+<pre><code>crontab -e
+</code></pre><p>进入自动任务设置，输入如下命令：</p>
+<p><img src="https://www.xiaoweihuang.me/images/ssl-crontab.png" alt=""></p>
+<p>保存并退出vi编辑界面。</p>
 
       
     </div>
@@ -395,7 +333,7 @@
             </li>
             <li class="post-copyright-link">
               <strong>本文链接：</strong>
-              <a href="/2018/11/05/2015-08-27-share-website/" title="推荐一些网站">2018/11/05/2015-08-27-share-website/</a>
+              <a href="/2018/12/05/auto-renew-let's-encrypt-ssl/" title="linux设置自动续签Let's Encrypt SSL证书">2018/12/05/auto-renew-let's-encrypt-ssl/</a>
             </li>
             <li class="post-copyright-license">
               <strong>版权声明： </strong>
@@ -454,15 +392,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/12/01/vue-component/" rel="next" title="如何从零开始封装一个Vue组件">
+                <i class="fa fa-chevron-left"></i> 如何从零开始封装一个Vue组件
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/05/2015-08-26-hello-2015/" rel="prev" title="Hello World">
-                Hello World <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
