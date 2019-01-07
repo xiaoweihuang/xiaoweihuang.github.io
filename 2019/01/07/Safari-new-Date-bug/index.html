@@ -79,19 +79,17 @@
 
 
 
-<meta name="description" content="要实现如下图所示的效果，如果我们使用css3来制作的话，那是轻而易举的事情，  但是现在这里，我要演示的是借助css2和svg来实现，具体代码如下，如果你感兴趣的话可以研究一下： &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html&amp;gt; &amp;lt;head&amp;gt;     &amp;lt;title&amp;gt;CSS effects&amp;lt;/title&amp;gt;     &amp;lt;meta charse">
+<meta name="description" content="今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象： new Date(&amp;apos;2019-01-07 23:46:50&amp;apos;) 然后分别使用getHours()和getMinu">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CSS2结合svg实现特殊几何形状效果">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/05/beautiful-effects-created-with-CSS/index.html">
+<meta property="og:title" content="new Date()方法在Safari浏览器的一个bug">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2019/01/07/Safari-new-Date-bug/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="要实现如下图所示的效果，如果我们使用css3来制作的话，那是轻而易举的事情，  但是现在这里，我要演示的是借助css2和svg来实现，具体代码如下，如果你感兴趣的话可以研究一下： &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html&amp;gt; &amp;lt;head&amp;gt;     &amp;lt;title&amp;gt;CSS effects&amp;lt;/title&amp;gt;     &amp;lt;meta charse">
+<meta property="og:description" content="今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象： new Date(&amp;apos;2019-01-07 23:46:50&amp;apos;) 然后分别使用getHours()和getMinu">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.imgur.com/YZLhhws.png">
-<meta property="og:updated_time" content="2018-07-22T16:10:28.176Z">
+<meta property="og:updated_time" content="2019-01-07T15:55:47.751Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CSS2结合svg实现特殊几何形状效果">
-<meta name="twitter:description" content="要实现如下图所示的效果，如果我们使用css3来制作的话，那是轻而易举的事情，  但是现在这里，我要演示的是借助css2和svg来实现，具体代码如下，如果你感兴趣的话可以研究一下： &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html&amp;gt; &amp;lt;head&amp;gt;     &amp;lt;title&amp;gt;CSS effects&amp;lt;/title&amp;gt;     &amp;lt;meta charse">
-<meta name="twitter:image" content="https://i.imgur.com/YZLhhws.png">
+<meta name="twitter:title" content="new Date()方法在Safari浏览器的一个bug">
+<meta name="twitter:description" content="今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象： new Date(&amp;apos;2019-01-07 23:46:50&amp;apos;) 然后分别使用getHours()和getMinu">
 
 
 
@@ -121,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/05/beautiful-effects-created-with-CSS/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2019/01/07/Safari-new-Date-bug/">
 
 
 
 
 
-  <title>CSS2结合svg实现特殊几何形状效果 | 前端农民工</title>
+  <title>new Date()方法在Safari浏览器的一个bug | 前端农民工</title>
   
 
 
@@ -245,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/beautiful-effects-created-with-CSS/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2019/01/07/Safari-new-Date-bug/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -262,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">CSS2结合svg实现特殊几何形状效果</h1>
+          <h1 class="post-title" itemprop="name headline">new Date()方法在Safari浏览器的一个bug</h1>
         
 
         <div class="post-meta">
@@ -274,8 +272,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T21:36:35+08:00">
-                2018-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-07T23:39:32+08:00">
+                2019-01-07
               </time>
             
 
@@ -312,111 +310,12 @@
       
 
       
-        <p>要实现如下图所示的效果，如果我们使用css3来制作的话，那是轻而易举的事情，</p>
-<p><img src="https://i.imgur.com/YZLhhws.png" alt=""></p>
-<p>但是现在这里，我要演示的是借助css2和svg来实现，具体代码如下，如果你感兴趣的话可以研究一下：</p>
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;title&gt;CSS effects&lt;/title&gt;
-    &lt;meta charset=&quot;utf-8&quot;&gt;
-    &lt;style type=&quot;text/css&quot;&gt;
-        body{
-            padding: 0;
-            margin: 0;
-            background-color: #1c1c1c;
-        }
-        a {
-            text-decoration: none;
-            color: #000;
-        }
-        .container {
-            max-width: 370px;
-            min-width: 250px;
-            margin: 100px auto;
-        }
-        .content-inner {
-            padding: 15px;
-            background-color: #fff;
-        }
-        .read-more {
-            padding: 15px 30px 30px;
-            color: #fff;
-            background-color: #23b6b6;
-            -webkit-transition: background-color 0.3s;
-            transition: background-color 0.3s;
-            box-sizing: border-box;
-        }
-        .svg-container {
-            position: relative;
-            z-index: 11;
-        }
-        .svg-block {
-            fill: #1c1c1c;
-            stroke: none;
-        }
-        .svg-container {
-            bottom: 0;
-            width: 100%;
-            height: 0;
-            padding-top: 7.93650794%;
-        }
-        svg:not(:root) {
-            overflow: hidden;
-        }
-        svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 9;
-        }
-        .content-bottom-svg {
-            margin-top: -7.78%;
-        }
-        .content-svg {
-            margin-top: 0;
-            margin-left: -3px;
-            margin-bottom: -7.74%;
-        }
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;div class=&quot;container&quot;&gt;
-    &lt;div class=&quot;content-inner&quot;&gt;            
-        &lt;header class=&quot;entry-header&quot;&gt;
-            &lt;h2 class=&quot;entry-title&quot;&gt;
-                &lt;a href=&quot;#&quot; rel=&quot;bookmark&quot;&gt;Dome Title&lt;/a&gt;
-            &lt;/h2&gt;
-        &lt;/header&gt;
+        <p>今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象：</p>
+<pre><code>new Date(&apos;2019-01-07 23:46:50&apos;)
+</code></pre><p>然后分别使用getHours()和getMinutes()方法获取到时和分，并渲染到页面上。</p>
+<p>测试同学进行测试时，就发现这个奇怪的问题了，chrome浏览器的模拟器显示正常，Android手机显示正常，偏偏在IOS手机上显示NaN:NaN。</p>
+<p>经查阅资料，这大概是Safari浏览器的一个bug，需要先将字符串里面的“-”换成“/”后在调用new方法，然后就没问题了。</p>
 
-        &lt;div class=&quot;entry-content&quot;&gt;
-            &lt;p&gt;Scaevola tribunus plebis ferret ad plebem vellentne de ea re quaeri. Comprehensum, quod cognitum non habet? Omnia contraria, quos etiam insanos esse vultis. Quae in controversiam veniunt, de iis, si placet, disseramus. Ego vero volo in virtute vim esse quam maximam; Facile est hoc cernere in primis puerorum aetatulis. Ut enim consuetudo loquitur, id solum dicitur honestum, quod est populari fama gloriosum.
-            &lt;/p&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;read-more&quot;&gt;
-        Continue reading …            
-    &lt;/div&gt;
-    &lt;div class=&quot;svg-container content-bottom-svg svg-block&quot;&gt;        
-        &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 1890 150&quot;&gt;
-            &lt;g transform=&quot;translate(0,-902.36218)&quot;&gt;&lt;/g&gt;
-              &lt;path d=&quot;m 898.41609,-33.21176 0.01,0 -0.005,-0.009 -0.005,0.009 z&quot;&gt;&lt;/path&gt;
-              &lt;path d=&quot;m 898.41609,-33.21176 0.01,0 -0.005,-0.009 -0.005,0.009 z&quot;&gt;&lt;/path&gt;
-              &lt;path d=&quot;m 1925,0 0,150 -1925,0&quot;&gt;&lt;/path&gt;
-        &lt;/svg&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;svg-container content-svg svg-block&quot;&gt;        
-            &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 1950 150&quot;&gt;
-              &lt;g transform=&quot;translate(0,-902.36218)&quot;&gt;&lt;/g&gt;
-              &lt;path d=&quot;m 898.41609,-33.21176 0.01,0 -0.005,-0.009 -0.005,0.009 z&quot;&gt;&lt;/path&gt;
-              &lt;path d=&quot;m 898.41609,-33.21176 0.01,0 -0.005,-0.009 -0.005,0.009 z&quot;&gt;&lt;/path&gt;
-              &lt;path d=&quot;M 0,150 0,0 1950,0&quot;&gt;&lt;/path&gt;
-            &lt;/svg&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
       
     </div>
     <div>
@@ -427,7 +326,7 @@
             </li>
             <li class="post-copyright-link">
               <strong>本文链接：</strong>
-              <a href="/2018/11/05/beautiful-effects-created-with-CSS/" title="CSS2结合svg实现特殊几何形状效果">2018/11/05/beautiful-effects-created-with-CSS/</a>
+              <a href="/2019/01/07/Safari-new-Date-bug/" title="new Date()方法在Safari浏览器的一个bug">2019/01/07/Safari-new-Date-bug/</a>
             </li>
             <li class="post-copyright-license">
               <strong>版权声明： </strong>
@@ -486,8 +385,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/05/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2019/01/06/get-wechat-openid-and-userinfo/" rel="next" title="微信公众号获取OpenId和用户基本信息">
+                <i class="fa fa-chevron-left"></i> 微信公众号获取OpenId和用户基本信息
               </a>
             
           </div>
@@ -495,10 +394,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/05/deploy-hexo-to-vps/" rel="prev" title="如何部署hexo博客到VPS服务器上">
-                如何部署hexo博客到VPS服务器上 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
