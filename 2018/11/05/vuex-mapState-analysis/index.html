@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="前端农民工">
 <meta property="og:description" content="为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。 对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余： // 在单独构建的版本中辅助函数为">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-21T09:08:16.553Z">
+<meta property="og:updated_time" content="2019-03-17T05:12:22.501Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vuex mapState 函数源码浅析">
 <meta name="twitter:description" content="为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。 对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余： // 在单独构建的版本中辅助函数为">
@@ -198,6 +198,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -289,6 +299,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue相关/" itemprop="url" rel="index">
+                    <span itemprop="name">vue相关</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -743,6 +775,15 @@ state={
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             

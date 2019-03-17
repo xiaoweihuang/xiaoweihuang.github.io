@@ -87,7 +87,7 @@
 <meta property="og:description" content="为了提升网站的用户体验，我们通常会给网站的右下角添加一个回到顶部的按钮，最近工作中在忙的移动端网站就有很长的列表页面，如果不给页面加个回到顶部的按钮，用户肯定会抓狂。这个组件的实现思路也比较简单，核心是监听window的scroll事件，在页面滚动的过程中获取”window.pageYOffset || document.documentElement.scrollTop || document.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://www.xiaoweihuang.me/images/backtotop.gif">
-<meta property="og:updated_time" content="2019-01-13T06:13:49.007Z">
+<meta property="og:updated_time" content="2019-03-17T05:17:01.226Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分享一个 Vue 实现的回到顶部组件">
 <meta name="twitter:description" content="为了提升网站的用户体验，我们通常会给网站的右下角添加一个回到顶部的按钮，最近工作中在忙的移动端网站就有很长的列表页面，如果不给页面加个回到顶部的按钮，用户肯定会抓狂。这个组件的实现思路也比较简单，核心是监听window的scroll事件，在页面滚动的过程中获取”window.pageYOffset || document.documentElement.scrollTop || document.">
@@ -200,6 +200,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -291,6 +301,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue相关/" itemprop="url" rel="index">
+                    <span itemprop="name">vue相关</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -477,6 +509,15 @@
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             

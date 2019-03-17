@@ -87,7 +87,7 @@
 <meta property="og:description" content="Vue 有两个比较核心的特性，一个是非侵入式的响应式数据绑定系统，另一个是组件系统。由于这两个功能非常重要，所以在求职面试的时候，面试官也通常会围绕这两部分进行提问，如数据绑定的底层实现，组件之间的通讯等等。接下来，本篇博客将主要探讨一下Vue的数据绑定原理与实现。 Vue是如何监听数据变化的当实例化一个Vue组件的时候，我们会把一个普通的JavaScript对象传递给Vue实例的data选项，然">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://cn.vuejs.org/images/data.png">
-<meta property="og:updated_time" content="2018-07-14T15:56:01.929Z">
+<meta property="og:updated_time" content="2019-03-17T05:12:35.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="谈谈Vue的数据绑定原理与实现">
 <meta name="twitter:description" content="Vue 有两个比较核心的特性，一个是非侵入式的响应式数据绑定系统，另一个是组件系统。由于这两个功能非常重要，所以在求职面试的时候，面试官也通常会围绕这两部分进行提问，如数据绑定的底层实现，组件之间的通讯等等。接下来，本篇博客将主要探讨一下Vue的数据绑定原理与实现。 Vue是如何监听数据变化的当实例化一个Vue组件的时候，我们会把一个普通的JavaScript对象传递给Vue实例的data选项，然">
@@ -200,6 +200,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -291,6 +301,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue相关/" itemprop="url" rel="index">
+                    <span itemprop="name">vue相关</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -647,6 +679,15 @@ function (node, value) {
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             

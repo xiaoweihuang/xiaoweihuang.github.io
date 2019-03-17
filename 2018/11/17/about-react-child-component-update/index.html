@@ -87,7 +87,7 @@
 <meta property="og:description" content="今天写 React 项目的时候，遇到一个比较奇怪的问题，这个问题应该也是大家在开发中经常会遇到的，问题我简单描述一下，我写了一个列表组件，然后这个列表组件引入了另一个PositionedSnackbar 组件, 这个PositionedSnackbar 组件是用于请求数据成功或者失败时给与用户提示的，起初这个PositionedSnackbar 组件是这样写的： import React from">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/7XK1DnG.png">
-<meta property="og:updated_time" content="2018-11-17T11:03:18.037Z">
+<meta property="og:updated_time" content="2019-03-17T05:16:31.044Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React子组件从父组件接收到新的props时，没有重新渲染的问题">
 <meta name="twitter:description" content="今天写 React 项目的时候，遇到一个比较奇怪的问题，这个问题应该也是大家在开发中经常会遇到的，问题我简单描述一下，我写了一个列表组件，然后这个列表组件引入了另一个PositionedSnackbar 组件, 这个PositionedSnackbar 组件是用于请求数据成功或者失败时给与用户提示的，起初这个PositionedSnackbar 组件是这样写的： import React from">
@@ -200,6 +200,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -291,6 +301,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/react相关/" itemprop="url" rel="index">
+                    <span itemprop="name">react相关</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -524,6 +556,15 @@ export default PositionedSnackbar;
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             

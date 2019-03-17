@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="前端农民工">
 <meta property="og:description" content="今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象： new Date(&amp;apos;2019-01-07 23:46:50&amp;apos;) 然后分别使用getHours()和getMinu">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-07T15:55:47.751Z">
+<meta property="og:updated_time" content="2019-03-17T05:13:59.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="new Date()方法在Safari浏览器的一个bug">
 <meta name="twitter:description" content="今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象： new Date(&amp;apos;2019-01-07 23:46:50&amp;apos;) 然后分别使用getHours()和getMinu">
@@ -198,6 +198,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -289,6 +299,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript基础系列/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript基础系列</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -480,6 +512,15 @@
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             

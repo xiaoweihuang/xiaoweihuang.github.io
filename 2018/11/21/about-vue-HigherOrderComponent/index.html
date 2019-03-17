@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="前端农民工">
 <meta property="og:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  React 与 mixi">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-21T14:20:54.944Z">
+<meta property="og:updated_time" content="2019-03-17T05:16:09.275Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Vue高阶组件">
 <meta name="twitter:description" content="说到高阶组件，我们是否立刻就能够想起高阶函数，那什么是高阶函数呢？高阶函数就是接受一个函数作为参数或者以一个函数作为返回值的函数，高阶组件的定义跟高阶函数很类似，高阶组件即是接受一个组件作为参数，并返回一个新的组件的组件。这篇博客我想探索一下Vue高阶组件，但是由于Vue高阶组件并不常用，高阶组件在React生态里使用比较广泛，所以在这里我先回顾一下React高阶组件。  React 与 mixi">
@@ -198,6 +198,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -289,6 +299,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue相关/" itemprop="url" rel="index">
+                    <span itemprop="name">vue相关</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -690,6 +722,15 @@ var component = new Component()
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             
