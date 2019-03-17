@@ -89,7 +89,7 @@
 <meta property="og:image" content="https://i.imgur.com/FWYkxAi.png">
 <meta property="og:image" content="https://i.imgur.com/CE09AvI.jpg">
 <meta property="og:image" content="https://yanhaijing.com/blog/138.gif">
-<meta property="og:updated_time" content="2019-03-17T05:13:44.410Z">
+<meta property="og:updated_time" content="2019-03-17T06:19:15.479Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript基础回顾（五）：JavaScript中的执行上下文">
 <meta name="twitter:description" content="最近一边阅读Vue源码，一边复习JavaScript的基础理论知识，前面回顾了JavaScipt中的词法作用域，这篇博客就回顾一下JavaScript中的执行上下文，理解了执行上下文就能更好地理解JavaScript中的作用域与作用域链。在查阅资料的过程中，我发现有一篇译文还不错，所以也就跟着那篇译文的思路回顾了JavaScript中的执行上下文，译文地址：https://yanhaijing.c">
@@ -371,7 +371,7 @@
 <h3 id="执行上下文堆栈"><a href="#执行上下文堆栈" class="headerlink" title="执行上下文堆栈"></a>执行上下文堆栈</h3></blockquote>
 <p>浏览器里的JavaScript解释器被实现为单线程。这意味着同一时间只能发生一件事情，其他的行文或事件将会被放在叫做执行栈里面排队。下面的图是单线程栈的抽象视图：</p>
 <p><img src="https://i.imgur.com/CE09AvI.jpg" alt=""></p>
-<p>我们已经知道，当浏览器首次载入你的脚本，它将默认进入全局执行上下文。如果，你在你的全局代码中调用一个函数，你程序的时序将进入被调用的函数，并穿件一个新的执行上下文，并将新创建的上下文压入执行栈的顶部。</p>
+<p>我们已经知道，当浏览器首次载入你的脚本，它将默认进入全局执行上下文。如果，你在你的全局代码中调用一个函数，你程序的时序将进入被调用的函数，并创建一个新的执行上下文，并将新创建的上下文压入执行栈的顶部。</p>
 <p>如果你调用当前函数内部的其他函数，相同的事情会在此上演。代码的执行流程进入内部函数，创建一个新的执行上下文并把它压入执行栈的顶部。浏览器将总会执行栈顶的执行上下文，一旦当前上下文函数执行结束，它将被从栈顶弹出，并将上下文控制权交给当前的栈。下面的例子显示递归函数的执行栈调用过程：</p>
 <pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(function foo(i) &#123;</span><br><span class="line">    if (i === 3) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        foo(++i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;(0));</span><br></pre></td></tr></table></figure>
 </code></pre><p><img src="https://yanhaijing.com/blog/138.gif" alt=""></p>
@@ -386,7 +386,7 @@
 </ul>
 <blockquote>
 <h3 id="执行上下文的细节"><a href="#执行上下文的细节" class="headerlink" title="执行上下文的细节"></a>执行上下文的细节</h3></blockquote>
-<p>我们现在已经知道没次调用函数，都会创建新的执行上下文。然而，在JavaScript解释器内部，每次调用执行上下文，分为两个阶段：</p>
+<p>我们现在已经知道每次调用函数，都会创建新的执行上下文。然而，在JavaScript解释器内部，每次调用执行上下文，分为两个阶段：</p>
 <ol>
 <li><p>创建阶段【当函数被调用，但未执行任何其内部代码之前】：</p>
 <ul>
@@ -605,7 +605,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -616,7 +616,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
