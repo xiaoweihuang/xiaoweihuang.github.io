@@ -79,19 +79,25 @@
 
 
 
-<meta name="description" content="ECMAScript6中新增了Promise对象， 所谓Promise对象，即代表着一个还未完成，但将来某时会完成的操作（通常是异步操作）。使用Promise对象，我们就可以避免陷入函数层层嵌套的‘回调金字塔’里去，将异步的操作以同步的的形式展现出来。Promise对象对外提供了一整套完整的接口，方便开发者更好地控制异步操作。  Promise语法  ES6的Promise对象是一个构造函数，创建">
+<meta name="description" content="刚刚安装好Docker，现在接着安装自动化部署工具Jenkins。  拉取docker jenkins镜像 1$ docker pull jenkins:latest   配置jenkins相关目录，并给予对应的权限 1$ mkdir -p /var/jenkins_home 1$ chown -R 1000  /var/jenkins_home  启动docker 1$docker run -d">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简单理解ECMAScript2015中的Promise">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/05/2016-08-25-about-promise/index.html">
+<meta property="og:title" content="Docker安装自动化部署工具Jenkins">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2019/03/24/install-jenkins-with-docker/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="ECMAScript6中新增了Promise对象， 所谓Promise对象，即代表着一个还未完成，但将来某时会完成的操作（通常是异步操作）。使用Promise对象，我们就可以避免陷入函数层层嵌套的‘回调金字塔’里去，将异步的操作以同步的的形式展现出来。Promise对象对外提供了一整套完整的接口，方便开发者更好地控制异步操作。  Promise语法  ES6的Promise对象是一个构造函数，创建">
+<meta property="og:description" content="刚刚安装好Docker，现在接着安装自动化部署工具Jenkins。  拉取docker jenkins镜像 1$ docker pull jenkins:latest   配置jenkins相关目录，并给予对应的权限 1$ mkdir -p /var/jenkins_home 1$ chown -R 1000  /var/jenkins_home  启动docker 1$docker run -d">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://images2015.cnblogs.com/blog/798982/201608/798982-20160817171642203-1109957991.png">
-<meta property="og:updated_time" content="2018-11-05T12:38:51.225Z">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/a.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/b.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/c.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/d.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/f.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/g.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/h.png">
+<meta property="og:updated_time" content="2019-03-24T08:31:24.151Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简单理解ECMAScript2015中的Promise">
-<meta name="twitter:description" content="ECMAScript6中新增了Promise对象， 所谓Promise对象，即代表着一个还未完成，但将来某时会完成的操作（通常是异步操作）。使用Promise对象，我们就可以避免陷入函数层层嵌套的‘回调金字塔’里去，将异步的操作以同步的的形式展现出来。Promise对象对外提供了一整套完整的接口，方便开发者更好地控制异步操作。  Promise语法  ES6的Promise对象是一个构造函数，创建">
-<meta name="twitter:image" content="http://images2015.cnblogs.com/blog/798982/201608/798982-20160817171642203-1109957991.png">
+<meta name="twitter:title" content="Docker安装自动化部署工具Jenkins">
+<meta name="twitter:description" content="刚刚安装好Docker，现在接着安装自动化部署工具Jenkins。  拉取docker jenkins镜像 1$ docker pull jenkins:latest   配置jenkins相关目录，并给予对应的权限 1$ mkdir -p /var/jenkins_home 1$ chown -R 1000  /var/jenkins_home  启动docker 1$docker run -d">
+<meta name="twitter:image" content="https://img.xiaoweihuang.me/images/2019/03/24/a.png">
 
 
 
@@ -121,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/05/2016-08-25-about-promise/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2019/03/24/install-jenkins-with-docker/">
 
 
 
 
 
-  <title>简单理解ECMAScript2015中的Promise | 前端农民工</title>
+  <title>Docker安装自动化部署工具Jenkins | 前端农民工</title>
   
 
 
@@ -262,7 +268,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/05/2016-08-25-about-promise/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2019/03/24/install-jenkins-with-docker/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -279,7 +285,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">简单理解ECMAScript2015中的Promise</h1>
+          <h1 class="post-title" itemprop="name headline">Docker安装自动化部署工具Jenkins</h1>
         
 
         <div class="post-meta">
@@ -291,8 +297,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T20:38:51+08:00">
-                2018-11-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-24T16:12:03+08:00">
+                2019-03-24
               </time>
             
 
@@ -301,6 +307,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/VPS相关/" itemprop="url" rel="index">
+                    <span itemprop="name">VPS相关</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -329,102 +357,36 @@
       
 
       
-        <p>ECMAScript6中新增了Promise对象， 所谓Promise对象，即代表着一个还未完成，但将来某时会完成的操作（通常是异步操作）。使用Promise对象，我们就可以避免陷入函数层层嵌套的‘回调金字塔’里去，将异步的操作以同步的的形式展现出来。Promise对象对外提供了一整套完整的接口，方便开发者更好地控制异步操作。</p>
+        <p>刚刚安装好Docker，现在接着安装自动化部署工具Jenkins。</p>
 <blockquote>
-<h3>Promise语法</h3>
-</blockquote>
-<p>ES6的Promise对象是一个构造函数，创建一个Promise对象实例的语法如下：</p>
-<pre><code>new Promise (function(resolve, reject){});
-</code></pre><p>Promise接受一个函数作为参数，这个函数也包含两个参数，这两个参数分别是resolve方法和reject方法，其中resolve方法在处理执行成功的时候将Promise对象的状态变为”fulfilled “，而reject方法则在处理执行失败的时候将Promise对象的状态变为”rejected”。</p>
-<pre><code>var promise = new Promise(function(resolve,reject){
-    if (/*异步操作成功*/) {
-        resolve(value)
-    } esle {
-        reject(error)
-    }
-
-});
-
-promise.then(function(value){//success},function(value){//error})
-</code></pre><p>从上面的代码我们可以看到，Promise对象实例生成后，可以使用then方法为异步操作成功或者失败的时候指定相应的处理方法。来看一个简单的例子。</p>
-<pre><code>if (window.Promise) {
-  var promise = new Promise(function(resolve,reject){
-      var request;
-      if (window.XMLHttpRequest) {
-           request = new XMLHttpRequest();
-       } else {
-           request = new ActiveXObject();
-       }
-           request.open(&apos;GET&apos;,&apos;https://cnodejs.org/api/v1/topics&apos;);
-           request.send();
-           request.onload = function() {
-               if(request.status == 200){
-                    resolve(request.response)
-                }else{
-                     reject(Error(request.statusText));
-                }
-           }
-           request.onerror = function() {
-                  reject(Error(&apos;fetch data error.&apos;))
-           }
-
-  })
- } else {
-    console.log(&apos;Promise not support.&apos;);
- }
-
- promise.then(function(value){
-        console.log(value);
-  },function(error) {
-        console.log(error.message);
-  })
-</code></pre><p>以上例子的代码即是Promise实现的异步请求。</p>
+<h3 id="拉取docker-jenkins镜像"><a href="#拉取docker-jenkins镜像" class="headerlink" title="拉取docker jenkins镜像"></a>拉取docker jenkins镜像</h3></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull jenkins:latest</span><br></pre></td></tr></table></figure>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/a.png" alt=""></p>
 <blockquote>
-<h3>Promise概念</h3>
-</blockquote>
-<p>理解Promise之前，先来看看Promise对象包含的几种状态：</p>
-<p>①pending:既不是fulfilled状态，也不是rejected状态<br>②fulfilled:成功的操作<br>③rejected:失败的操作</p>
-<p><img src="http://images2015.cnblogs.com/blog/798982/201608/798982-20160817171642203-1109957991.png" alt=""></p>
-<p>从上面的流程图可以看出，处于pending状态的Promise对象既可以转变为一个带有成功值的fulfill状态，也可以转变为一个带有失败信息的rejected状态。当Promise的状态发生改变时，由Promise.then绑定的回调函数就会被调用。</p>
-<h3>Promise对象的原型：Promise.prototype</h3><br>Promise.prototype即是Promise构造器的原型，所有的Promise实例对象都继承自Promise.prototype,可以通过Promise构造器的原型对象来给所有Promise实例添加属性和方法。<br><br>Promise.prototype.catch(onReject):  catch方法只用来处理Promise被拒绝的情况，同时返回一个Promise对象，这个原型方法的行为和调用跟promise.then(undefined,onReject)相同。<br><br>        promise.catch(onReject);<br>        promise.then(function(error){//拒绝})<br><br>Promise.prototype.then(onfulfilled,onRejected):then方法也会返回一个Promise对象，then方法有两个参数，它们分别是Promise成功或者失败时的回调函数。<br><br>        promise.then(onFulfilled,onRejected);<br>        promise.then(function(value){<br>            console.log(value)//成功状态<br>        }，function(reason){<br>             console.log(reason.message);//失败状态<br>        })<br><br><br>&gt;<h3>链式Promise</h3>
-
-<p>由于Promise对象的catch方法和then方法都返回一个Promise对象，所以可以实现Promise的链式调用，可以帮助我们陷入“回调金字塔”，例如当你的某个操作返回数据，然后你要基于这些数据完成另一个操作，再返回新的数据，然后再基于这些新的数据完成另一个新的操作，这时我们就可以使用Promise对象的链式调用，以增强代码的可读性，同时从一层嵌套一层的“回调金字塔”中挣脱出来。还是以异步请求举个例子。</p>
-<pre><code>function getData(url) {
-    return new Promise(function(resolve,reject){
-        var request;
-        if (window.XMLHttpRequest) {
-             request = new XMLHttpRequest();
-         } else {
-             request = new ActiveXObject();
-         }
-         request.open(&apos;GET&apos;,url);
-         request.send();
-         request.onload = function() {
-             if(request.status == 200){
-                  resolve(request.response)
-              }else{
-                   reject(Error(request.statusText));
-              }
-         }
-         request.onerror = function() {
-                reject(Error(&apos;fetch data error.&apos;))
-         }
-
-    })
-}
-
-getData(&apos;https://cnodejs.org/api/v1/topics&apos;).then(function(result){
-   var result = JSON.parse(result);
-   return getData(&apos;https://cnodejs.org/user/&apos;+result.data[0].author.loginname);//由于浏览器同源策略的原因，这个异步请求是失败的，这里只是示意
-}).then(function(result){
-   console.log(result);
-}).catch(function(error){
-   console.log(error);
-});
-</code></pre><blockquote>
-<h3>Promise的错误处理</h3>
-</blockquote>
-<p>通过前面的例子，我们也可以看到，Promise对象的错误由catch方法来捕获，传入catch方法的参数即为Promise发生错误时的回调函数。前面也提到了，catch方法的行为和调用跟Promise.prototype.then(undefined,rejected)相同，也就是说then方法里面传入的第二个参数rejected函数和传入catch方法的回调函数，都会在Promise对象状态变为”rejected”时被调用。</p>
+<h3 id="配置jenkins相关目录，并给予对应的权限"><a href="#配置jenkins相关目录，并给予对应的权限" class="headerlink" title="配置jenkins相关目录，并给予对应的权限"></a>配置jenkins相关目录，并给予对应的权限</h3></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /var/jenkins_home</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chown -R 1000  /var/jenkins_home</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h3 id="启动docker"><a href="#启动docker" class="headerlink" title="启动docker"></a>启动docker</h3></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> run -d -p 49002:8080 --name myjenkins -v /var/jenkins_home:/var/jenkins_home jenkins</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h3 id="初始化Jenkins"><a href="#初始化Jenkins" class="headerlink" title="初始化Jenkins"></a>初始化Jenkins</h3></blockquote>
+<p>在浏览器输入地址：http://你的服务器ip:49002，然后可以看到如下界面：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/b.png" alt=""></p>
+<p>然后打开/var/jenkins_home/secrets/initialAdminPassword文件找到秘钥并输入输入框，点击continue。</p>
+<blockquote>
+<h3 id="选择第一个安装配置"><a href="#选择第一个安装配置" class="headerlink" title="选择第一个安装配置"></a>选择第一个安装配置</h3></blockquote>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/c.png" alt=""></p>
+<p>点击左边的Install suggested plugns,然后会开始安装相关插件:</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/d.png" alt=""></p>
+<blockquote>
+<h3 id="配置Jenkins的admin用户"><a href="#配置Jenkins的admin用户" class="headerlink" title="配置Jenkins的admin用户"></a>配置Jenkins的admin用户</h3></blockquote>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/f.png" alt=""></p>
+<p>填好相关信息后点击 continue as admin:</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/g.png" alt=""></p>
+<blockquote>
+<h3 id="安装成功"><a href="#安装成功" class="headerlink" title="安装成功"></a>安装成功</h3></blockquote>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/h.png" alt=""></p>
 
       
     </div>
@@ -436,7 +398,7 @@ getData(&apos;https://cnodejs.org/api/v1/topics&apos;).then(function(result){
             </li>
             <li class="post-copyright-link">
               <strong>本文链接：</strong>
-              <a href="/2018/11/05/2016-08-25-about-promise/" title="简单理解ECMAScript2015中的Promise">2018/11/05/2016-08-25-about-promise/</a>
+              <a href="/2019/03/24/install-jenkins-with-docker/" title="Docker安装自动化部署工具Jenkins">2019/03/24/install-jenkins-with-docker/</a>
             </li>
             <li class="post-copyright-license">
               <strong>版权声明： </strong>
@@ -495,8 +457,8 @@ getData(&apos;https://cnodejs.org/api/v1/topics&apos;).then(function(result){
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/05/2016-05-29-about-closures/" rel="next" title="浅析JavaScript闭包">
-                <i class="fa fa-chevron-left"></i> 浅析JavaScript闭包
+              <a href="/2019/03/24/install-docker-on-centos7/" rel="next" title="在centos7上安装Docker">
+                <i class="fa fa-chevron-left"></i> 在centos7上安装Docker
               </a>
             
           </div>
@@ -504,10 +466,6 @@ getData(&apos;https://cnodejs.org/api/v1/topics&apos;).then(function(result){
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/05/2016-08-28-hello-react/" rel="prev" title="React初探">
-                React初探 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -632,7 +590,7 @@ getData(&apos;https://cnodejs.org/api/v1/topics&apos;).then(function(result){
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">Promise语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">Promise概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">Promise对象的原型：Promise.prototype</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">链式Promise</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">Promise的错误处理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#拉取docker-jenkins镜像"><span class="nav-number">1.</span> <span class="nav-text">拉取docker jenkins镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置jenkins相关目录，并给予对应的权限"><span class="nav-number">2.</span> <span class="nav-text">配置jenkins相关目录，并给予对应的权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动docker"><span class="nav-number">3.</span> <span class="nav-text">启动docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化Jenkins"><span class="nav-number">4.</span> <span class="nav-text">初始化Jenkins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择第一个安装配置"><span class="nav-number">5.</span> <span class="nav-text">选择第一个安装配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置Jenkins的admin用户"><span class="nav-number">6.</span> <span class="nav-text">配置Jenkins的admin用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装成功"><span class="nav-number">7.</span> <span class="nav-text">安装成功</span></a></li></ol></div>
             
 
           </div>
