@@ -79,17 +79,20 @@
 
 
 
-<meta name="description" content="本文为博客园汤姆大叔的深入理解JavaScript系列文章归档，原文地址：https://www.cnblogs.com/TomXu/archive/2011/12/15/2288411.html 深入理解JavaScript系列（1）：编写高质量JavaScript代码的基本要点 深入理解JavaScript系列（2）：揭秘命名函数表达式 深入理解JavaScript系列（3）：全面解析Modu">
+<meta name="description" content="今天搭上支付宝小程序扶持计划的末班车，以个人开发者身份获得一台2vCPU+4Gib的云服务器免费使用两个月和一个com域名免费使用一年。不想浪费这台服务器资源，所以我想在上面安装一些个人时间和项目管理工具，今天创建好服务器实例后，首先就给它装上了一个gitlab服务器，接下来简单说说安装的过程。 执行以下命令，使服务器的防火墙允许通过http或者ssh访问12$ sudo yum install">
 <meta property="og:type" content="article">
-<meta property="og:title" content="汤姆大叔-深入理解JavaScript系列">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/28/tom-thinking-in-javascript/index.html">
+<meta property="og:title" content="在centos6安装gitlab服务器">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2019/03/31/install-gitlab-on-centos6/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="本文为博客园汤姆大叔的深入理解JavaScript系列文章归档，原文地址：https://www.cnblogs.com/TomXu/archive/2011/12/15/2288411.html 深入理解JavaScript系列（1）：编写高质量JavaScript代码的基本要点 深入理解JavaScript系列（2）：揭秘命名函数表达式 深入理解JavaScript系列（3）：全面解析Modu">
+<meta property="og:description" content="今天搭上支付宝小程序扶持计划的末班车，以个人开发者身份获得一台2vCPU+4Gib的云服务器免费使用两个月和一个com域名免费使用一年。不想浪费这台服务器资源，所以我想在上面安装一些个人时间和项目管理工具，今天创建好服务器实例后，首先就给它装上了一个gitlab服务器，接下来简单说说安装的过程。 执行以下命令，使服务器的防火墙允许通过http或者ssh访问12$ sudo yum install">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-17T05:13:28.098Z">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/31/2d50c568c3c262755.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/31/38c7a52be4297abe9.png">
+<meta property="og:updated_time" content="2019-03-31T10:12:23.316Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="汤姆大叔-深入理解JavaScript系列">
-<meta name="twitter:description" content="本文为博客园汤姆大叔的深入理解JavaScript系列文章归档，原文地址：https://www.cnblogs.com/TomXu/archive/2011/12/15/2288411.html 深入理解JavaScript系列（1）：编写高质量JavaScript代码的基本要点 深入理解JavaScript系列（2）：揭秘命名函数表达式 深入理解JavaScript系列（3）：全面解析Modu">
+<meta name="twitter:title" content="在centos6安装gitlab服务器">
+<meta name="twitter:description" content="今天搭上支付宝小程序扶持计划的末班车，以个人开发者身份获得一台2vCPU+4Gib的云服务器免费使用两个月和一个com域名免费使用一年。不想浪费这台服务器资源，所以我想在上面安装一些个人时间和项目管理工具，今天创建好服务器实例后，首先就给它装上了一个gitlab服务器，接下来简单说说安装的过程。 执行以下命令，使服务器的防火墙允许通过http或者ssh访问12$ sudo yum install">
+<meta name="twitter:image" content="https://img.xiaoweihuang.me/images/2019/03/31/2d50c568c3c262755.png">
 
 
 
@@ -119,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/28/tom-thinking-in-javascript/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2019/03/31/install-gitlab-on-centos6/">
 
 
 
 
 
-  <title>汤姆大叔-深入理解JavaScript系列 | 前端农民工</title>
+  <title>在centos6安装gitlab服务器 | 前端农民工</title>
   
 
 
@@ -260,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/28/tom-thinking-in-javascript/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2019/03/31/install-gitlab-on-centos6/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -277,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">汤姆大叔-深入理解JavaScript系列</h1>
+          <h1 class="post-title" itemprop="name headline">在centos6安装gitlab服务器</h1>
         
 
         <div class="post-meta">
@@ -289,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-28T23:00:59+08:00">
-                2018-11-28
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-31T17:45:34+08:00">
+                2019-03-31
               </time>
             
 
@@ -312,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript基础系列/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript基础系列</span>
+                  <a href="/categories/VPS相关/" itemprop="url" rel="index">
+                    <span itemprop="name">VPS相关</span>
                   </a>
                 </span>
 
@@ -349,58 +352,14 @@
       
 
       
-        <p>本文为博客园汤姆大叔的深入理解JavaScript系列文章归档，原文地址：<a href="https://www.cnblogs.com/TomXu/archive/2011/12/15/2288411.html" target="_blank" rel="noopener">https://www.cnblogs.com/TomXu/archive/2011/12/15/2288411.html</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2011/12/28/2286877.html" target="_blank" rel="noopener">深入理解JavaScript系列（1）：编写高质量JavaScript代码的基本要点</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2011/12/29/2290308.html" target="_blank" rel="noopener">深入理解JavaScript系列（2）：揭秘命名函数表达式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2011/12/30/2288372.html" target="_blank" rel="noopener">深入理解JavaScript系列（3）：全面解析Module模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2011/12/31/2289423.html" target="_blank" rel="noopener">深入理解JavaScript系列（4）：立即调用的函数表达式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/05/2305453.html" target="_blank" rel="noopener">深入理解JavaScript系列（5）：强大的原型和原型链</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/06/2305513.html" target="_blank" rel="noopener">深入理解JavaScript系列（6）：S.O.L.I.D五大原则之单一职责SRP</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/09/2306329.html" target="_blank" rel="noopener">深入理解JavaScript系列（7）：S.O.L.I.D五大原则之开闭原则OCP</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/10/2310244.html" target="_blank" rel="noopener">深入理解JavaScript系列（8）：S.O.L.I.D五大原则之里氏替换原则LSP</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/11/2311956.html" target="_blank" rel="noopener">深入理解JavaScript系列（9）：根本没有“JSON对象”这回事！</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/12/2308594.html" target="_blank" rel="noopener">深入理解JavaScript系列（10）：JavaScript核心（晋级高手必读篇）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/13/2308101.html" target="_blank" rel="noopener">深入理解JavaScript系列（11）：执行上下文（Execution Contexts</a>）</p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/16/2309728.html" target="_blank" rel="noopener">深入理解JavaScript系列（12）：变量对象（Variable Object）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/17/2310479.html" target="_blank" rel="noopener">深入理解JavaScript系列（13）：This? Yes, this!</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/18/2312463.html" target="_blank" rel="noopener">深入理解JavaScript系列（14）：作用域链(Scope Chain)</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/30/2326372.html" target="_blank" rel="noopener">深入理解JavaScript系列（15）：函数（Functions）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/01/31/2330252.html" target="_blank" rel="noopener">深入理解JavaScript系列（16）：闭包（Closures）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/03/2330295.html" target="_blank" rel="noopener">深入理解JavaScript系列（17）：面向对象编程之一般理论</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/06/2330609.html" target="_blank" rel="noopener">深入理解JavaScript系列（18）：面向对象编程之ECMAScript实现</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/08/2341439.html" target="_blank" rel="noopener">深入理解JavaScript系列（19）：求值策略</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/10/2342098.html" target="_blank" rel="noopener">深入理解JavaScript系列（20）：《你真懂JavaScript吗？》答案详解</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/14/2330137.html" target="_blank" rel="noopener">深入理解JavaScript系列（21）：S.O.L.I.D五大原则之接口隔离原则ISP</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/15/2330143.html" target="_blank" rel="noopener">深入理解JavaScript系列（22）：S.O.L.I.D五大原则之依赖倒置原则DIP</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/16/2351331.html" target="_blank" rel="noopener">深入理解JavaScript系列（23）：JavaScript与DOM（上）——也适用于新手</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/17/2351938.html" target="_blank" rel="noopener">深入理解JavaScript系列（24）：JavaScript与DOM（下）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/20/2352817.html" target="_blank" rel="noopener">深入理解JavaScript系列（25）：设计模式之单例模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/21/2352994.html" target="_blank" rel="noopener">深入理解JavaScript系列（26）：设计模式之构造函数模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/22/2353341.html" target="_blank" rel="noopener">深入理解JavaScript系列（27）：设计模式之建造者模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/23/2353389.html" target="_blank" rel="noopener">深入理解JavaScript系列（28）：设计模式之工厂模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/24/2353434.html" target="_blank" rel="noopener">深入理解JavaScript系列（29）：设计模式之装饰者模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/28/2353448.html" target="_blank" rel="noopener">深入理解JavaScript系列（30）：设计模式之外观模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/02/29/2354979.html" target="_blank" rel="noopener">深入理解JavaScript系列（31）：设计模式之代理模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/03/02/2355128.html" target="_blank" rel="noopener">深入理解JavaScript系列（32）：设计模式之观察者模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/03/05/2358552.html" target="_blank" rel="noopener">深入理解JavaScript系列（33）：设计模式之策略模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/03/08/2358593.html" target="_blank" rel="noopener">深入理解JavaScript系列（34）：设计模式之命令模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/03/09/2358903.html" target="_blank" rel="noopener">深入理解JavaScript系列（35）：设计模式之迭代器模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/03/13/2374789.html" target="_blank" rel="noopener">深入理解JavaScript系列（36）：设计模式之中介者模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/09/2379774.html" target="_blank" rel="noopener">深入理解JavaScript系列（37）：设计模式之享元模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/10/2435381.html" target="_blank" rel="noopener">深入理解JavaScript系列（38）：设计模式之职责链模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/11/2435452.html" target="_blank" rel="noopener">深入理解JavaScript系列（39）：设计模式之适配器模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/12/2435530.html" target="_blank" rel="noopener">深入理解JavaScript系列（40）：设计模式之组合模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/13/2436371.html" target="_blank" rel="noopener">深入理解JavaScript系列（41）：设计模式之模板方法</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/16/2436460.html" target="_blank" rel="noopener">深入理解JavaScript系列（42）：设计模式之原型模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/18/2437099.html" target="_blank" rel="noopener">深入理解JavaScript系列（43）：设计模式之状态模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/19/2437321.html" target="_blank" rel="noopener">深入理解JavaScript系列（44）：设计模式之桥接模式</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/23/2438005.html" target="_blank" rel="noopener">深入理解JavaScript系列（45）：代码复用模式（避免篇）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/24/2438050.html" target="_blank" rel="noopener">深入理解JavaScript系列（46）：代码复用模式（推荐篇）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/25/2439527.html" target="_blank" rel="noopener">深入理解JavaScript系列（47）：对象创建模式（上篇）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/04/26/2443010.html" target="_blank" rel="noopener">深入理解JavaScript系列（48）：对象创建模式（下篇）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/07/23/2580701.html" target="_blank" rel="noopener">深入理解JavaScript系列（49）：Function模式（上篇）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/07/24/2581239.html" target="_blank" rel="noopener">深入理解JavaScript系列（50）：Function模式（下篇）</a></p>
-<p><a href="http://www.cnblogs.com/TomXu/archive/2012/07/26/2581268.html" target="_blank" rel="noopener">深入理解JavaScript系列（结局篇）</a></p>
+        <p>今天搭上支付宝小程序扶持计划的末班车，以个人开发者身份获得一台2vCPU+4Gib的云服务器免费使用两个月和一个com域名免费使用一年。不想浪费这台服务器资源，所以我想在上面安装一些个人时间和项目管理工具，今天创建好服务器实例后，首先就给它装上了一个gitlab服务器，接下来简单说说安装的过程。</p>
+<h3 id="执行以下命令，使服务器的防火墙允许通过http或者ssh访问"><a href="#执行以下命令，使服务器的防火墙允许通过http或者ssh访问" class="headerlink" title="执行以下命令，使服务器的防火墙允许通过http或者ssh访问"></a>执行以下命令，使服务器的防火墙允许通过http或者ssh访问</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install -y curl policycoreutils-python openssh-server cronie</span><br><span class="line">$ sudo lokkit -s http -s ssh</span><br></pre></td></tr></table></figure>
+<h3 id="安装-Postfix-以发送通知邮件"><a href="#安装-Postfix-以发送通知邮件" class="headerlink" title="安装 Postfix 以发送通知邮件"></a>安装 Postfix 以发送通知邮件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install postfix</span><br><span class="line">$ sudo service postfix start</span><br><span class="line">$ sudo chkconfig postfix on</span><br></pre></td></tr></table></figure>
+<h3 id="获取-gitlab-安装包"><a href="#获取-gitlab-安装包" class="headerlink" title="获取 gitlab 安装包"></a>获取 gitlab 安装包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash</span><br></pre></td></tr></table></figure>
+<h3 id="安装-gitlab-EXTERNAL-URL-即为你的gitlab访问地址"><a href="#安装-gitlab-EXTERNAL-URL-即为你的gitlab访问地址" class="headerlink" title="安装 gitlab, EXTERNAL_URL 即为你的gitlab访问地址"></a>安装 gitlab, EXTERNAL_URL 即为你的gitlab访问地址</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo EXTERNAL_URL=&quot;https://gitlab.example.com&quot; yum -y install gitlab-ee</span><br></pre></td></tr></table></figure>
+<h3 id="安装完成后，在浏览器打开，看到如下设置密码界面，表示安装成功"><a href="#安装完成后，在浏览器打开，看到如下设置密码界面，表示安装成功" class="headerlink" title="安装完成后，在浏览器打开，看到如下设置密码界面，表示安装成功"></a>安装完成后，在浏览器打开，看到如下设置密码界面，表示安装成功</h3><p><img src="https://img.xiaoweihuang.me/images/2019/03/31/2d50c568c3c262755.png" alt=""></p>
+<h3 id="重置密码后，以root作为用户名，刚刚设置的密码作为密码可以登录到管理后台："><a href="#重置密码后，以root作为用户名，刚刚设置的密码作为密码可以登录到管理后台：" class="headerlink" title="重置密码后，以root作为用户名，刚刚设置的密码作为密码可以登录到管理后台："></a>重置密码后，以root作为用户名，刚刚设置的密码作为密码可以登录到管理后台：</h3><p><img src="https://img.xiaoweihuang.me/images/2019/03/31/38c7a52be4297abe9.png" alt=""></p>
+<p>到这里，gitlab就安装完成了。</p>
 
       
     </div>
@@ -412,7 +371,7 @@
             </li>
             <li class="post-copyright-link">
               <strong>本文链接：</strong>
-              <a href="/2018/11/28/tom-thinking-in-javascript/" title="汤姆大叔-深入理解JavaScript系列">2018/11/28/tom-thinking-in-javascript/</a>
+              <a href="/2019/03/31/install-gitlab-on-centos6/" title="在centos6安装gitlab服务器">2019/03/31/install-gitlab-on-centos6/</a>
             </li>
             <li class="post-copyright-license">
               <strong>版权声明： </strong>
@@ -471,8 +430,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/28/about-object-inheritance/" rel="next" title="JavaScript基础回顾（四）：如何实现对象的继承">
-                <i class="fa fa-chevron-left"></i> JavaScript基础回顾（四）：如何实现对象的继承
+              <a href="/2019/03/31/update-jenkins-with-docker/" rel="next" title="docker升级Jenkins容器">
+                <i class="fa fa-chevron-left"></i> docker升级Jenkins容器
               </a>
             
           </div>
@@ -480,10 +439,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/12/01/vue-component/" rel="prev" title="如何从零开始封装一个Vue组件">
-                如何从零开始封装一个Vue组件 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -535,8 +490,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -589,6 +553,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#执行以下命令，使服务器的防火墙允许通过http或者ssh访问"><span class="nav-number">1.</span> <span class="nav-text">执行以下命令，使服务器的防火墙允许通过http或者ssh访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Postfix-以发送通知邮件"><span class="nav-number">2.</span> <span class="nav-text">安装 Postfix 以发送通知邮件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取-gitlab-安装包"><span class="nav-number">3.</span> <span class="nav-text">获取 gitlab 安装包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-gitlab-EXTERNAL-URL-即为你的gitlab访问地址"><span class="nav-number">4.</span> <span class="nav-text">安装 gitlab, EXTERNAL_URL 即为你的gitlab访问地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装完成后，在浏览器打开，看到如下设置密码界面，表示安装成功"><span class="nav-number">5.</span> <span class="nav-text">安装完成后，在浏览器打开，看到如下设置密码界面，表示安装成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重置密码后，以root作为用户名，刚刚设置的密码作为密码可以登录到管理后台："><span class="nav-number">6.</span> <span class="nav-text">重置密码后，以root作为用户名，刚刚设置的密码作为密码可以登录到管理后台：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
