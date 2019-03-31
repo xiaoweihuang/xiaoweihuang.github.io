@@ -86,18 +86,18 @@
 <meta property="og:site_name" content="前端农民工">
 <meta property="og:description" content="刚刚安装好Docker，现在接着安装自动化部署工具Jenkins。  拉取docker jenkins镜像 1$ docker pull jenkins:latest   配置jenkins相关目录，并给予对应的权限 1$ mkdir -p /var/jenkins_home 1$ chown -R 1000  /var/jenkins_home  启动docker 1$docker run -d">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/a.png">
-<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/b.png">
-<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/c.png">
-<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/d.png">
-<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/f.png">
-<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/g.png">
-<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/24/h.png">
-<meta property="og:updated_time" content="2019-03-24T08:31:24.151Z">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/31/a.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/31/b.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/31/c.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/31/d.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/31/f.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/31/g.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/03/31/h.png">
+<meta property="og:updated_time" content="2019-03-31T05:28:36.139Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker安装自动化部署工具Jenkins">
 <meta name="twitter:description" content="刚刚安装好Docker，现在接着安装自动化部署工具Jenkins。  拉取docker jenkins镜像 1$ docker pull jenkins:latest   配置jenkins相关目录，并给予对应的权限 1$ mkdir -p /var/jenkins_home 1$ chown -R 1000  /var/jenkins_home  启动docker 1$docker run -d">
-<meta name="twitter:image" content="https://img.xiaoweihuang.me/images/2019/03/24/a.png">
+<meta name="twitter:image" content="https://img.xiaoweihuang.me/images/2019/03/31/a.png">
 
 
 
@@ -361,7 +361,7 @@
 <blockquote>
 <h3 id="拉取docker-jenkins镜像"><a href="#拉取docker-jenkins镜像" class="headerlink" title="拉取docker jenkins镜像"></a>拉取docker jenkins镜像</h3></blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull jenkins:latest</span><br></pre></td></tr></table></figure>
-<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/a.png" alt=""></p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/31/a.png" alt=""></p>
 <blockquote>
 <h3 id="配置jenkins相关目录，并给予对应的权限"><a href="#配置jenkins相关目录，并给予对应的权限" class="headerlink" title="配置jenkins相关目录，并给予对应的权限"></a>配置jenkins相关目录，并给予对应的权限</h3></blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /var/jenkins_home</span><br></pre></td></tr></table></figure>
@@ -372,21 +372,21 @@
 <blockquote>
 <h3 id="初始化Jenkins"><a href="#初始化Jenkins" class="headerlink" title="初始化Jenkins"></a>初始化Jenkins</h3></blockquote>
 <p>在浏览器输入地址：http://你的服务器ip:49002，然后可以看到如下界面：</p>
-<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/b.png" alt=""></p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/31/b.png" alt=""></p>
 <p>然后打开/var/jenkins_home/secrets/initialAdminPassword文件找到秘钥并输入输入框，点击continue。</p>
 <blockquote>
 <h3 id="选择第一个安装配置"><a href="#选择第一个安装配置" class="headerlink" title="选择第一个安装配置"></a>选择第一个安装配置</h3></blockquote>
-<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/c.png" alt=""></p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/31/c.png" alt=""></p>
 <p>点击左边的Install suggested plugns,然后会开始安装相关插件:</p>
-<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/d.png" alt=""></p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/31/d.png" alt=""></p>
 <blockquote>
 <h3 id="配置Jenkins的admin用户"><a href="#配置Jenkins的admin用户" class="headerlink" title="配置Jenkins的admin用户"></a>配置Jenkins的admin用户</h3></blockquote>
-<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/f.png" alt=""></p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/31/f.png" alt=""></p>
 <p>填好相关信息后点击 continue as admin:</p>
-<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/g.png" alt=""></p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/31/g.png" alt=""></p>
 <blockquote>
 <h3 id="安装成功"><a href="#安装成功" class="headerlink" title="安装成功"></a>安装成功</h3></blockquote>
-<p><img src="https://img.xiaoweihuang.me/images/2019/03/24/h.png" alt=""></p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/03/31/h.png" alt=""></p>
 
       
     </div>
