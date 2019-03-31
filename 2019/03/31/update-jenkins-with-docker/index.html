@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象： new Date(&amp;apos;2019-01-07 23:46:50&amp;apos;) 然后分别使用getHours()和getMinu">
+<meta name="description" content="右键复制下载链接   登入你的jenkins容器 12#using host&apos;s root with -u 0$ docker container exec -u 0 -it jenkins bash  下载更新，地址为第一步复制出来的链接 12# inside the container, using 2.89.2 as example$ wget http://updates.jenkins">
 <meta property="og:type" content="article">
-<meta property="og:title" content="new Date()方法在Safari浏览器的一个bug">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2019/01/07/Safari-new-Date-bug/index.html">
+<meta property="og:title" content="docker升级Jenkins容器">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2019/03/31/update-jenkins-with-docker/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象： new Date(&amp;apos;2019-01-07 23:46:50&amp;apos;) 然后分别使用getHours()和getMinu">
+<meta property="og:description" content="右键复制下载链接   登入你的jenkins容器 12#using host&apos;s root with -u 0$ docker container exec -u 0 -it jenkins bash  下载更新，地址为第一步复制出来的链接 12# inside the container, using 2.89.2 as example$ wget http://updates.jenkins">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-17T05:13:59.803Z">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*O1IZRq9c7cCb7gc1PceQGQ.png">
+<meta property="og:updated_time" content="2019-03-31T03:10:12.297Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="new Date()方法在Safari浏览器的一个bug">
-<meta name="twitter:description" content="今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象： new Date(&amp;apos;2019-01-07 23:46:50&amp;apos;) 然后分别使用getHours()和getMinu">
+<meta name="twitter:title" content="docker升级Jenkins容器">
+<meta name="twitter:description" content="右键复制下载链接   登入你的jenkins容器 12#using host&apos;s root with -u 0$ docker container exec -u 0 -it jenkins bash  下载更新，地址为第一步复制出来的链接 12# inside the container, using 2.89.2 as example$ wget http://updates.jenkins">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/1600/1*O1IZRq9c7cCb7gc1PceQGQ.png">
 
 
 
@@ -119,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2019/01/07/Safari-new-Date-bug/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2019/03/31/update-jenkins-with-docker/">
 
 
 
 
 
-  <title>new Date()方法在Safari浏览器的一个bug | 前端农民工</title>
+  <title>docker升级Jenkins容器 | 前端农民工</title>
   
 
 
@@ -260,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2019/01/07/Safari-new-Date-bug/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2019/03/31/update-jenkins-with-docker/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -277,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">new Date()方法在Safari浏览器的一个bug</h1>
+          <h1 class="post-title" itemprop="name headline">docker升级Jenkins容器</h1>
         
 
         <div class="post-meta">
@@ -289,8 +291,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-07T23:39:32+08:00">
-                2019-01-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-31T10:53:19+08:00">
+                2019-03-31
               </time>
             
 
@@ -299,28 +301,6 @@
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript基础系列/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript基础系列</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -349,11 +329,25 @@
       
 
       
-        <p>今天测试同学给我提了个bug,就是在一个商品信息的卡片中，有个字段是显示商品的上新时间，后端返回给前端是一个这样格式的字符串：”2019-01-07 23:46:50”，前端从里面提取时和分，因为这个字符串可以直接转成一个Date对象，所以二话不说就new一个对象：</p>
-<pre><code>new Date(&apos;2019-01-07 23:46:50&apos;)
-</code></pre><p>然后分别使用getHours()和getMinutes()方法获取到时和分，并渲染到页面上。</p>
-<p>测试同学进行测试时，就发现这个奇怪的问题了，chrome浏览器的模拟器显示正常，Android手机显示正常，偏偏在IOS手机上显示NaN:NaN。</p>
-<p>经查阅资料，这大概是Safari浏览器的一个bug，需要先将字符串里面的“-”换成“/”后在调用new方法，然后就没问题了。</p>
+        <blockquote>
+<h3 id="右键复制下载链接"><a href="#右键复制下载链接" class="headerlink" title="右键复制下载链接"></a>右键复制下载链接</h3></blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*O1IZRq9c7cCb7gc1PceQGQ.png" alt=""></p>
+<blockquote>
+<h3 id="登入你的jenkins容器"><a href="#登入你的jenkins容器" class="headerlink" title="登入你的jenkins容器"></a>登入你的jenkins容器</h3></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#using host's root with -u 0</span></span><br><span class="line">$ docker container <span class="built_in">exec</span> -u 0 -it jenkins bash</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h3 id="下载更新，地址为第一步复制出来的链接"><a href="#下载更新，地址为第一步复制出来的链接" class="headerlink" title="下载更新，地址为第一步复制出来的链接"></a>下载更新，地址为第一步复制出来的链接</h3></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># inside the container, using 2.89.2 as example</span></span><br><span class="line">$ wget http://updates.jenkins-ci.org/download/war/2.89.2/jenkins.war</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h3 id="移动下载的源文件到合适的位置"><a href="#移动下载的源文件到合适的位置" class="headerlink" title="移动下载的源文件到合适的位置"></a>移动下载的源文件到合适的位置</h3></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mv ./jenkins.war /usr/share/jenkins</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h3 id="修改权限"><a href="#修改权限" class="headerlink" title="修改权限"></a>修改权限</h3></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chown jenkins:jenkins /usr/share/jenkins/jenkins.war (updated)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h3 id="退出容器并重启容器"><a href="#退出容器并重启容器" class="headerlink" title="退出容器并重启容器"></a>退出容器并重启容器</h3></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># exit contaienr (inside container)</span></span><br><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># restart container (from your server)</span></span><br><span class="line">$ docker container restart jenkins</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -365,7 +359,7 @@
             </li>
             <li class="post-copyright-link">
               <strong>本文链接：</strong>
-              <a href="/2019/01/07/Safari-new-Date-bug/" title="new Date()方法在Safari浏览器的一个bug">2019/01/07/Safari-new-Date-bug/</a>
+              <a href="/2019/03/31/update-jenkins-with-docker/" title="docker升级Jenkins容器">2019/03/31/update-jenkins-with-docker/</a>
             </li>
             <li class="post-copyright-license">
               <strong>版权声明： </strong>
@@ -424,8 +418,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/06/get-wechat-openid-and-userinfo/" rel="next" title="微信公众号获取OpenId和用户基本信息">
-                <i class="fa fa-chevron-left"></i> 微信公众号获取OpenId和用户基本信息
+              <a href="/2019/03/24/install-jenkins-with-docker/" rel="next" title="Docker安装自动化部署工具Jenkins">
+                <i class="fa fa-chevron-left"></i> Docker安装自动化部署工具Jenkins
               </a>
             
           </div>
@@ -433,10 +427,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/01/13/a-vue-backtotop-component/" rel="prev" title="分享一个 Vue 实现的回到顶部组件">
-                分享一个 Vue 实现的回到顶部组件 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -488,8 +478,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -542,6 +541,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#右键复制下载链接"><span class="nav-number">1.</span> <span class="nav-text">右键复制下载链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#登入你的jenkins容器"><span class="nav-number">2.</span> <span class="nav-text">登入你的jenkins容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载更新，地址为第一步复制出来的链接"><span class="nav-number">3.</span> <span class="nav-text">下载更新，地址为第一步复制出来的链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移动下载的源文件到合适的位置"><span class="nav-number">4.</span> <span class="nav-text">移动下载的源文件到合适的位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改权限"><span class="nav-number">5.</span> <span class="nav-text">修改权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#退出容器并重启容器"><span class="nav-number">6.</span> <span class="nav-text">退出容器并重启容器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
