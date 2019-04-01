@@ -79,21 +79,31 @@
 
 
 
-<meta name="description" content="create-react-app是react官方提供的快速搭建react项目的脚手架工具，它的安装和使用都非常方便，在命令行工具执行以下命令即可完成create-react-app的安装： npm install -g create-react-app 然后执行以下命令即可创建一个react项目： create-react-app helloworld 初始化后的react项目目录结构如下图所示：">
+<meta name="description" content="前段时间在服务器上安装了docker,同时也在docker里面部署了一个jenkins容器，由于我的服务器在刚买的时候已经装好了lnmp环境，所以我就没有在docker里面部署nginx服务器了，本次实践就是直接修改nignx配置，网站的根目录直接使用vue项目打包后的dist目录，当然如果后期要继续玩jenkins自动化部署以及灾备相关实践的话，我估计还会得在docker里面部署一个nignx容">
 <meta property="og:type" content="article">
-<meta property="og:title" content="create-react-app工具两种按需引入antd组件的方式">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2018/11/14/two-ways-to-import-antd-into-react-app/index.html">
+<meta property="og:title" content="jenkins自动化部署github上的vue项目">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2019/04/01/jenkins-deploy-github-vue-project-to-nginx/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="create-react-app是react官方提供的快速搭建react项目的脚手架工具，它的安装和使用都非常方便，在命令行工具执行以下命令即可完成create-react-app的安装： npm install -g create-react-app 然后执行以下命令即可创建一个react项目： create-react-app helloworld 初始化后的react项目目录结构如下图所示：">
+<meta property="og:description" content="前段时间在服务器上安装了docker,同时也在docker里面部署了一个jenkins容器，由于我的服务器在刚买的时候已经装好了lnmp环境，所以我就没有在docker里面部署nginx服务器了，本次实践就是直接修改nignx配置，网站的根目录直接使用vue项目打包后的dist目录，当然如果后期要继续玩jenkins自动化部署以及灾备相关实践的话，我估计还会得在docker里面部署一个nignx容">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.imgur.com/ZGkUdgO.png">
-<meta property="og:image" content="https://i.imgur.com/tpmgSfn.png">
-<meta property="og:image" content="https://i.imgur.com/6sj9SAv.png">
-<meta property="og:updated_time" content="2019-03-17T05:13:08.093Z">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j1.2.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j2.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j3.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j4.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j5.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j6.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j7.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j8b365dcada6b2c383.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j9.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j10.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j11.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j13.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j14.png">
+<meta property="og:updated_time" content="2019-04-01T16:22:45.709Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="create-react-app工具两种按需引入antd组件的方式">
-<meta name="twitter:description" content="create-react-app是react官方提供的快速搭建react项目的脚手架工具，它的安装和使用都非常方便，在命令行工具执行以下命令即可完成create-react-app的安装： npm install -g create-react-app 然后执行以下命令即可创建一个react项目： create-react-app helloworld 初始化后的react项目目录结构如下图所示：">
-<meta name="twitter:image" content="https://i.imgur.com/ZGkUdgO.png">
+<meta name="twitter:title" content="jenkins自动化部署github上的vue项目">
+<meta name="twitter:description" content="前段时间在服务器上安装了docker,同时也在docker里面部署了一个jenkins容器，由于我的服务器在刚买的时候已经装好了lnmp环境，所以我就没有在docker里面部署nginx服务器了，本次实践就是直接修改nignx配置，网站的根目录直接使用vue项目打包后的dist目录，当然如果后期要继续玩jenkins自动化部署以及灾备相关实践的话，我估计还会得在docker里面部署一个nignx容">
+<meta name="twitter:image" content="https://img.xiaoweihuang.me/images/2019/04/01/j1.2.png">
 
 
 
@@ -123,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/11/14/two-ways-to-import-antd-into-react-app/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2019/04/01/jenkins-deploy-github-vue-project-to-nginx/">
 
 
 
 
 
-  <title>create-react-app工具两种按需引入antd组件的方式 | 前端农民工</title>
+  <title>jenkins自动化部署github上的vue项目 | 前端农民工</title>
   
 
 
@@ -264,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/11/14/two-ways-to-import-antd-into-react-app/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2019/04/01/jenkins-deploy-github-vue-project-to-nginx/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -281,7 +291,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">create-react-app工具两种按需引入antd组件的方式</h1>
+          <h1 class="post-title" itemprop="name headline">jenkins自动化部署github上的vue项目</h1>
         
 
         <div class="post-meta">
@@ -293,8 +303,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-14T20:41:50+08:00">
-                2018-11-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-01T23:05:03+08:00">
+                2019-04-01
               </time>
             
 
@@ -316,8 +326,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/react相关/" itemprop="url" rel="index">
-                    <span itemprop="name">react相关</span>
+                  <a href="/categories/vue相关/" itemprop="url" rel="index">
+                    <span itemprop="name">vue相关</span>
                   </a>
                 </span>
 
@@ -353,162 +363,33 @@
       
 
       
-        <p>create-react-app是react官方提供的快速搭建react项目的脚手架工具，它的安装和使用都非常方便，在命令行工具执行以下命令即可完成create-react-app的安装：</p>
-<pre><code>npm install -g create-react-app
-</code></pre><p>然后执行以下命令即可创建一个react项目：</p>
-<pre><code>create-react-app helloworld
-</code></pre><p>初始化后的react项目目录结构如下图所示：</p>
-<p><img src="https://i.imgur.com/ZGkUdgO.png" alt=""></p>
-<p>然后执行npm start即可启动项目。</p>
-<p>antd是一个非常好用的框架，有时我们可能会需要在使用create-react-app创建的项目中使用它，但是如果把antd全局引入了的话，打包后的体积会特别大，所以比较好的方式是按需引入项目中需要使用的组件。如何实现按需引入呢？下面我介绍两种方式，其中一种是antd官方提供的方法，另一种则是执行npm run eject后在webpack配置文件中配置按需引入。</p>
-<blockquote>
-<h3 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h3></blockquote>
-<p>首先安装react-app-rewired：</p>
-<pre><code>npm install --save react-app-rewired
-</code></pre><p>安装完后修改package.json文件里的配置：</p>
-<pre><code>&quot;scripts&quot;: {
-    -   &quot;start&quot;: &quot;react-scripts start&quot;,
-    +   &quot;start&quot;: &quot;react-app-rewired start&quot;,
-    -   &quot;build&quot;: &quot;react-scripts build&quot;,
-    +   &quot;build&quot;: &quot;react-app-rewired build&quot;,
-    -   &quot;test&quot;: &quot;react-scripts test&quot;,
-    +   &quot;test&quot;: &quot;react-app-rewired test&quot;,
-}
-</code></pre><p>由于我们需要按需加载组件的代码和样式，所以还需要安装babel-plugin-import插件：</p>
-<pre><code>npm install --save babel-plugin-import
-</code></pre><p>然后在项目根目录创建一个 config-overrides.js 将以下内容写入这个配置文件用于修改默认配置,：</p>
-<pre><code>const { injectBabelPlugin } = require(&apos;react-app-rewired&apos;);
-
- module.exports = function override(config, env) {
-   config = injectBabelPlugin(
-    [&apos;import&apos;, { libraryName: &apos;antd&apos;, libraryDirectory: &apos;es&apos;, style: &apos;css&apos; }],
-    config,
-   );
-   return config;
-};
-</code></pre><p>接下来重启一下项目，即可在组件中使用以来命令按需引入antd里面的组件：</p>
-<pre><code>import { Button } from &apos;antd&apos; // 引入antd的Button组件
-</code></pre><blockquote>
-<h3 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h3></blockquote>
-<p>使用create-react-app创建好项目后，我们需要先执行npm run eject以让webpack的配置文件显示出来，这个过程是不可逆的，执行这个命令后，在项目的根目录下面会多一个config文件夹，里面存放的是webpack相关的配置文件：</p>
-<p><img src="https://i.imgur.com/tpmgSfn.png" alt=""></p>
-<p>接下来需要对webpack.config.dev.js和webpack.config.prod.js两个文件做相同的修改：</p>
-<p>一个是babel-loader中的plugins增加对atnd的支持：</p>
-<pre><code>// Process application JS with Babel.
-      // The preset includes JSX, Flow, and some ESnext features.
-      {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
-        include: paths.appSrc,
-        loader: require.resolve(&apos;babel-loader&apos;),
-        options: {
-          customize: require.resolve(
-            &apos;babel-preset-react-app/webpack-overrides&apos;
-          ),
-
-          plugins: [
-            [
-              require.resolve(&apos;babel-plugin-named-asset-import&apos;),
-              {
-                loaderMap: {
-                  svg: {
-                    ReactComponent: &apos;@svgr/webpack?-prettier,-svgo![path]&apos;,
-                  },
-                },
-              },
-            ],
-            [&apos;import&apos;, [{ libraryName: &quot;antd&quot;, style: true }]] // 新添加的一行
-          ],
-          // This is a feature of `babel-loader` for webpack (not Babel itself).
-          // It enables caching results in ./node_modules/.cache/babel-loader/
-          // directory for faster rebuilds.
-          cacheDirectory: true,
-          // Don&apos;t waste time on Gzipping the cache
-          cacheCompression: false,
-        },
-      },
-</code></pre><p>还有一点，同样也需要安装babel-plugin-import插件：</p>
-<pre><code>npm install --save babel-plugin-import
-</code></pre><p>由于antd的样式是用less写的，所以还需要先安装less-loader，然后再修改webpack.config.dev.js和webpack.config.prod.js里的配置：</p>
-<pre><code>npm install --save less-loader
-</code></pre><p>修改地方一(cssRegex)：</p>
-<pre><code>// style files regexes
-const cssRegex = /\.css|less$/; // 添加|less
-const cssModuleRegex = /\.module\.css$/;
-const sassRegex = /\.(scss|sass)$/;
-const sassModuleRegex = /\.module\.(scss|sass)$/;
-</code></pre><p>修改地方二（getStyleLoaders函数）：</p>
-<pre><code>// common function to get style loaders
-const getStyleLoaders = (cssOptions, preProcessor) =&gt; {
-  const loaders = [
-    require.resolve(&apos;style-loader&apos;),
-    {
-      loader: require.resolve(&apos;css-loader&apos;),
-      options: cssOptions,
-    },
-    {
-      // Options for PostCSS as we reference these options twice
-      // Adds vendor prefixing based on your specified browser support in
-      // package.json
-      loader: require.resolve(&apos;postcss-loader&apos;),
-      options: {
-        // Necessary for external CSS imports to work
-        // https://github.com/facebook/create-react-app/issues/2677
-        ident: &apos;postcss&apos;,
-        plugins: () =&gt; [
-          require(&apos;postcss-flexbugs-fixes&apos;),
-          require(&apos;postcss-preset-env&apos;)({
-            autoprefixer: {
-              flexbox: &apos;no-2009&apos;,
-            },
-            stage: 3,
-          }),
-        ],
-      },
-    },
-    {
-      loader: require.resolve(&apos;less-loader&apos;)
-    }, // 增加 less 的loader
-  ];
-  if (preProcessor) {
-    loaders.push(require.resolve(preProcessor));
-  }
-  return loaders;
-};
-</code></pre><p>最后可以测试一下效果，修改一下App.js:</p>
-<pre><code>import React, { Component } from &apos;react&apos;;
-import { Button } from &apos;antd&apos;;
-import logo from &apos;./logo.svg&apos;;
-import &apos;./App.css&apos;;
-
-class App extends Component {
-  render() {
-    return (
-      &lt;div className=&quot;App&quot;&gt;
-        &lt;header className=&quot;App-header&quot;&gt;
-          &lt;img src={logo} className=&quot;App-logo&quot; alt=&quot;logo&quot; /&gt;
-          &lt;p&gt;
-            Edit &lt;code&gt;src/App.js&lt;/code&gt; and save to reload.
-          &lt;/p&gt;
-          &lt;p&gt;
-            &lt;Button type=&quot;primary&quot;&gt;按钮&lt;/Button&gt;
-          &lt;/p&gt;
-          &lt;a
-            className=&quot;App-link&quot;
-            href=&quot;https://reactjs.org&quot;
-            target=&quot;_blank&quot;
-            rel=&quot;noopener noreferrer&quot;
-          &gt;
-            Learn React
-          &lt;/a&gt;
-        &lt;/header&gt;
-      &lt;/div&gt;
-    );
-  }
-}
-
-export default App;
-</code></pre><p>然后启动项目，可以看到效果：</p>
-<p><img src="https://i.imgur.com/6sj9SAv.png" alt=""></p>
+        <p>前段时间在服务器上安装了docker,同时也在docker里面部署了一个jenkins容器，由于我的服务器在刚买的时候已经装好了lnmp环境，所以我就没有在docker里面部署nginx服务器了，本次实践就是直接修改nignx配置，网站的根目录直接使用vue项目打包后的dist目录，当然如果后期要继续玩jenkins自动化部署以及灾备相关实践的话，我估计还会得在docker里面部署一个nignx容器，这个后面再说。这篇博客我先简单说说如何自动化部署托管在github上的vue项目。</p>
+<h3 id="jenkins插件安装"><a href="#jenkins插件安装" class="headerlink" title="jenkins插件安装"></a>jenkins插件安装</h3><p>安装 Publish Over SSH 、Git plugin 、NodeJS Plugin 插件</p>
+<h3 id="在jenkins管理面板新建一个任务"><a href="#在jenkins管理面板新建一个任务" class="headerlink" title="在jenkins管理面板新建一个任务"></a>在jenkins管理面板新建一个任务</h3><p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j1.2.png" alt=""></p>
+<p>输入任务名称，并选择构建一个自由风格的软件项目，然后点击OK.</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j2.png" alt=""></p>
+<p>选中General，然后选填你的任务描述，然后点击Source Code Management，</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j3.png" alt=""></p>
+<p>选择git，并把vue项目地址填入项目URL，再点击Build Triggers,</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j4.png" alt=""></p>
+<p>勾选GitHub hook trigger for GITScm polling，然后点击Build Environment,</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j5.png" alt=""></p>
+<p>勾选Provide Node &amp; npm bin/ folder to PATH，并选择NodeJS Installation版本，然后点击Build,</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j6.png" alt=""></p>
+<p>选择【执行shell】，然后输入以下命令：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j7.png" alt=""></p>
+<p>然后点击save即完成jenkins任务的创建，但现在还无法部署vue项目，因为jenkins跟github还没有关联上。</p>
+<p>jenkins管理面板点击系统管理，再点击系统设置，</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j8b365dcada6b2c383.png" alt=""></p>
+<p>覆盖Hook URL处勾选为Github指定另外一个Hook URL，然后把这个URL设置到Github的Webhooks里面：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j9.png" alt=""></p>
+<p>到这里就完成jenkin对github上的vue项目的自动化部署配置了。</p>
+<h3 id="执行构建任务并部署到nginx服务器"><a href="#执行构建任务并部署到nginx服务器" class="headerlink" title="执行构建任务并部署到nginx服务器"></a>执行构建任务并部署到nginx服务器</h3><p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j10.png" alt=""></p>
+<p>点击立即构建，看构建日志：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j11.png" alt=""></p>
+<p>红色圈住的目录就是项目在jenkins构建的目录，构建完成后会增加一个dist目录，配置Nginx的网站目录指向这里就可以通过浏览器访问部署后的项目了：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j13.png" alt=""></p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/04/01/j14.png" alt=""></p>
 
       
     </div>
@@ -520,7 +401,7 @@ export default App;
             </li>
             <li class="post-copyright-link">
               <strong>本文链接：</strong>
-              <a href="/2018/11/14/two-ways-to-import-antd-into-react-app/" title="create-react-app工具两种按需引入antd组件的方式">2018/11/14/two-ways-to-import-antd-into-react-app/</a>
+              <a href="/2019/04/01/jenkins-deploy-github-vue-project-to-nginx/" title="jenkins自动化部署github上的vue项目">2019/04/01/jenkins-deploy-github-vue-project-to-nginx/</a>
             </li>
             <li class="post-copyright-license">
               <strong>版权声明： </strong>
@@ -579,8 +460,8 @@ export default App;
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/12/vue-cnode/" rel="next" title="用Vue实现一个简易的cNode中文社区">
-                <i class="fa fa-chevron-left"></i> 用Vue实现一个简易的cNode中文社区
+              <a href="/2019/03/31/install-gitlab-on-centos6/" rel="next" title="在centos6安装gitlab服务器">
+                <i class="fa fa-chevron-left"></i> 在centos6安装gitlab服务器
               </a>
             
           </div>
@@ -588,10 +469,6 @@ export default App;
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/17/about-react-child-component-update/" rel="prev" title="React子组件从父组件接收到新的props时，没有重新渲染的问题">
-                React子组件从父组件接收到新的props时，没有重新渲染的问题 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -716,7 +593,7 @@ export default App;
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#方式一"><span class="nav-number">1.</span> <span class="nav-text">方式一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方式二"><span class="nav-number">2.</span> <span class="nav-text">方式二</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#jenkins插件安装"><span class="nav-number">1.</span> <span class="nav-text">jenkins插件安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在jenkins管理面板新建一个任务"><span class="nav-number">2.</span> <span class="nav-text">在jenkins管理面板新建一个任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行构建任务并部署到nginx服务器"><span class="nav-number">3.</span> <span class="nav-text">执行构建任务并部署到nginx服务器</span></a></li></ol></div>
             
 
           </div>
