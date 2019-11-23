@@ -79,19 +79,22 @@
 
 
 
-<meta name="description" content="之前给网站部署了Let’s Encrypt的免费SSL证书，但这个证书的有效期是90天，到期的时候需要自己手动续签，否则的话网站会打不开。但是每次都手动续签的话不仅很麻烦而且很容易忘记掉，所以还是借助linux的crontab自动任务靠谱一些。 证书的续签命令是： 1/root/letsencrypt/certbot-auto renew --force-renew 续签完需要reload一下ng">
+<meta name="description" content="最近想给一个wordpress网站增加打赏功能，希望支持支付宝和微信进行打赏。最简单粗暴的方式是直接将自己的支付宝和微信收款二维码放上去，这样就无法实现自动将打赏信息记录到数据库并显示到打赏页面，要想实现这一功能，可以签约支付宝当面付基础版，https://b.alipay.com/signing/productDetailV2.htm?productId=I1011000290000001003">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux设置自动续签Let&#39;s Encrypt SSL证书">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2018/12/05/auto-renew-let's-encrypt-ssl/index.html">
+<meta property="og:title" content="支付宝当面付PHP版Demo">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2019/11/24/alipay-f2fpay-demo/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="之前给网站部署了Let’s Encrypt的免费SSL证书，但这个证书的有效期是90天，到期的时候需要自己手动续签，否则的话网站会打不开。但是每次都手动续签的话不仅很麻烦而且很容易忘记掉，所以还是借助linux的crontab自动任务靠谱一些。 证书的续签命令是： 1/root/letsencrypt/certbot-auto renew --force-renew 续签完需要reload一下ng">
+<meta property="og:description" content="最近想给一个wordpress网站增加打赏功能，希望支持支付宝和微信进行打赏。最简单粗暴的方式是直接将自己的支付宝和微信收款二维码放上去，这样就无法实现自动将打赏信息记录到数据库并显示到打赏页面，要想实现这一功能，可以签约支付宝当面付基础版，https://b.alipay.com/signing/productDetailV2.htm?productId=I1011000290000001003">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://www.xiaoweihuang.me/images/ssl-crontab.png">
-<meta property="og:updated_time" content="2018-12-05T15:44:04.889Z">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/11/23/imageb4f963c18670bd59.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/11/23/imagea0231377f6059482.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/11/23/image47dff630c85e2490.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2019/11/23/image9512be48d99f7cc2.png">
+<meta property="og:updated_time" content="2019-11-23T17:29:48.622Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux设置自动续签Let&#39;s Encrypt SSL证书">
-<meta name="twitter:description" content="之前给网站部署了Let’s Encrypt的免费SSL证书，但这个证书的有效期是90天，到期的时候需要自己手动续签，否则的话网站会打不开。但是每次都手动续签的话不仅很麻烦而且很容易忘记掉，所以还是借助linux的crontab自动任务靠谱一些。 证书的续签命令是： 1/root/letsencrypt/certbot-auto renew --force-renew 续签完需要reload一下ng">
-<meta name="twitter:image" content="https://www.xiaoweihuang.me/images/ssl-crontab.png">
+<meta name="twitter:title" content="支付宝当面付PHP版Demo">
+<meta name="twitter:description" content="最近想给一个wordpress网站增加打赏功能，希望支持支付宝和微信进行打赏。最简单粗暴的方式是直接将自己的支付宝和微信收款二维码放上去，这样就无法实现自动将打赏信息记录到数据库并显示到打赏页面，要想实现这一功能，可以签约支付宝当面付基础版，https://b.alipay.com/signing/productDetailV2.htm?productId=I1011000290000001003">
+<meta name="twitter:image" content="https://img.xiaoweihuang.me/images/2019/11/23/imageb4f963c18670bd59.png">
 
 
 
@@ -121,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="https://www.xiaoweihuang.me/2018/12/05/auto-renew-let's-encrypt-ssl/">
+  <link rel="canonical" href="https://www.xiaoweihuang.me/2019/11/24/alipay-f2fpay-demo/">
 
 
 
 
 
-  <title>linux设置自动续签Let's Encrypt SSL证书 | 前端农民工</title>
+  <title>支付宝当面付PHP版Demo | 前端农民工</title>
   
 
 
@@ -255,7 +258,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2018/12/05/auto-renew-let's-encrypt-ssl/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2019/11/24/alipay-f2fpay-demo/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaoweihuang">
@@ -272,7 +275,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">linux设置自动续签Let's Encrypt SSL证书</h1>
+          <h1 class="post-title" itemprop="name headline">支付宝当面付PHP版Demo</h1>
         
 
         <div class="post-meta">
@@ -284,8 +287,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-05T23:25:29+08:00">
-                2018-12-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-24T00:56:10+08:00">
+                2019-11-24
               </time>
             
 
@@ -322,16 +325,19 @@
       
 
       
-        <p>之前给网站部署了Let’s Encrypt的免费SSL证书，但这个证书的有效期是90天，到期的时候需要自己手动续签，否则的话网站会打不开。但是每次都手动续签的话不仅很麻烦而且很容易忘记掉，所以还是借助linux的crontab自动任务靠谱一些。</p>
-<p>证书的续签命令是：</p>
-<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/root/letsencrypt/certbot-auto renew --force-renew</span><br></pre></td></tr></table></figure>
-</code></pre><p>续签完需要reload一下nginx，然后续签的证书才会生效:</p>
-<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/nginx reload</span><br></pre></td></tr></table></figure>
-</code></pre><p>上面的两个命令我们可以借助crontab设置自动任务，每月1号0点自动续签证书，执行：</p>
-<pre><code>crontab -e
-</code></pre><p>进入自动任务设置，输入如下命令：</p>
-<p><img src="https://www.xiaoweihuang.me/images/ssl-crontab.png" alt=""></p>
-<p>保存并退出vi编辑界面。</p>
+        <p>最近想给一个wordpress网站增加打赏功能，希望支持支付宝和微信进行打赏。最简单粗暴的方式是直接将自己的支付宝和微信收款二维码放上去，这样就无法实现自动将打赏信息记录到数据库并显示到打赏页面，要想实现这一功能，可以签约支付宝当面付基础版，<a href="https://b.alipay.com/signing/productDetailV2.htm?productId=I1011000290000001003" target="_blank" rel="noopener">https://b.alipay.com/signing/productDetailV2.htm?productId=I1011000290000001003</a>，签约当面付基础版只需上传店铺门面照片，无须上传营业执照，所以对于大部分人来说都是可以签约成功的，微信商户签约比较麻烦，所以微信打赏暂时还是把收款二维码放上去。</p>
+<p>我的支付宝账号在今年4月份的时候已经签约成功支付宝当面付基础版了，所以今天先从支付宝开放平台下载了PHP版本的当面付Demo，将Demo跑起来看看效果先，但是跑起来并不是那么顺利，同时我也不是很熟PHP，所以也折腾了半个多小时。</p>
+<h2 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h2><h4 id="PHP禁用了scandir函数"><a href="#PHP禁用了scandir函数" class="headerlink" title="PHP禁用了scandir函数"></a>PHP禁用了scandir函数</h4><p>直接跑Demo的时候，如果PHP设置了display_errors=On的话，会看到类似如下的报错提示：</p>
+<pre><code>Warning: scandir() has been disabled for security reasons in /home/wwwroot/xxxx/xxx.php on line 764
+</code></pre><p>解决办法是打开php.ini文件，去掉disable_functions中的scandir，去掉后需要重启一下PHP</p>
+<h4 id="ACQ-INVALID-STORE-ID商户门店编号无效"><a href="#ACQ-INVALID-STORE-ID商户门店编号无效" class="headerlink" title="ACQ.INVALID_STORE_ID商户门店编号无效"></a>ACQ.INVALID_STORE_ID商户门店编号无效</h4><p>点击确认订单的时候，下一个页面提示报错ACQ.INVALID_STORE_ID商户门店编号无效，生成二维码失败，解决办法是将Demo中门店编号相关的字段传递空字符串进去，也就是将下面几行代码修改一下，分别给它们赋值为空：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/11/23/imageb4f963c18670bd59.png" alt=""></p>
+<p>修改后的效果如下：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/11/23/imagea0231377f6059482.png" alt=""></p>
+<p>然后就可以测试Demo了：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/11/23/image47dff630c85e2490.png" alt=""></p>
+<p>设置一下订单号、订单名称、付款金额信息，然后点击确认，就可以生成二维码了：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2019/11/23/image9512be48d99f7cc2.png" alt=""></p>
 
       
     </div>
@@ -343,7 +349,7 @@
             </li>
             <li class="post-copyright-link">
               <strong>本文链接：</strong>
-              <a href="/2018/12/05/auto-renew-let's-encrypt-ssl/" title="linux设置自动续签Let's Encrypt SSL证书">2018/12/05/auto-renew-let's-encrypt-ssl/</a>
+              <a href="/2019/11/24/alipay-f2fpay-demo/" title="支付宝当面付PHP版Demo">2019/11/24/alipay-f2fpay-demo/</a>
             </li>
             <li class="post-copyright-license">
               <strong>版权声明： </strong>
@@ -402,8 +408,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/12/01/vue-component/" rel="next" title="如何从零开始封装一个Vue组件">
-                <i class="fa fa-chevron-left"></i> 如何从零开始封装一个Vue组件
+              <a href="/2019/11/23/vue-performance-optimization/" rel="next" title="Vue网站性能优化">
+                <i class="fa fa-chevron-left"></i> Vue网站性能优化
               </a>
             
           </div>
@@ -411,10 +417,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/12/10/the-execution-context-in-javascript/" rel="prev" title="JavaScript基础回顾（五）：JavaScript中的执行上下文">
-                JavaScript基础回顾（五）：JavaScript中的执行上下文 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -466,8 +468,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -520,6 +531,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#可能遇到的问题"><span class="nav-number">1.</span> <span class="nav-text">可能遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PHP禁用了scandir函数"><span class="nav-number">1.0.1.</span> <span class="nav-text">PHP禁用了scandir函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ACQ-INVALID-STORE-ID商户门店编号无效"><span class="nav-number">1.0.2.</span> <span class="nav-text">ACQ.INVALID_STORE_ID商户门店编号无效</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
