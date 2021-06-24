@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="时间过得好快，转眼就快毕业一年了，尤记得在去年八月末，自己使用jekyll在github pages搭建了这个个人博客，搭建这个博客的初衷是用于记录自己在工作或者学习过程中所遇到的问题以及解决方案，但由于自己过于懒惰，几乎快有七个月的时间没有更新博客了，想想就觉得可惜，浪费了那么多可以让自己成长的机会。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于前端开发学习的回顾与展望">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2016/04/07/My-front-end-developer-life/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="时间过得好快，转眼就快毕业一年了，尤记得在去年八月末，自己使用jekyll在github pages搭建了这个个人博客，搭建这个博客的初衷是用于记录自己在工作或者学习过程中所遇到的问题以及解决方案，但由于自己过于懒惰，几乎快有七个月的时间没有更新博客了，想想就觉得可惜，浪费了那么多可以让自己成长的机会。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-04-06T16:52:00.000Z">
+<meta property="article:modified_time" content="2021-06-23T14:55:04.728Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="study">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2016/04/07/My-front-end-developer-life/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>关于前端开发学习的回顾与展望 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2016/04/07/My-front-end-developer-life/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关于前端开发学习的回顾与展望
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-04-07 00:52:00" itemprop="dateCreated datePublished" datetime="2016-04-07T00:52:00+08:00">2016-04-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-23 22:55:04" itemprop="dateModified" datetime="2021-06-23T22:55:04+08:00">2021-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/study/" itemprop="url" rel="index"><span itemprop="name">study</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>时间过得好快，转眼就快毕业一年了，尤记得在去年八月末，自己使用jekyll在github pages搭建了这个个人博客，搭建这个博客的初衷是用于记录自己在工作或者学习过程中所遇到的问题以及解决方案，但由于自己过于懒惰，几乎快有七个月的时间没有更新博客了，想想就觉得可惜，浪费了那么多可以让自己成长的机会。<span id="more"></span>在开发与学习的过程中踩过的坑不少，随着时间的流逝，当时又没有加以总结，最终在脑海中就只留下个大概的印象，这样是肯定不利于自己成长的。况且我对自己的要求也不只是单纯的会用PS切图、会玩html(5)/css(3)/javascript(jQuery)、会处理PC端和移动端浏览器兼容性就够了，只会这些技能是远远还达不到一个前端工程师的要求的，充其量只能算是一个页面仔，俗称切图的。为了个人的职业发展，自己能做的就是保持学习新知识，不管是前端的js库、框架，还是前端自动化构建工具，还是服务器端流行的node.js，都要主动去学习和了解，拓宽知识面,当然，横向拓宽知识面的前提是在前端这一领域做得足够专业，足够深度了。在学习之余，还要关注自己写的代码质量、工作效率以及前端页面的性能(为用户提供良好的用户体验)。另外要重视的就是团队协作问题了，除了团队协作工具的选择，团队成员之间沟通得顺不顺畅也直接影响团队的开发效率，所以我们除了要熟悉团队协作工具,还要提升自己的沟通能力和语言表达能力。接下来我就说说自己踏入前端开发这个领域后，对个人前端知识体系的构建，以及对前端开发的一些看法和个人感想。</p>
+<blockquote>
+<p> 前端知识体系的构建  </p>
+</blockquote>
+<p>  <em>一、库与框架的学习</em> </p>
+<p>这几年前端开发这一领域发展太快，现在的web应用也日益复杂，前端开发也已不再是单纯的切页面和用JS实现动态特效了，对于比较复杂的应用，如果前端不使用一些js库和框架辅助开发的话，工作量会变得非常大，将严重影响开发的效率和项目进度。所以从入职前端开发后，除了完成切页面的任务，我也逐步开始学习除jQuery以外的其他JS库和框架，如underscore.js、backbone.js、React.js、vue.js、Angular.js等，以及Bootstrap、Amaze UI、material design lite等前端UI组件库或框架。学习的过程也是一个比较纠结的过程，经常会遇到一些让你沮丧的问题，打击你对前端开发的信心，这时如果你没有足够的耐心和兴趣，很可能你就会考虑放弃前端开发了，另一方面就是前端开发领域的知识更新速度非常快，几乎每天都有新的库或者框架出现，如果你不坚持学习，很快你就可能被淘汰了，但是学习哪个库或者框架好呢，学了有没有用，学习成本高不高，学完了会不会又被新出来的框架给淘汰了，众多的疑问会浮现在你的脑海中，让你不知所措。</p>
+<p>我个人的观点是，挑你们项目中正在使用或者最合适应用到你们项目中去的框架先学，然后再利用空闲时间学习其他的框架，但也别过于追求学习速度和学习更多的框架，一个是欲速则不达，如走马观花般地学习新知识必然学得不彻底、不深入，只能停留在会用的层面，在学习过程中，最好适当研读它的源码，在增进理解的同时，还可以学习它的实现原理以及设计思想，另一个就是别想着一下子就全部框架都学会，知识是学不完的，每天都会有新知识出现，我们可以根据自己的职业规划或者自己的发展方向选相应的框架逐个学，世界上没有最好的框架，只有最适合你们项目的框架。至于说学了有没有用，会不会过时，我觉得这些疑问都是多余的，所谓技多不压身，学多一点知识意味着自己有更多的选择，但我们也别指望会用几个框架就衣食无忧了，新知识层出不穷，我们要远离舒适区，对新鲜事物保持开放的态度，坚持学习，自己才能跟上前端领域的发展步伐而不会被淘汰。</p>
+<p> <em>二、前端自动化构建工具的学习</em> </p>
+<p>学习了库与框架，便可以在项目中选择最适合的框架进行开发了，当然项目如果不是很复杂的话，用上jQuery库也就够了，在小项目中使用angular等框架会显得很笨重，大材小用。确定好相应的库和框架后，一定程度上是可以帮助我们提升开发效率，但这时也开始要考虑应用运行的性能了，在这里我们可以通过前端自动化构建工具对网站资源进行优化，并使用它们自动完成在开发过程中很多重复的任务，从而进一步提高我们的工作效率。在前端开发过程中，项目上线前，我们往往会要对文件目录进行调整，js/css/html语法检测、css压缩与合并、js代码压缩以及图片压缩等，这些操作都是重复而且比较枯燥的，所以我们可以借其他工具帮助我们完成这些任务。关于前端自动化构建工具这一块，我选择了grunt、gulp和webpack进行学习，并在项目中使用它们，让它们帮我完成大部分无聊的工作，并且大大提高了开发的效率。</p>
+<p><em>三、JavaScript/CSS模块化开发的学习</em> </p>
+<p>通过框架的使用以及前端自动化构建工具的运用，我们一定程度上解决了项目的开发效率和运行效率，项目上线后，这时就开始要考虑项目的维护效率以及维护成本了。软件工程中不同功能的模块分开进行开发和维护的思想，同样也适用于前端，模块化开发也是目前在前端领域非常受欢迎的开发方式，也是一个提升开发效率，降低维护成本非常重要的手段。通过模块化开发，可以通过别名等的配置，配合构建工具，轻松实现模块的版本管理，模块化也让每个文件的功能单一，非常有利于代码的维护，另外部分模块化加载工具还能实现异步加载，通过对模块的异步加载，也有利于提升页面的性能。</p>
+<ul>
+<li>JavaScript模块化开发</li>
+</ul>
+<p>在js方面，目前遵循的模块化规范主要有：AMD/CMD和CommonJS。AMD即Asynchronous Module Definition，中文是“异步模块定义”的意思，它是一个浏览器端模块化开发的规范，require.js遵循的就是这个规范。CommonJS则是服务器端模块化开发的规范，Node.js采用的就是这个规范。CMD即Common Module Definition,中文是“通用模块定义”的意思，该规范明确了模块的基本书写格式和基本交互规则，sea.js遵循的就是这个规范。AMD与CMD两者之间的区别是AMD是依赖关系前置，CMD是按需加载。目前我学习并使用过的模块化加载工具有require.js和sea.js,它们之间的区别是sea.js对模块的处理方式是懒执行，而require.js对模块的处理方式则是预执行。当我们开发的页面包含很多js文件的时候，浏览器下载页面的时候会先加载js文件，此时浏览器会先停止对页面的渲染，如果要加载的js文件很多，浏览器甚至会失去响应。同时还要保证js文件的依赖性，依懒性最大的文件要放到最后加载，当js文件之间的依赖关系很复杂的时候，代码的编写和维护也会变得非常困难，但是通过模块化开发并合理运用模块化加载工具就能很好地解决上述问题。</p>
+<ul>
+<li>CSS模块化开发</li>
+</ul>
+<p>在CSS模块中，每一个文件都被编译成独立的文件，所以我们只需要使用通用简单的类选择器名字就好，也不用担心它会污染全局变量。在CSS模块化开发以前，解决样式名冲突的方法是给局部变量加上前缀，但CSS模块化后则不需要这么做了，通过使用require或者import从js中导入文件，最终编译后的类名会自动生成并且是唯一的，而且所有类都是相互独立的，每一个类都必须包含这个元素需要的所有样式。CSS模块中通过组件在所有的状态样式中共享你的样式，composes这个关键词可以将其他css类内的所有样式导入进某个样式内，通过composes语法能实现不重写css的情况下对元素混合使用不同类的样式。我们都知道在css预处理器Sass或者Less中，可以在每个文件中使用@import在不同文件之间共享样式，但很容易你的变量就会与其他变量名称相冲突，最终分辨不清哪个组件依赖哪个变量，而css模块则每次只运行一个文件，这样就可以避免全局变量的污染，同时可以使用compose从另一个文件加载css,从而实现不同文件之间共享样式。另外一点就是在css模块中，通过使用组件，我们可以使用可复用的样式定义我们的组件，从而实现在其他地方复用样式。</p>
+<p>css模块化开发，不仅更有利于维护，而且能提升开发效率，让css写起来更加舒适和高效。css模块化开发，比Sass和Less预处理器用起来更爽。</p>
+<p><em>四、组件化开发与静态资源管理</em></p>
+<p>当项目比较复杂庞大的时候，仅仅是模块化开发已经不能满足我们开发和维护的需求了，一方面体现在资源的冗余，就是根据业务的需要，在开发的过程中会有大量的css和js产生，有时因为仅仅是想使用某个方法，却需要导入整个js模块，或者为了使用某个css中的部分样式却要依赖整个css,这样就容易造成资源的冗余，另外一方面就是当文件比较多时，html/css/js之间的依赖关系会变得没有那么直观，有时会发生html已经删除了但是对应的css/js还存在。所以为了解决上述问题，目前的解决方案是前端实现组件化开发，以页面上的功能组件为单位，按需加载css和js资源，同时也让组件更易用易维护，易扩展易重用。</p>
+<p>另外一方面就是关于网站的静态资源，第一，如果要开发者人工管理每个页面需要的js和css文件，以及不同资源之间的依赖关系，效率会比较低而且繁琐，第二，对页面静态资源的加载优化成本比较高而且是不可持续的，最好的方式是能自动处理CDN，并自动生成最优的静态资源合并策略，第三，不同终端要适配相应的静态资源，以及如果应用要实现国际化，还需要对不同的国家进行差异化处理，返回相应的静态资源。对网站静态资源的管理，主要就是解决以上几个问题，以实现更快、更可靠、更低成本的开发和维护。</p>
+<blockquote>
+<p> 展望  </p>
+</blockquote>
+<p>还是那句话，前端开发还处于快速发展期，要想不落后就要坚持学习，有选择性地学习，时刻准备迎接新的机遇和挑战。人的精力也有限，所以我们尽量选择最适合个人技术栈的库或者框架来学习，同时阅读一到两个优秀的库或者框架的源码，学习它们的设计思想，提升自己的架构能力。在众多的前端框架中没有最好的，也没有最差的，只有最适合自己项目的，网上经常能看到关于各种框架之间比较的文章，它们往往会干扰你对框架的学习，但你要做的就是坚持自己的想法，静心地学下去就好。</p>
+<p>说了那么多，其实最重要的还是：“实践！实践！实践！”，重要的事情说三遍。</p>
+<p>最后引用乔布斯的那句话：“Stay hungry, Stay foolish.”，自勉。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>xiaoweihuang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2016/04/07/My-front-end-developer-life/" title="关于前端开发学习的回顾与展望">https://www.xiaoweihuang.me/2016/04/07/My-front-end-developer-life/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/study/" rel="tag"># study</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/10/07/hello-reactnativeandroid/" rel="prev" title="windows上配置React Native Android开发环境">
+      <i class="fa fa-chevron-left"></i> windows上配置React Native Android开发环境
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/04/17/JD/" rel="next" title="京东资深前端架构师分享前端工程化在2015年京东PC新首页的一些开发实践(转载)">
+      京东资深前端架构师分享前端工程化在2015年京东PC新首页的一些开发实践(转载) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

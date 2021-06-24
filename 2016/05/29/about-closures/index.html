@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引用维基百科：在计算机科学中，闭包（英语：Closure），又称词法闭包（Lexical Closure）或函数闭包（function closures），引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅析JavaScript闭包">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2016/05/29/about-closures/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="引用维基百科：在计算机科学中，闭包（英语：Closure），又称词法闭包（Lexical Closure）或函数闭包（function closures），引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-05-28T18:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-23T14:54:24.205Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="闭包">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2016/05/29/about-closures/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>浅析JavaScript闭包 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2016/05/29/about-closures/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          浅析JavaScript闭包
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-05-29 02:00:00" itemprop="dateCreated datePublished" datetime="2016-05-29T02:00:00+08:00">2016-05-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-23 22:54:24" itemprop="dateModified" datetime="2021-06-23T22:54:24+08:00">2021-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%97%AD%E5%8C%85/" itemprop="url" rel="index"><span itemprop="name">闭包</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>引用维基百科：<em>在计算机科学中，<strong>闭包</strong>（英语：Closure），又称<strong>词法闭包</strong>（Lexical Closure）或<strong>函数闭包</strong>（function closures），引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。</em></p>
+<span id="more"></span>
+
+<p>从维基百科对闭包的解释来看，我们可以这么认为：定义在闭包中的函数，可以记住它被创建时的环境。</p>
+<p>闭包是JavaScript非常重要的一个语言特性，在理解闭包之前，我们先来看看JavaScript中的变量以及变量作用域。</p>
+<blockquote>
+<p>变量与变量作用域</p>
+</blockquote>
+<ol>
+<li>变量的声明</li>
+</ol>
+<p>JavaScript是大小写敏感的，使用Unicode字符集。在JavaScript中，语句被称为statements,并用分号分隔（；）。在程序中，使用变量来为值命名，变量的名称称为identifiers,它需要遵守一定的规则，在JavaScript语言中，一个标识符(identifier)必须以字母、下划线(_)或者美元($)符号开头；后续的字符可以包含数字(0~9)。关于变量的声明有三种：</p>
+<ul>
+<li><p>var:使用关键字var声明变量，例如：var x = 666,同时可以将变量初始化为一个值，这个语法也可以用来声明局部和全局变量。值得注意的是,如果对变量直接赋值，例如：x = 2333,这样会声明一个全局变量并会导致JavaScript编译时产生一个严重警告，所以要尽量避免这种声明方式。</p>
+</li>
+<li><p>let:使用关键字let声明了一个块范围作用域变量，例如：let = 999, 同时将变量初始化为一个值。</p>
+</li>
+<li><p>const:使用const关键字可以声明一个只读的常量，例如π。</p>
+</li>
+</ul>
+<p>2.对变量求值</p>
+<p>使用var或者let声明变量时，如果未赋值，会被设定一个默认值undefined，在程序中访问一个未初始化(未声明)的变量，会抛出ReferenceError异常：</p>
+<pre><code>var a;
+console.log(&quot;a的值是：&quot; + a);//输出-&gt; a的值是：undefined
+console.log(&quot;b的值是：&quot; + b);//输出-&gt; Uncaught ReferenceError: b is not defined
+</code></pre>
+<p>undefined值在布尔类型环境中会被当做false，例如下面的代码：</p>
+<pre><code>var a;
+if(a)&#123;
+    console.log(&quot;a的值是：&quot; + a);
+&#125;else&#123;
+    console.log(&quot;a的值是：&quot; + a + &quot;,证明undefined在布尔环境中被当做false。&quot;);
+&#125;
+//以上代码执行后输出-&gt; a的值是：undefined,证明undefined在布尔环境中被当做false。
+</code></pre>
+<p>undefined值在数值型环境中会被转换为NaN，例如下面的代码：</p>
+<pre><code>var a;
+consoloe.log(a+666);//输出 -&gt;NaN
+</code></pre>
+<p>另外，对一个null的变量求值，空值null会在数值型环境中被当做0，在布尔类型环境中会被当做false。</p>
+<p>3.变量的作用域</p>
+<p>在函数之外声明的变量是全局变量，它的值在整个程序都可以访问和修改，在函数内部声明的变量是局部变量，每当函数执行时，就会创建和摧毁该变量，并且无法通过函数之外的任何代码访问该变量。变量的参数也属于局部变量。</p>
+<pre><code>var a = 666;
+function test() &#123;
+    var b = 999;
+    console.log(&#39;a的值是：&#39; + a);
+&#125;
+test();//a的值是：666
+console.log(&#39;b的值是：&#39; + b);//ReferenceError: b is not defined
+</code></pre>
+<p>关于let和const声明的块范围变量，本文暂不作讨论。</p>
+<p>4.变量提升</p>
+<p>JavaScript的变量声明具有变量提升(hoisting)机制，JavaScript引擎在执行的时候，会把所有变量的声明都提升到当前作用域的最前面。如果变量是局部变量，则提升到函数的最前面，如果变量是全局变量，则提升到全局作用域的开头。看下面一段代码：</p>
+<pre><code>var a = &#39;hello&#39;;
+(function()&#123;
+    console.log(a);
+    var a = &#39;javascript&#39;
+&#125;)();
+</code></pre>
+<p>这段代码的运行结果是：undefined。从运行结果来看，我们可以发现两点，一是function作用域里的变量v遮盖了上层作用域变量v；二是在function作用域内，变量v的声明被提升了。也就是说，上面的代码等价于：</p>
+<pre><code>var a = &#39;hello&#39;;
+(functiton()&#123;
+    var v;
+    console.log(v);
+    v = &#39;world&#39;;
+&#125;)();
+</code></pre>
+<p>当前作用域内的的变量和函数的声明都会提升到作用域的最前面，另外函数表达式不会被提升，这也是函数表达式与函数声明的区别。看以下代码：</p>
+<pre><code>(function()&#123;
+    f1();//Uncaught ReferenceError: f1 is not defined
+    f2();
+    var f1 = function()&#123;&#125;;
+    function f2()&#123;&#125;
+&#125;)();
+</code></pre>
+<p>5.作用域链</p>
+<p>当代码在一个环境中执行时，会创建变量对象的一个作用域链(scope chain)。作用域链的用途，是保证对执行环境有权访问的所有变量和函数的有序访问。作用域链的前端，始终都是当前执行的代码所在环境的变量对象。如果这个环境是一个函数，则将其活动对象作为变量对象。</p>
+<p>每一个函数都有自己的执行环境，当执行流进一个函数时，函数环境就会被推入一个环境栈中，而在函数执行之后，栈将其环境弹出，把控制权返回给之前的执行环境，这个栈也就是作用域链。</p>
+<p>看下面一段代码：</p>
+<pre><code>var name = &#39;javascript-closures&#39;;
+function test()&#123;
+    var name = &#39;javascript&#39;;
+    function f1()&#123;
+        var name = &#39;closures&#39;;
+        console.log(name);
+    &#125;
+    function f2()&#123;
+        console.log(name);
+    &#125;
+    f1();
+    f2();
+&#125;
+test();
+</code></pre>
+<p>这段代码执行，当执行到f1()时，此时的作用域链是：f1()-&gt;test()-&gt;window,很显然在f1函数作用域内，声明并赋值了变量name,所以这时控制台将输出：closures;当执行f2时，此时的作用域链则是：f2-&gt;test()-&gt;window,由于在f2内部没有声明变量name,所以解释器会向上一级作用域查找这个变量，直到找到该变量的标示符或不再存在父作用域了（若仍没找到该变量，则返回undefined），很显然f2的执行结果是：javascript。</p>
+<blockquote>
+<p>理解闭包</p>
+</blockquote>
+<p>简单回顾了一下关于JavaScript变量的基础知识后，接下来开始谈谈我对闭包的理解。当然，在前面讲到作用域链的时候，其实已经使用到闭包的特性了。</p>
+<p>什么是闭包呢？其实闭包就是：一个函数和它所引用的外部变量组成的实体。由于外部变量被引用了，所以它的生命被延长。外层函数执行完，按理说它的变量是要全部销毁的，但由于闭包的存在，之后执行此内部函数，通过闭包仍能访问到外层函数的变量，这也是闭包的特点。闭包的本质是：内部函数创建时，会保存在当前环境的作用域链(内部属性[[<strong>scope</strong>]])中，并且函数被保留下来，引擎不会对外层环境的变量对象进行销毁。</p>
+<p>简单来说，闭包就是指有权访问另外一个函数作用域中的变量的函数。首先它是一个函数，其次能访问另外一个函数作用域的变量。来看看下面一个例子：</p>
+<pre><code>function getWeChat()&#123;
+    var wechat = &#39;wechatnumber&#39;;
+    console.log(wechat);
+&#125;
+function displayWeChat()&#123;
+    console.log(wechat);
+&#125;
+</code></pre>
+<p>很显然上面的代码执行displayWeChat的时候会报错，在displayWeChat函数内部并不能访问到getWeChat函数内部的变量wechat,但假如就是想要别人的微信号(wechat)呢？可以对上面的代码进行如下改动，就可以欢快地拿到别人的wechat了：</p>
+<pre><code>function getWeChat() &#123;
+    var wechat = &#39;wechatnumber&#39;;
+    function displayWeChat() &#123;
+        console.log(wechat);
+    &#125;
+    return displayWeChat;
+&#125;
+var getWeChatNumber = getWeChat();
+getWeChatNumber();//此时getWeChatNumber其实就是一个闭包了
+</code></pre>
+<p>从上面的例子可以看出，关于闭包，有三个特点：</p>
+<ul>
+<li>闭包可以访问当前函数以外的变量</li>
+</ul>
+<p>看下面一段代码，html结构如下：</p>
+<pre><code>&lt;div id=&quot;list&quot;&gt;
+    &lt;li&gt;项目一&lt;/li&gt;
+    &lt;li&gt;项目二&lt;/li&gt;
+    &lt;li&gt;项目三&lt;/li&gt;
+    &lt;li&gt;项目四&lt;/li&gt;
+&lt;/div&gt;
+</code></pre>
+<p>JavaScript代码如下：</p>
+<pre><code>function bindClick()&#123;
+    var oList = document.getElementById(&#39;list&#39;);
+    var aLi = oList.getElementsByTagName(&#39;li&#39;);
+    for(var i = 0;i&lt;aLi.length;i++)&#123;
+        aLi[i].onclick = function() &#123;
+            alert(&#39;You click the &#39; + i + &#39; li tag.&#39;);
+        &#125;
+    &#125;
+&#125;
+bindClick();
+</code></pre>
+<p>上述代码原本想要实现的功能是点击相应的li时，弹出提示用户点击的是第几个li,但这段js代码运行后的结果是：点击每个li标签，弹出的都是相同的结果”You click the 4 li tag”,这是什么原因呢，其实也就是作用域导致的问题，我们可以通过闭包，实现我们想要的结果，对js代码进行如下修改：</p>
+<pre><code>function bindClick()&#123;
+    var oList = document.getElementById(&#39;list&#39;);
+    var aLi = oList.getElementsByTagName(&#39;li&#39;);
+    for(var i = 0;i&lt;aLi.length;i++)&#123;
+        function a(i)&#123;
+            aLi[i].onclick = function() &#123;
+                alert(&#39;You click the &#39; + i + &#39; li tag.&#39;);
+            &#125;
+        &#125;
+
+        a(i);
+    &#125;
+&#125;
+bindClick();
+</code></pre>
+<p>这时，运行js就能达到我们想要的效果了，函数a就是一个闭包，从上面的代码也可以看到，闭包可以访问当前函数以外的变量。</p>
+<ul>
+<li><p>即使外部函数已经返回，闭包仍能访问外部函数定义的变量</p>
+<pre><code>  function getDate()&#123;
+      var date = new Date();
+      var year = date.getYear();
+      var month = date.getMonth()+1;
+      var day = date.getDate();
+      var hour = date.getHours();
+      var minute = date.getMinutes();
+      var second = date.getSeconds();
+      function date()&#123;
+          console.log(&#39;Today is &#39; + year + &#39;-&#39; + month + &#39;-&#39; + day +&#39;　　&#39; + hour +&#39;:&#39; + minute + &#39;:&#39;+ second);
+      &#125;
+      return date;
+  &#125;
+
+  getDate()();//Today is 2016-5-29　　15:49:35　0.772378174152599
+  getDate()();//Today is 2016-5-29　　15:49:35　0.1944137749432555
+</code></pre>
+</li>
+</ul>
+<ul>
+<li>闭包可以更新外部的变量<pre><code>  function f1()&#123;
+      var a = 1;
+      function geta() &#123;
+          a++;
+          alert(a);        
+      &#125;
+      return geta;    
+  &#125;
+
+  var myFunc = f1();
+  myFunc();//alert 2
+  myFunc();//alert 3
+</code></pre>
+</li>
+</ul>
+<blockquote>
+<p>闭包思考题</p>
+</blockquote>
+<p>思考题一：</p>
+<pre><code>var name = &quot;The Window&quot;;
+
+var object = &#123;
+　　name : &quot;My Object&quot;,
+ 
+　　getNameFunc : function()&#123;
+　　　　return function()&#123;
+　　　　　　return this.name;
+　　　　&#125;;
+ 
+　　&#125;
+ 
+&#125;;
+ 
+alert(object.getNameFunc()());
+</code></pre>
+<p>思考题二：</p>
+<pre><code>var name = &quot;The Window&quot;;
+
+var object = &#123;
+　　name : &quot;My Object&quot;,
+ 
+　　getNameFunc : function()&#123;
+　　　　var that = this;
+　　　　return function()&#123;
+　　　　　　return that.name;
+　　　　&#125;;
+ 
+　　&#125;
+ 
+&#125;;
+ 
+alert(object.getNameFunc()());
+</code></pre>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>xiaoweihuang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2016/05/29/about-closures/" title="浅析JavaScript闭包">https://www.xiaoweihuang.me/2016/05/29/about-closures/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%97%AD%E5%8C%85/" rel="tag"># 闭包</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/04/17/JD/" rel="prev" title="京东资深前端架构师分享前端工程化在2015年京东PC新首页的一些开发实践(转载)">
+      <i class="fa fa-chevron-left"></i> 京东资深前端架构师分享前端工程化在2015年京东PC新首页的一些开发实践(转载)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/08/25/about-promise/" rel="next" title="简单理解ECMAScript2015中的Promise">
+      简单理解ECMAScript2015中的Promise <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

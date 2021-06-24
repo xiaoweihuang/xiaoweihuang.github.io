@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="create-react-app是react官方提供的快速搭建react项目的脚手架工具，它的安装和使用都非常方便，在命令行工具执行以下命令即可完成create-react-app的安装： 1npm install -g create-react-app  然后执行以下命令即可创建一个react项目： 1create-react-app helloworld">
+<meta property="og:type" content="article">
+<meta property="og:title" content="create-react-app工具两种按需引入antd组件的方式">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2021/06/24/two-ways-to-import-antd-into-react-app/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="create-react-app是react官方提供的快速搭建react项目的脚手架工具，它的安装和使用都非常方便，在命令行工具执行以下命令即可完成create-react-app的安装： 1npm install -g create-react-app  然后执行以下命令即可创建一个react项目： 1create-react-app helloworld">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.imgur.com/ZGkUdgO.png">
+<meta property="og:image" content="https://i.imgur.com/tpmgSfn.png">
+<meta property="og:image" content="https://i.imgur.com/6sj9SAv.png">
+<meta property="article:published_time" content="2021-06-23T16:15:30.153Z">
+<meta property="article:modified_time" content="2021-06-24T14:45:21.535Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/ZGkUdgO.png">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2021/06/24/two-ways-to-import-antd-into-react-app/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>create-react-app工具两种按需引入antd组件的方式 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2021/06/24/two-ways-to-import-antd-into-react-app/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          create-react-app工具两种按需引入antd组件的方式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-24 00:15:30 / 修改时间：22:45:21" itemprop="dateCreated datePublished" datetime="2021-06-24T00:15:30+08:00">2021-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>create-react-app是react官方提供的快速搭建react项目的脚手架工具，它的安装和使用都非常方便，在命令行工具执行以下命令即可完成create-react-app的安装：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g create-react-app</span><br></pre></td></tr></table></figure>
+
+<p>然后执行以下命令即可创建一个react项目：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create-react-app helloworld</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>初始化后的react项目目录结构如下图所示：<a target="_blank" rel="noopener" href="https://i.imgur.com/ZGkUdgO.png"><img src="https://i.imgur.com/ZGkUdgO.png"></a>然后执行npm start即可启动项目。antd是一个非常好用的框架，有时我们可能会需要在使用create-react-app创建的项目中使用它，但是如果把antd全局引入了的话，打包后的体积会特别大，所以比较好的方式是按需引入项目中需要使用的组件。如何实现按需引入呢？下面我介绍两种方式，其中一种是antd官方提供的方法，另一种则是执行npm run eject后在webpack配置文件中配置按需引入。</p>
+<blockquote>
+<h3>方式一</h3>
+</blockquote>
+<p>首先安装react-app-rewired：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save react-app-rewired</span><br></pre></td></tr></table></figure>
+
+<p>安装完后修改package.json文件里的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">    -   &quot;start&quot;: &quot;react-scripts start&quot;,</span><br><span class="line">    +   &quot;start&quot;: &quot;react-app-rewired start&quot;,</span><br><span class="line">    -   &quot;build&quot;: &quot;react-scripts build&quot;,</span><br><span class="line">    +   &quot;build&quot;: &quot;react-app-rewired build&quot;,</span><br><span class="line">    -   &quot;test&quot;: &quot;react-scripts test&quot;,</span><br><span class="line">    +   &quot;test&quot;: &quot;react-app-rewired test&quot;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于我们需要按需加载组件的代码和样式，所以还需要安装babel-plugin-import插件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save babel-plugin-import</span><br></pre></td></tr></table></figure>
+
+<p>然后在项目根目录创建一个 config-overrides.js 将以下内容写入这个配置文件用于修改默认配置,：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const &#123; injectBabelPlugin &#125; = require(&#x27;react-app-rewired&#x27;);</span><br><span class="line"></span><br><span class="line"> module.exports = function override(config, env) &#123;</span><br><span class="line">   config = injectBabelPlugin(</span><br><span class="line">    [&#x27;import&#x27;, &#123; libraryName: &#x27;antd&#x27;, libraryDirectory: &#x27;es&#x27;, style: &#x27;css&#x27; &#125;],</span><br><span class="line">    config,</span><br><span class="line">   );</span><br><span class="line">   return config;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>接下来重启一下项目，即可在组件中使用以来命令按需引入antd里面的组件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Button &#125; from &#x27;antd&#x27; // 引入antd的Button组件</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h3>方式二</h3>
+</blockquote>
+<p>使用create-react-app创建好项目后，我们需要先执行npm run eject以让webpack的配置文件显示出来，这个过程是不可逆的，执行这个命令后，在项目的根目录下面会多一个config文件夹，里面存放的是webpack相关的配置文件：<a target="_blank" rel="noopener" href="https://i.imgur.com/tpmgSfn.png"><img src="https://i.imgur.com/tpmgSfn.png"></a>接下来需要对webpack.config.dev.js和webpack.config.prod.js两个文件做相同的修改：一个是babel-loader中的plugins增加对atnd的支持：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// Process application JS with Babel.</span><br><span class="line">      // The preset includes JSX, Flow, and some ESnext features.</span><br><span class="line">      &#123;</span><br><span class="line">        test: /\.(js|mjs|jsx|ts|tsx)$/,</span><br><span class="line">        include: paths.appSrc,</span><br><span class="line">        loader: require.resolve(&#x27;babel-loader&#x27;),</span><br><span class="line">        options: &#123;</span><br><span class="line">          customize: require.resolve(</span><br><span class="line">            &#x27;babel-preset-react-app/webpack-overrides&#x27;</span><br><span class="line">          ),</span><br><span class="line"></span><br><span class="line">          plugins: [</span><br><span class="line">            [</span><br><span class="line">              require.resolve(&#x27;babel-plugin-named-asset-import&#x27;),</span><br><span class="line">              &#123;</span><br><span class="line">                loaderMap: &#123;</span><br><span class="line">                  svg: &#123;</span><br><span class="line">                    ReactComponent: &#x27;@svgr/webpack?-prettier,-svgo![path]&#x27;,</span><br><span class="line">                  &#125;,</span><br><span class="line">                &#125;,</span><br><span class="line">              &#125;,</span><br><span class="line">            ],</span><br><span class="line">            [&#x27;import&#x27;, [&#123; libraryName: &quot;antd&quot;, style: true &#125;]] // 新添加的一行</span><br><span class="line">          ],</span><br><span class="line">          // This is a feature of `babel-loader` for webpack (not Babel itself).</span><br><span class="line">          // It enables caching results in ./node_modules/.cache/babel-loader/</span><br><span class="line">          // directory for faster rebuilds.</span><br><span class="line">          cacheDirectory: true,</span><br><span class="line">          // Don&#x27;t waste time on Gzipping the cache</span><br><span class="line">          cacheCompression: false,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>还有一点，同样也需要安装babel-plugin-import插件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save babel-plugin-import</span><br></pre></td></tr></table></figure>
+
+<p>由于antd的样式是用less写的，所以还需要先安装less-loader，然后再修改webpack.config.dev.js和webpack.config.prod.js里的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save less-loader</span><br></pre></td></tr></table></figure>
+
+<p>修改地方一(cssRegex)：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// style files regexes</span><br><span class="line">const cssRegex = /\.css|less$/; // 添加|less</span><br><span class="line">const cssModuleRegex = /\.module\.css$/;</span><br><span class="line">const sassRegex = /\.(scss|sass)$/;</span><br><span class="line">const sassModuleRegex = /\.module\.(scss|sass)$/;</span><br></pre></td></tr></table></figure>
+
+<p>修改地方二（getStyleLoaders函数）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">// common function to get style loaders</span><br><span class="line">const getStyleLoaders = (cssOptions, preProcessor) =&gt; &#123;</span><br><span class="line">  const loaders = [</span><br><span class="line">    require.resolve(&#x27;style-loader&#x27;),</span><br><span class="line">    &#123;</span><br><span class="line">      loader: require.resolve(&#x27;css-loader&#x27;),</span><br><span class="line">      options: cssOptions,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      // Options for PostCSS as we reference these options twice</span><br><span class="line">      // Adds vendor prefixing based on your specified browser support in</span><br><span class="line">      // package.json</span><br><span class="line">      loader: require.resolve(&#x27;postcss-loader&#x27;),</span><br><span class="line">      options: &#123;</span><br><span class="line">        // Necessary for external CSS imports to work</span><br><span class="line">        // https://github.com/facebook/create-react-app/issues/2677</span><br><span class="line">        ident: &#x27;postcss&#x27;,</span><br><span class="line">        plugins: () =&gt; [</span><br><span class="line">          require(&#x27;postcss-flexbugs-fixes&#x27;),</span><br><span class="line">          require(&#x27;postcss-preset-env&#x27;)(&#123;</span><br><span class="line">            autoprefixer: &#123;</span><br><span class="line">              flexbox: &#x27;no-2009&#x27;,</span><br><span class="line">            &#125;,</span><br><span class="line">            stage: 3,</span><br><span class="line">          &#125;),</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      loader: require.resolve(&#x27;less-loader&#x27;)</span><br><span class="line">    &#125;, // 增加 less 的loader</span><br><span class="line">  ];</span><br><span class="line">  if (preProcessor) &#123;</span><br><span class="line">    loaders.push(require.resolve(preProcessor));</span><br><span class="line">  &#125;</span><br><span class="line">  return loaders;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>最后可以测试一下效果，修改一下App.js:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; Component &#125; from &#x27;react&#x27;;</span><br><span class="line">import &#123; Button &#125; from &#x27;antd&#x27;;</span><br><span class="line">import logo from &#x27;./logo.svg&#x27;;</span><br><span class="line">import &#x27;./App.css&#x27;;</span><br><span class="line"></span><br><span class="line">class App extends Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div className=&quot;App&quot;&gt;</span><br><span class="line">        &lt;header className=&quot;App-header&quot;&gt;</span><br><span class="line">          &lt;img src=&#123;logo&#125; className=&quot;App-logo&quot; alt=&quot;logo&quot; /&gt;</span><br><span class="line">          &lt;p&gt;</span><br><span class="line">            Edit &lt;code&gt;src/App.js&lt;/code&gt; and save to reload.</span><br><span class="line">          &lt;/p&gt;</span><br><span class="line">          &lt;p&gt;</span><br><span class="line">            &lt;Button type=&quot;primary&quot;&gt;按钮&lt;/Button&gt;</span><br><span class="line">          &lt;/p&gt;</span><br><span class="line">          &lt;a</span><br><span class="line">            className=&quot;App-link&quot;</span><br><span class="line">            href=&quot;https://reactjs.org&quot;</span><br><span class="line">            target=&quot;_blank&quot;</span><br><span class="line">            rel=&quot;noopener noreferrer&quot;</span><br><span class="line">          &gt;</span><br><span class="line">            Learn React</span><br><span class="line">          &lt;/a&gt;</span><br><span class="line">        &lt;/header&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default App;</span><br></pre></td></tr></table></figure>
+
+<p>然后启动项目，可以看到效果：<a target="_blank" rel="noopener" href="https://i.imgur.com/6sj9SAv.png"><img src="https://i.imgur.com/6sj9SAv.png"></a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>前端农民工
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2021/06/24/two-ways-to-import-antd-into-react-app/" title="create-react-app工具两种按需引入antd组件的方式">https://www.xiaoweihuang.me/2021/06/24/two-ways-to-import-antd-into-react-app/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/24/vue-cnode/" rel="prev" title="用Vue实现一个简易的cNode中文社区">
+      <i class="fa fa-chevron-left"></i> 用Vue实现一个简易的cNode中文社区
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/about-react-child-component-update/" rel="next" title="React子组件从父组件接收到新的props时，没有重新渲染的问题">
+      React子组件从父组件接收到新的props时，没有重新渲染的问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">方式一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">方式二</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

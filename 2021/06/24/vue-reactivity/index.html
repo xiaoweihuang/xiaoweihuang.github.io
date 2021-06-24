@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Vue 有两个比较核心的特性，一个是非侵入式的响应式数据绑定系统，另一个是组件系统。由于这两个功能非常重要，所以在求职面试的时候，面试官也通常会围绕这两部分进行提问，如数据绑定的底层实现，组件之间的通讯等等。接下来，本篇博客将主要探讨一下Vue的数据绑定原理与实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈Vue的数据绑定原理与实现">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2021/06/24/vue-reactivity/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="Vue 有两个比较核心的特性，一个是非侵入式的响应式数据绑定系统，另一个是组件系统。由于这两个功能非常重要，所以在求职面试的时候，面试官也通常会围绕这两部分进行提问，如数据绑定的底层实现，组件之间的通讯等等。接下来，本篇博客将主要探讨一下Vue的数据绑定原理与实现。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cn.vuejs.org/images/data.png">
+<meta property="article:published_time" content="2021-06-23T16:07:36.979Z">
+<meta property="article:modified_time" content="2021-06-24T14:49:11.513Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cn.vuejs.org/images/data.png">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2021/06/24/vue-reactivity/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>谈谈Vue的数据绑定原理与实现 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2021/06/24/vue-reactivity/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          谈谈Vue的数据绑定原理与实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-24 00:07:36 / 修改时间：22:49:11" itemprop="dateCreated datePublished" datetime="2021-06-24T00:07:36+08:00">2021-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Vue 有两个比较核心的特性，一个是非侵入式的响应式数据绑定系统，另一个是组件系统。由于这两个功能非常重要，所以在求职面试的时候，面试官也通常会围绕这两部分进行提问，如数据绑定的底层实现，组件之间的通讯等等。接下来，本篇博客将主要探讨一下Vue的数据绑定原理与实现。</p>
+<span id="more"></span>
+
+<h3>Vue是如何监听数据变化的</h3>
+
+<p>当实例化一个Vue组件的时候，我们会把一个普通的JavaScript对象传递给Vue实例的data选项，然后Vue会对这个对象里面的每个属性进行遍历，然后使用ES5的Object.defineProperty给这些属性设置getter和setter。由于Object.defineProperty是ES5无法shim的一个特性，所以Vue也不支持IE8以及更低版本的浏览器。Vue通过getter和setter劫持传入对象的属性后，然后在内部会跟踪依赖，当属性被访问或者被修改时通知变化。</p>
+<h3>Vue数据绑定原理</h3>
+
+<p>先看一张摘自Vue官方文档的图片：<a target="_blank" rel="noopener" href="https://cn.vuejs.org/images/data.png"><img src="https://cn.vuejs.org/images/data.png"></a>Vue的数据绑定是通过Object.defineProperty劫持数据并结合发布者-订阅者的设计模式来实现的。前面也已经提到了，Vue劫持数据后会对数据进行跟踪依赖，也就是监听它们的变化，所以我们需要设置一个Obsver监听器，用来监听所有劫持到的属性，当属性发生变化时，会通知Watcher订阅者来重新计算判断是否需要更新。由于会有很多订阅者，所以需要一个消息订阅器Dependency，用来专门收集这些订阅者，然后Vue在监听器Observer和订阅者Watcher之间进行统一管理。由于要更新组件视图，所以还需要有一个指令解析器Compile,它将对每个节点元素进行解析，识别出绑定在这些元素上的相关指令，同时将这些指令分别初始化为一个订阅者Watcher,并替换掉模板的数据或者绑定相应的更新函数，此时，如果订阅者Watcher计算到到属性的变化，就会执行相应的更新函数，从而更新视图。从上面的分析，我们知道要实现数据绑定，可以通过以下三个步骤完成：</p>
+<ol>
+<li> 实现一个监听器Observer,借助Object.defindProperty劫持所有属性，如果有变化，就会通知订阅者</li>
+<li> 实现一个订阅者Watcher,每一个订阅者都绑定一个更新函数，订阅者计算属性变化并执行相应的更新函数，从而更新视图</li>
+<li> 实现一个解析器Compile，解析和识别每个元素上的指令，并初始化这些包含指令的元素的模板数据以更新视图，并初始化相应的订阅者Watcher</li>
+</ol>
+<h3>Vue数据绑定的实现</h3>
+
+<blockquote>
+<p>监听器Observer</p>
+</blockquote>
+<p>核心功能是监听数据的变化，实现的核心方法是Object.defineProperty,劫持每个属性的setter和getter属性：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">// Dep用于订阅者的存储和收集，将在下面实现</span><br><span class="line">import Dep from &#x27;Dep&#x27;</span><br><span class="line">// Observer类用于给data属性添加set&amp;get方法</span><br><span class="line">export default class Observer&#123;</span><br><span class="line">    constructor(value)&#123;</span><br><span class="line">        this.value = value</span><br><span class="line">        this.walk(value)</span><br><span class="line">    &#125;</span><br><span class="line">    walk(value)&#123;</span><br><span class="line">        Object.keys(value).forEach(key =&gt; this.convert(key, value[key]))</span><br><span class="line">    &#125;</span><br><span class="line">    convert(key, val)&#123;</span><br><span class="line">        defineReactive(this.value, key, val)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">export function defineReactive(obj, key, val)&#123;</span><br><span class="line">    var dep = new Dep()</span><br><span class="line">    // 给当前属性的值添加监听</span><br><span class="line">    var chlidOb = observe(val)</span><br><span class="line">    Object.defineProperty(obj, key, &#123;</span><br><span class="line">        enumerable: true,</span><br><span class="line">        configurable: true,</span><br><span class="line">        get: ()=&gt; &#123;</span><br><span class="line">            console.log(&#x27;get value&#x27;)</span><br><span class="line">            // 如果Dep类存在target属性，将其添加到dep实例的subs数组中</span><br><span class="line">            // target指向一个Watcher实例，每个Watcher都是一个订阅者</span><br><span class="line">            // Watcher实例在实例化过程中，会读取data中的某个属性，从而触发当前get方法</span><br><span class="line">            // 此处的问题是：并不是每次Dep.target有值时都需要添加到订阅者管理员中去管理，需要对订阅者去重，不影响整体思路，不去管它</span><br><span class="line">            if(Dep.target)&#123;</span><br><span class="line">                dep.addSub(Dep.target)</span><br><span class="line">            &#125;</span><br><span class="line">            return val</span><br><span class="line">        &#125;,</span><br><span class="line">        set: (newVal) =&gt; &#123;</span><br><span class="line">            console.log(&#x27;new value seted&#x27;)</span><br><span class="line">            if(val === newVal) return</span><br><span class="line">            val = newVal</span><br><span class="line">            // 对新值进行监听</span><br><span class="line">            chlidOb = observe(newVal)</span><br><span class="line">            // 通知所有订阅者，数值被改变了</span><br><span class="line">            dep.notify()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line">export function observe(value)&#123;</span><br><span class="line">    // 当值不存在，或者不是复杂数据类型时，不再需要继续深入监听</span><br><span class="line">    if(!value || typeof value !== &#x27;object&#x27;)&#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    return new Observer(value)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>消息订阅器Dependency</p>
+</blockquote>
+<p>用于对订阅者进行收集和通知</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">export default class Dep&#123;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        this.subs = []</span><br><span class="line">    &#125;</span><br><span class="line">    addSub(sub)&#123;</span><br><span class="line">        this.subs.push(sub)</span><br><span class="line">    &#125;</span><br><span class="line">    notify()&#123;</span><br><span class="line">        // 通知所有的订阅者(Watcher)，触发订阅者的相应逻辑处理</span><br><span class="line">        this.subs.forEach((sub) =&gt; sub.update())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>订阅者Watcher</p>
+</blockquote>
+<p>每个被劫持的属性都对应一个订阅者，当属性被访问时，订阅者会对新旧数据进行比较，如果发生了变化，则会执行相应的更新函数，从而更新视图</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import Dep from &#x27;Dep&#x27;</span><br><span class="line">export default class Watcher&#123;</span><br><span class="line">    constructor(vm, expOrFn, cb)&#123;</span><br><span class="line">        this.vm = vm // 被订阅的数据一定来自于当前Vue实例</span><br><span class="line">        this.cb = cb // 当数据更新时想要做的事情</span><br><span class="line">        this.expOrFn = expOrFn // 被订阅的数据</span><br><span class="line">        this.val = this.get() // 维护更新之前的数据</span><br><span class="line">    &#125;</span><br><span class="line">    // 对外暴露的接口，用于在订阅的数据被更新时，由订阅者管理员(Dep)调用</span><br><span class="line">    update()&#123;</span><br><span class="line">        this.run()</span><br><span class="line">    &#125;</span><br><span class="line">    run()&#123;</span><br><span class="line">        const val = this.get()</span><br><span class="line">        if(val !== this.val)&#123;</span><br><span class="line">            this.val = val;</span><br><span class="line">            this.cb.call(this.vm)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    get()&#123;</span><br><span class="line">        // 当前订阅者(Watcher)读取被订阅数据的最新更新后的值时，通知订阅者管理员收集当前订阅者</span><br><span class="line">        Dep.target = this</span><br><span class="line">        const val = this.vm._data[this.expOrFn]</span><br><span class="line">        // 置空，用于下一个Watcher使用</span><br><span class="line">        Dep.target = null</span><br><span class="line">        return val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>解析器Compile</p>
+</blockquote>
+<p>解析每个元素上的指令，并将它们对应的节点绑定相应的更新函数，初始化相应的订阅者，或者替换模板数据，初始化视图。</p>
+<ul>
+<li><p>先创建一个fragment片段，并将要解析的dom节点存入fragment片段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function nodeToFragment (el) &#123;</span><br><span class="line">var fragment = document.createDocumentFragment();</span><br><span class="line">var child = el.firstChild;</span><br><span class="line">while (child) &#123;</span><br><span class="line">    // 将Dom元素移入fragment中</span><br><span class="line">    fragment.appendChild(child);</span><br><span class="line">    child = el.firstChild</span><br><span class="line">&#125;</span><br><span class="line">return fragment;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>遍历各个节点，对包含相关指令的节点进行处理：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">function compileElement (el) &#123;</span><br><span class="line">var childNodes = el.childNodes;</span><br><span class="line">var self = this;</span><br><span class="line">[].slice.call(childNodes).forEach(function(node) &#123;</span><br><span class="line">    var reg = /\&#123;\&#123;(.*)\&#125;\&#125;/;</span><br><span class="line">    var text = node.textContent;</span><br><span class="line"></span><br><span class="line">    if (self.isTextNode(node) &amp;&amp; reg.test(text)) &#123;  // 判断是否是符合这种形式&#123;&#123;&#125;&#125;的指令</span><br><span class="line">        self.compileText(node, reg.exec(text)[1]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (node.childNodes &amp;&amp; node.childNodes.length) &#123;</span><br><span class="line">        self.compileElement(node);  // 继续递归遍历子节点</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">&#125;,</span><br><span class="line">function compileText (node, exp) &#123;</span><br><span class="line">var self = this;</span><br><span class="line">var initText = this.vm[exp];</span><br><span class="line">this.updateText(node, initText);  // 将初始化的数据初始化到视图中</span><br><span class="line">new Watcher(this.vm, exp, function (value) &#123;  // 生成订阅器并绑定更新函数</span><br><span class="line">    self.updateText(node, value);</span><br><span class="line">&#125;);</span><br><span class="line">&#125;,</span><br><span class="line">function (node, value) &#123;</span><br><span class="line">node.textContent = typeof value == &#x27;undefined&#x27; ? &#x27;&#x27; : value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>前端农民工
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2021/06/24/vue-reactivity/" title="谈谈Vue的数据绑定原理与实现">https://www.xiaoweihuang.me/2021/06/24/vue-reactivity/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/24/refactoring/" rel="prev" title="你一定是闲得蛋疼才重构的吧【转载】">
+      <i class="fa fa-chevron-left"></i> 你一定是闲得蛋疼才重构的吧【转载】
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/vuex-mapState-analysis/" rel="next" title="vuex mapState 函数源码浅析">
+      vuex mapState 函数源码浅析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Vue是如何监听数据变化的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">Vue数据绑定原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">Vue数据绑定的实现</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

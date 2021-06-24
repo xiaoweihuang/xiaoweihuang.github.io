@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Facebook在九月中旬就开源了React Native Android，我一直想尝试一下它，毕竟自己不想被新技术甩地太远，保持对新技术的好奇与热情很重要。有点遗憾的是，我的笔记本系统是windows,而React Native的官方文档中声明，React Native目前仅支持在Mac OSX上进行开发，还好喜欢折腾的大有人在，已经有人成功在windows上配置好React Native An">
+<meta property="og:type" content="article">
+<meta property="og:title" content="windows上配置React Native Android开发环境">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2015/10/07/hello-reactnativeandroid/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="Facebook在九月中旬就开源了React Native Android，我一直想尝试一下它，毕竟自己不想被新技术甩地太远，保持对新技术的好奇与热情很重要。有点遗憾的是，我的笔记本系统是windows,而React Native的官方文档中声明，React Native目前仅支持在Mac OSX上进行开发，还好喜欢折腾的大有人在，已经有人成功在windows上配置好React Native An">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/image.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/image86aa2b94973f4642.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/image03f6c4c32725803b.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/image75939723f1c50880.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/imagef644b2341b25c8b7.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/imaged53a87702c3f4e39.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/imageefadf9583eca2e9b.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/image0a0aa28817d5cf6a.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/image43def37b27a31fe6.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/image6834ee835236ae68.png">
+<meta property="og:image" content="http://xiaoweihuang.github.io/img/2015-10-07-react-native-android/success.gif">
+<meta property="article:published_time" content="2015-10-07T07:52:00.000Z">
+<meta property="article:modified_time" content="2021-06-23T15:28:30.662Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="React Native">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.xiaoweihuang.me/images/2021/06/23/image.png">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2015/10/07/hello-reactnativeandroid/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>windows上配置React Native Android开发环境 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2015/10/07/hello-reactnativeandroid/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          windows上配置React Native Android开发环境
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-10-07 15:52:00" itemprop="dateCreated datePublished" datetime="2015-10-07T15:52:00+08:00">2015-10-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-23 23:28:30" itemprop="dateModified" datetime="2021-06-23T23:28:30+08:00">2021-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React-Native%E3%80%82/" itemprop="url" rel="index"><span itemprop="name">React Native。</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Facebook在九月中旬就开源了React Native Android，我一直想尝试一下它，毕竟自己不想被新技术甩地太远，保持对新技术的好奇与热情很重要。有点遗憾的是，我的笔记本系统是windows,而React Native的官方文档中声明，React Native目前仅支持在Mac OSX上进行开发，还好喜欢折腾的大有人在，已经有人成功在windows上配置好React Native Android开发环境了。接下来，我就站在这些大神的肩膀上，假装自己是大神，将我自己在windows上进行环境配置的过程分享出来。</p>
+<span id="more"></span>
+
+<blockquote>
+<p>安装JDK</p>
+</blockquote>
+<p>先到 <a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html" title="Java">Java</a> 官网下载并安装，注意是X86还是X64版本，成功安装后，把JDK的安装目录添加到系统的Path环境变量中。</p>
+<blockquote>
+<p>安装Android SDK</p>
+</blockquote>
+<p>Android SDK可以单独安装，也可以通过Eclipse ADT或者Android Studio一并安装，推荐使用google官方推出的Android开发工具Android Studio与Android SDK一并安装。<br>首先到官方下载页面 <a target="_blank" rel="noopener" href="https://developer.android.com/intl/zh-cn/sdk/index.html">Android Studio</a> ，下载并安装（要记住SDK的安装目录，默认安装在C:\Users\Administrator\AppData\Local\Android\sdk目录下）。</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/image.png"></p>
+<p>然后进入到 SDK 的安装目录,把SDK安装目录以及platform-toos子目录路径添加到系统的Path环境变量中：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/image86aa2b94973f4642.png"></p>
+<p>双击 SDK Manager.exe ，选择需要安装的Android版本，然后点击 install packages,安装完成后的界面如下图所示：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/image03f6c4c32725803b.png"></p>
+<p>到这一步，Android SDK已安装完成。</p>
+<blockquote>
+<p>安装Node.JS</p>
+</blockquote>
+<p>进入Node官网 <a target="_blank" rel="noopener" href="https://nodejs.org/en/download/">下载</a> 页面，点击符合你的计算机系统的版本进行下载并安装：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/image75939723f1c50880.png"></p>
+<p>然后进入命令行，输入 <code>node -v</code> 并回车，如果返回以下结果，表明node.JS安装成功。</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/imagef644b2341b25c8b7.png"></p>
+<blockquote>
+<p>安装react-native命令行工具</p>
+</blockquote>
+<p>在命令行执行以下命令：</p>
+<pre><code>npm install -g react-native-cli
+</code></pre>
+<blockquote>
+<p>初始化 HelloWorld 应用</p>
+</blockquote>
+<p>在命令行执行以下命令：</p>
+<pre><code>react-native init HelloWorld
+</code></pre>
+<p>由于npm的版本问题，在windows下存在bug,会报错，解决办法是，进入到github上React-Native项目的 <a target="_blank" rel="noopener" href="https://github.com/facebook/react-native">首页</a> ，点击右下角的 Download zip,并解压到硬盘上。</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/imaged53a87702c3f4e39.png"></p>
+<p>从命令行进入到解压目录，然后再进入到 react-native-cli 子目录，执行以下命令：</p>
+<pre><code>npm -g install 
+</code></pre>
+<p>然后再重新执行 <code>react-native init HelloWorld</code> ，初次创建React Native Android 项目会比较慢。</p>
+<blockquote>
+<p>运行packager</p>
+</blockquote>
+<p>从命令行进入到 HelloWorld 项目目录，然后执行以下命令：</p>
+<pre><code>node node_modules/react-native/packager/packager.js
+</code></pre>
+<blockquote>
+<p>创建AVD</p>
+</blockquote>
+<p>打开SDK的安装目录，双击 AVD Manager.exe ，然后在弹出的AVD管理窗口中，点击create开始创建AVD，设置好参数后，点击OK；</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/imageefadf9583eca2e9b.png"></p>
+<p>然后在AVD管理窗口中，选中Android5.1.1,再点击start,之后等待模拟器开启。</p>
+<blockquote>
+<p>执行 react-native run-android</p>
+</blockquote>
+<p>保持packager开启的状态，新开一个命令行窗口，进入到 HelloWorld 项目目录，然后执行以下命令：</p>
+<pre><code>react-native run-android
+</code></pre>
+<p>这时，在开启packer的窗口会报以下错误：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/image0a0aa28817d5cf6a.png"></p>
+<p>解决这个问题的办法是：在node_modules/react-native/packager/react-packager/src/DependencyResolver/DependencyGraph/ResolutionRequest.js的_resolveNodeDependency(fromModule, toModuleName)方法中，将</p>
+<pre><code>for (let currDir = path.dirname(fromModule.path);                 
+    currDir !== &#39;/&#39;;                 
+currDir = path.dirname(currDir)) &#123;
+</code></pre>
+<p>修改为</p>
+<pre><code>for (let currDir = path.dirname(fromModule.path);                 
+    path.dirname(currDir) != currDir;                 
+currDir = path.dirname(currDir)) &#123;
+</code></pre>
+<p>然后重新开启packer,并在另一个窗口重新执行 <code>react-native run-android</code> 命令，</p>
+<p>如果运行<code> react-native run-android</code>命令的窗口返回如下结果，表明HelloWorld应用在虚拟机上安装成功，</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/image43def37b27a31fe6.png"></p>
+<p>但这时出现了另外一个问题，内容不能渲染出来，空白一片。</p>
+<p><img src="https://img.xiaoweihuang.me/images/2021/06/23/image6834ee835236ae68.png"></p>
+<p>如果使用的是真机调试（以及Android5.0以下），则可能还会出现 Unable to download JS bundle的错误，解决这个问题的方法如下（来自stackoverflow）：</p>
+<pre><code>* MORE INFO FOR RUNNING/DEBUGGING ON A DEVICE *
+You might find that if you deploy your app to your Android device rather than an emulater you get a red screen of death with an error saying Unable to load JS Bundle. You need to set the debug server for your device to be your computer running react...either its name OR IP address.
+1.    Press the device Menu button
+2.    Select Dev Settings
+3.    Select Debug server host for device
+4.    Type in your machine&#39;s IP and Reload JS
+More info: http://facebook.github.io/react-native/docs/running-on-device-android.html
+</code></pre>
+<p>另外解决内容不能渲染出来的方法如下：在node_modules/react-native/packager/react-packager/src/DependencyResolver/Module.js的getName()方法中，将</p>
+<pre><code>return path.join(name, path.relative(p.root, this.path));
+</code></pre>
+<p>修改为：</p>
+<pre><code>return path.join(name, path.relative(p.root, this.path)).replace(/\\/g, &#39;/&#39;);
+</code></pre>
+<p>然后重新开启 packer,并在另一个窗口重新执行 <code> react-native run-android</code> 命令,这时将能成功在虚拟机上运行HelloWorld:</p>
+<p><img src="http://xiaoweihuang.github.io/img/2015-10-07-react-native-android/success.gif"></p>
+<hr>
+<p>转载请注明本文链接： <a target="_blank" rel="noopener" href="http://xiaoweihuang.github.io/2015/10/05/hello-reactnativeandroid/">http://xiaoweihuang.github.io/2015/10/05/hello-reactnativeandroid/</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>xiaoweihuang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2015/10/07/hello-reactnativeandroid/" title="windows上配置React Native Android开发环境">https://www.xiaoweihuang.me/2015/10/07/hello-reactnativeandroid/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React-Native/" rel="tag"># React Native</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/10/07/nodejs/" rel="prev" title="Node初学者入门教程（转载）">
+      <i class="fa fa-chevron-left"></i> Node初学者入门教程（转载）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/04/07/My-front-end-developer-life/" rel="next" title="关于前端开发学习的回顾与展望">
+      关于前端开发学习的回顾与展望 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

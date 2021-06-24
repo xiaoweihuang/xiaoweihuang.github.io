@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="我们在面试或者笔试的过程中，对象的深复制问题经常会被问到，说难不难，说简单也不简单，要弄清楚这个问题，我们首先需要明确的是在JavaScript中的数据类型有哪些，通常分为两大类，一类是基本数据类型，包括Boolean、Null、Number、undefined、String、Symbol，还有一类是复杂数据类型，即Object类型。在这篇博客中，我们主要来回顾一下对象的深度复制，也就是如何实现对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript基础回顾（三）：如何实现对象的深度复制">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2021/06/24/about-deepclone-object/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="我们在面试或者笔试的过程中，对象的深复制问题经常会被问到，说难不难，说简单也不简单，要弄清楚这个问题，我们首先需要明确的是在JavaScript中的数据类型有哪些，通常分为两大类，一类是基本数据类型，包括Boolean、Null、Number、undefined、String、Symbol，还有一类是复杂数据类型，即Object类型。在这篇博客中，我们主要来回顾一下对象的深度复制，也就是如何实现对">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-24T13:38:59.797Z">
+<meta property="article:modified_time" content="2021-06-24T14:33:49.816Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2021/06/24/about-deepclone-object/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>JavaScript基础回顾（三）：如何实现对象的深度复制 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2021/06/24/about-deepclone-object/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript基础回顾（三）：如何实现对象的深度复制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-24 21:38:59 / 修改时间：22:33:49" itemprop="dateCreated datePublished" datetime="2021-06-24T21:38:59+08:00">2021-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我们在面试或者笔试的过程中，对象的深复制问题经常会被问到，说难不难，说简单也不简单，要弄清楚这个问题，我们首先需要明确的是在JavaScript中的数据类型有哪些，通常分为两大类，一类是基本数据类型，包括Boolean、Null、Number、undefined、String、Symbol，还有一类是复杂数据类型，即Object类型。在这篇博客中，我们主要来回顾一下对象的深度复制，也就是如何实现对复杂数据类型的深度复制。在回顾之前，我们先来看看基本数据类型的复制。</p>
+<span id="more"></span>
+
+<blockquote>
+<h3>基本数据类型的复制</h3>
+</blockquote>
+<p>基本数据类型的复制其实就是我们通常所说的浅复制，变量复制以后，修改旧的或者复制出来的变量，另一个变量保持不变，因为基本数据类型我们是按值来访问的，操作是它们实际保存的值。举个简单的例子：</p>
+<pre><code>var a = 123;
+var b = a;
+a = &#39;abc&#39;;
+console.log(b); // =&gt; 123
+</code></pre>
+<p>为什么会这样呢？我们从内存的角度来分析这个现象，当变量被复制以后，计算机会在栈内存中开辟一块新的内存来保存复制后的值，所以复制前后的两个变量互不干涉，它们都是栈内存的一块空间，在执行上下文栈执行完这些代码后，它们就会从内存中被释放。</p>
+<p>从上面的内存分配图简单理解一下基本数据类型的复制，当我们将a的值赋给b的时候，在栈内存中就会开辟一块新的空间用来保存b，同时b的值为123，当对a进行重新赋值为’abc’后，实际只改变了a的值，对b没有影响。同样的，如果我们对b进行重新赋值，实际也只会改变b的值，对a不会产生影响。接下来我们就探索一下，如何实现复杂数据类型的深度复制，这个深度复制也是基于基本数据类型的浅复制而言的。</p>
+<blockquote>
+<h3>对象的复制</h3>
+</blockquote>
+<p>先来看一个简单的例子，我们按照前面复制基本数据类型的做法对对象进行浅复制，看看结果怎么样：</p>
+<pre><code>var a = &#123; x: 1 &#125;
+var b = a;
+b.x = 2;
+console.log(a.x) // =&gt; 2
+</code></pre>
+<p>从上面例子的运行结果来看，我们使用复制基本数据类型的做法来对对象进行复制是不行的，我们修改复制后对象的某个属性，直接影响到了原来的对象。原因就是我们在代码中操作对象的时候，实际上操作的是对象的引用。从内存的角度来分析就是，a变量是在栈内存中的某块空间保存，它指向堆内存的另一块空间，这块空间的值就是对象实际的值，对a对象进行复制后，会在栈内存中开辟一块新的空间保存复制后的变量b，同时b跟a指向了堆内存中的同一块空间，所以修改其中一个对象都会影响到另一个对象的值。</p>
+<p>从内存图可以直观看出，复制后的变量b是栈内存中的另一块空间，但是它跟a指向的是堆内存中的同一块地址，当我们修改b.x的值时，a.x也会被修改。要想复制后的变量跟原来的对象互不影响，我们就需要对对象进行深度复制。如何实现深度复制呢？无非就是要让复制后的对象与原对象指向不同的堆内存空间。</p>
+<blockquote>
+<h3>实现一个能复制基本数据类型，也能深度复制对象的通用方法</h3>
+</blockquote>
+<p>首先封装一个能实现复制基本数据类型的方法：</p>
+<pre><code>function isObject(obj) &#123;
+    return typeof obj === &#39;object&#39; &amp;&amp; !!obj;
+&#125;
+
+function deepClone(obj) &#123;
+    if (!isObject(obj)) return obj;
+&#125;
+</code></pre>
+<p>上面的deepClone方法，当我们判断到数据是非对象类型或者null时，我们返回传入的变量即可以实现基本数据类型的复制，包括null的复制，但是上面判断传入的值是否是对象的方法有问题吗？还是有问题的，假如我们传入的是一个function时，isObject执行后的返回值将是false，也就是我们执行deepClone后，返回的是传入的function，举个简单的例子：</p>
+<pre><code>function isObject(obj) &#123;
+    return typeof obj === &#39;object&#39; &amp;&amp; !!obj;
+&#125;
+
+function deepClone(obj) &#123;
+    if (!isObject(obj)) return obj;
+&#125;
+
+var a = function() &#123; console.log(&#39;test&#39;) &#125;
+var b = deepClone(a);
+b(); // =&gt; test
+</code></pre>
+<p>从输出的结果来看，好像是deepClone是实现了对象的复制，但是我们给a添加一些属性，然后使用deepClone复制出对象b，同时修改b对象的属性，看看是否会对a对象产生影响：</p>
+<pre><code>function isObject(obj) &#123;
+    return typeof obj === &#39;object&#39; &amp;&amp; !!obj;
+&#125;
+
+function deepClone(obj) &#123;
+    if (!isObject(obj)) return obj;
+&#125;
+
+var a = function() &#123; console.log(&#39;test&#39;) &#125;
+a.x = 1;
+var b = deepClone(a);
+b.x = 2;
+console.log(a.x) // =&gt; 2
+</code></pre>
+<p>很显然，我们不能使用浅复制的方式对function进行复制，而是以对象的形式对它进行复制，所以isObject修改一下: </p>
+<pre><code>function isObject(obj) &#123;
+    var type = typeof obj;
+    return type === &#39;object&#39; &amp;&amp; !!obj || type === &#39;function&#39;;
+&#125;
+
+function deepClone(obj) &#123;
+    if (!isObject(obj)) return obj;
+&#125;
+</code></pre>
+<p>通过上述代码的封装，我们就可以实现基本数据类型的复制了，接下来我们看看如何深度复制对象类型的数据。</p>
+<p>我们知道typeof的返回值是”object”的是数据类型括数组类型、对象类型以及null，但null我们已经把它当做特例处理了，即传入null的时候，返回null即可实现复制，所以接下来思考一下如何深度复制数组、对象类型的数据。</p>
+<p>关于数组的深度复制，我们不难想到数组的slice方法，它是返回一个新的数组，所以用这个方法即可以实现数组的深度复制：</p>
+<pre><code>function isObject(obj) &#123;
+    var type = typeof obj;
+    return type === &#39;object&#39; &amp;&amp; !!obj || type === &#39;function&#39;;
+&#125;
+
+function deepClone(obj) &#123;
+    if (!isObject(obj)) return obj;
+    if (Object.prototype.toString.call(obj) === &#39;[object Array]&#39;) &#123;
+        return obj.slice();
+    &#125;
+&#125;
+</code></pre>
+<p>简单测试一下：</p>
+<pre><code>function isObject(obj) &#123;
+    var type = typeof obj;
+    return type === &#39;object&#39; &amp;&amp; !!obj || type === &#39;function&#39;;
+&#125;
+
+function deepClone(obj) &#123;
+    if (!isObject(obj)) return obj;
+    if (Object.prototype.toString.call(obj) === &#39;[object Array]&#39;) &#123;
+        return obj.slice();
+    &#125;
+&#125;
+
+var a = [1, 2, 3];
+var b = deepClone(a);
+b[0] = 0;
+console.log(b) // =&gt; [0, 2, 3]
+console.log(a) // =&gt; [1, 2, 3]
+</code></pre>
+<p>从运行结果来看，我们已经实现了数组的深度复制，接下来我们继续探讨对象的深度复制，假如我们需要深度复制下面这样一个对象，该如何做：</p>
+<pre><code>&#123;
+    x: 1,
+    y: &#39;a&#39;,
+    z: &#123;
+        i: 2,
+        j: &#123;
+            k: 3
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>简单思考一下，可以按如下实现对对象的深度复制：</p>
+<pre><code>function isObject(obj) &#123;
+    var type = typeof obj;
+    return type === &#39;object&#39; &amp;&amp; !!obj || type === &#39;function&#39;;
+&#125;
+
+function deepClone(obj) &#123;
+    if (!isObject(obj)) return obj;
+    if (Object.prototype.toString.call(obj) === &#39;[object Array]&#39;) &#123;
+        return obj.slice();
+    &#125; else &#123;
+        var result = &#123;&#125;;
+        for(var key in obj) &#123;
+            result[key] = typeof obj[key] === &#39;object&#39; ? deepClone(obj[key]) : obj[key];
+        &#125;
+        return result;
+    &#125;
+&#125;
+</code></pre>
+<p>简单测试：</p>
+<pre><code>var a = &#123;
+    x: 1,
+    y: &#39;a&#39;,
+    z: &#123;
+        i: 2,
+        j: &#123;
+            k: 3
+        &#125;
+    &#125;
+&#125;
+var b = deepClone(a);
+b.z = false;
+console.log(a); // =&gt; &#123; x: 1, y: &quot;a&quot;, z: &#123; i: 2, j: &#123; k: 3 &#125; &#125; &#125;
+console.log(b); // =&gt; &#123; x: 1, y: &quot;a&quot;, z: false &#125;
+</code></pre>
+<p>使用deepClone深度复制对象后，修改复制后的对象不会影响原来的对象。到了这里，我们可以实现基本数据类型、null以及对象的深度复制了。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>前端农民工
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2021/06/24/about-deepclone-object/" title="JavaScript基础回顾（三）：如何实现对象的深度复制">https://www.xiaoweihuang.me/2021/06/24/about-deepclone-object/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/24/about-scope/" rel="prev" title="JavaScript基础回顾（二）：词法作用域与动态作用域">
+      <i class="fa fa-chevron-left"></i> JavaScript基础回顾（二）：词法作用域与动态作用域
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/about-object-inheritance/" rel="next" title="JavaScript基础回顾（四）：如何实现对象的继承">
+      JavaScript基础回顾（四）：如何实现对象的继承 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">基本数据类型的复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">对象的复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">实现一个能复制基本数据类型，也能深度复制对象的通用方法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

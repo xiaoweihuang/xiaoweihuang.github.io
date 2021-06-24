@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vuex mapState 函数源码浅析">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2021/06/24/vuex-mapState-analysis/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-23T16:09:04.964Z">
+<meta property="article:modified_time" content="2021-06-24T14:49:23.920Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="vuex">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2021/06/24/vuex-mapState-analysis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>vuex mapState 函数源码浅析 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2021/06/24/vuex-mapState-analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          vuex mapState 函数源码浅析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-24 00:09:04 / 修改时间：22:49:23" itemprop="dateCreated datePublished" datetime="2021-06-24T00:09:04+08:00">2021-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vuex/" itemprop="url" rel="index"><span itemprop="name">vuex</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>为了加深对vuex的理解，今天下午的时候刚好有空，所以就挑了vuex的辅助函数 mapState 的源码简单分析了下，顺便写这篇博客记录下来，在分析源码之前，我们先来回顾一下mapState的用法。对于使用过vuex的朋友来说，应该都知道mapState可以将store中的state映射为vue组件的计算属性，通过使用mapState可以减少代码的重复和冗余：</p>
+<span id="more"></span>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 在单独构建的版本中辅助函数为 Vuex.mapState</span><br><span class="line">import &#123; mapState &#125; from &#x27;vuex&#x27;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line"> computed: mapState(&#123;</span><br><span class="line"></span><br><span class="line">     count: state =&gt; state.count,</span><br><span class="line"></span><br><span class="line">     // 传字符串参数 &#x27;count&#x27; 等同于 `state =&gt; state.count`</span><br><span class="line">     countAlias: &#x27;count&#x27;,</span><br><span class="line"></span><br><span class="line">     // 为了能够使用 `this` 获取局部状态，这里要使用常规函数，而不能使用箭头函数</span><br><span class="line">     countPlusLocalState (state) &#123;</span><br><span class="line">         return state.count + this.localCount</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码将count和countPlusLocalState映射为组件的计算属性，如果组件的计算属性跟state的子节点的名称相同时，也可以给mapState传入一个字符串数组：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 在单独构建的版本中辅助函数为 Vuex.mapState</span><br><span class="line">import &#123; mapState &#125; from &#x27;vuex&#x27;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line"> // ...</span><br><span class="line"> computed: mapState([</span><br><span class="line">     &#x27;count&#x27;,</span><br><span class="line">     &#x27;coutPlusLocalState&#x27;</span><br><span class="line"> ])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>回顾了mapState的具体用法，接下来就分析一下它的源码吧，vuex辅助函数的源码地址在这里：<a target="_blank" rel="noopener" href="https://github.com/vuejs/vuex/blob/dev/src/helpers.js">https://github.com/vuejs/vuex/blob/dev/src/helpers.js</a>这里主要分析mapState函数的源码，其他辅助函数的源码也差不多，分析懂了其中一个，其他也就信手拈来了。需要读懂mapState的源码，必须要有以下三个基础知识点的储备，如果自己忘记了或者记忆不太清了，可以自行去温习一下：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray">Array.isArray()</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map">Array.prototype.map()</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys">Object.keys()</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call">Function.prototype.call()</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">解构赋值</a></li>
+</ul>
+<p>下面我把mapState源码相关的代码先抽出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Reduce the code which written in Vue.js for getting the state.</span><br><span class="line"> * @param &#123;String&#125; [namespace] - Module&#x27;s namespace</span><br><span class="line"> * @param &#123;Object|Array&#125; states # Object&#x27;s item can be a function </span><br><span class="line"> * which accept state and getters for param, you can do something for state and getters in it.</span><br><span class="line"> * @param &#123;Object&#125;</span><br><span class="line"> */</span><br><span class="line">export const mapState = normalizeNamespace((namespace, states) =&gt; &#123;</span><br><span class="line"> const res = &#123;&#125;</span><br><span class="line"> normalizeMap(states).forEach((&#123; key, val &#125;) =&gt; &#123;</span><br><span class="line">     res[key] = function mappedState () &#123;</span><br><span class="line">         let state = this.$store.state</span><br><span class="line">         let getters = this.$store.getters</span><br><span class="line">         if (namespace) &#123;</span><br><span class="line">              const module = getModuleByNamespace(this.$store, &#x27;mapState&#x27;, namespace)</span><br><span class="line">              if (!module) &#123;</span><br><span class="line">                 return</span><br><span class="line">              &#125;</span><br><span class="line">              state = module.context.state</span><br><span class="line">              getters = module.context.getters</span><br><span class="line">         &#125;</span><br><span class="line">         return typeof val === &#x27;function&#x27;</span><br><span class="line">                    ? val.call(this, state, getters)</span><br><span class="line">                        : state[val]</span><br><span class="line">     &#125;</span><br><span class="line">     // mark vuex getter for devtools</span><br><span class="line">     res[key].vuex = true</span><br><span class="line"> &#125;)</span><br><span class="line"> return res</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Return a function expect two param contains namespace and map. </span><br><span class="line"> * it will normalize the namespace and then the param&#x27;s function will handle the new namespace and the map.</span><br><span class="line"> * @param &#123;Function&#125; fn</span><br><span class="line"> * @return &#123;Function&#125;</span><br><span class="line"> */</span><br><span class="line">function normalizeNamespace (fn) &#123;</span><br><span class="line"> return (namespace, map) =&gt; &#123;</span><br><span class="line">   if (typeof namespace !== &#x27;string&#x27;) &#123;</span><br><span class="line">        map = namespace</span><br><span class="line">        namespace = &#x27;&#x27;</span><br><span class="line">   &#125; else if (namespace.charAt(namespace.length - 1) !== &#x27;/&#x27;) &#123;</span><br><span class="line">        namespace += &#x27;/&#x27;</span><br><span class="line">   &#125;</span><br><span class="line">   return fn(namespace, map)</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">**</span><br><span class="line"> * Normalize the map</span><br><span class="line"> * normalizeMap([1, 2, 3]) =&gt; [ &#123; key: 1, val: 1 &#125;, &#123; key: 2, val: 2 &#125;, &#123; key: 3, val: 3 &#125; ]</span><br><span class="line"> * normalizeMap(&#123;a: 1, b: 2, c: 3&#125;) =&gt; [ &#123; key: &#x27;a&#x27;, val: 1 &#125;, &#123; key: &#x27;b&#x27;, val: 2 &#125;, &#123; key: &#x27;c&#x27;, val: 3 &#125; ]</span><br><span class="line"> * @param &#123;Array|Object&#125; map</span><br><span class="line"> * @return &#123;Object&#125;</span><br><span class="line"> */</span><br><span class="line">function normalizeMap (map) &#123;</span><br><span class="line"> return Array.isArray(map)</span><br><span class="line"> ? map.map(key =&gt; (&#123; key, val: key &#125;))</span><br><span class="line"> : Object.keys(map).map(key =&gt; (&#123; key, val: map[key] &#125;))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Search a special module from store by namespace. if module not exist, print error message.</span><br><span class="line"> * @param &#123;Object&#125; store</span><br><span class="line"> * @param &#123;String&#125; helper</span><br><span class="line"> * @param &#123;String&#125; namespace</span><br><span class="line"> * @return &#123;Object&#125;</span><br><span class="line"> */</span><br><span class="line">function getModuleByNamespace (store, helper, namespace) &#123;</span><br><span class="line">    const module = store._modulesNamespaceMap[namespace]</span><br><span class="line">    if (process.env.NODE_ENV !== &#x27;production&#x27; &amp;&amp; !module) &#123;</span><br><span class="line">        console.error(`[vuex] module namespace not found in $&#123;helper&#125;(): $&#123;namespace&#125;`)</span><br><span class="line">    &#125;</span><br><span class="line">    return module</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实上面的代码，除了export 方法 mapState 外的其他函数都是所有辅助函数所共用的。第一步需要先分析normalizeNamespace 方法，从源码可以看到，它传入了一个参数，这个参数是一个函数fn，调用normalizeNamespace 后会return回一个匿名函数，这个匿名函数可以传入两个参数：一个是namespace, 一个是map, 这两个参数其实就是用来接收我们在组件中调用mapState方法时要传入的参数，通常情况下我们的应用没有那么复杂，不需要使用命名空间，所以一般都是只传入一个参数，也就是那些被映射为组件计算属性的一些值，但是有时候我们的应用会比较庞大，为了后期便于维护，我们会使用到vuex 支持的 module，这时就会有命名空间的设置，这种情况下传入的两个参数就要严格按照这个匿名函数定义时给出的参数列表顺序进行传值，第一个参数必须是命名空间，而第二个参数就是需要被映射给组件的值，看看源码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function normalizeNamespace (fn) &#123;</span><br><span class="line"> return (namespace, map) =&gt; &#123;</span><br><span class="line">     if (typeof namespace !== &#x27;string&#x27;) &#123;</span><br><span class="line">         map = namespace</span><br><span class="line">         namespace = &#x27;&#x27;</span><br><span class="line">     &#125; else if (namespace.charAt(namespace.length - 1) !== &#x27;/&#x27;) &#123;</span><br><span class="line">         namespace += &#x27;/&#x27;</span><br><span class="line">     &#125;</span><br><span class="line">     return fn(namespace, map)</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一步会先判断mapState那里传入的第一个参数是不是字符串，如果不是字符串，说明没有使用命名空间，于是会把传进来的实参赋值给map，然后将namespace设置为空字符串，接下来讲就分析一下没有命名空间时，mapState的整个执行流程，涉及命名空间的请自行去分析，也差不多，仅仅是多了一个作用域。回到前面的例子，给mapState传入一个对象：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">export default &#123;</span><br><span class="line"> computed: mapState(&#123;</span><br><span class="line">     count: state =&gt; state.count,</span><br><span class="line">     countAlias: &#x27;count&#x27;,</span><br><span class="line">     countPlusLocalState (state) &#123;</span><br><span class="line">         return state.count + this.localCount</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过mapState工具函数的处理后，结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">export default &#123; </span><br><span class="line"> // ... </span><br><span class="line">    computed: &#123; </span><br><span class="line">         count() &#123; </span><br><span class="line">             return this.$store.state.count </span><br><span class="line">         &#125;, </span><br><span class="line">         countAlias() &#123; </span><br><span class="line">             return this.$store.state[&#x27;count&#x27;] </span><br><span class="line">         &#125;, </span><br><span class="line">         countPlusLocalState() &#123; </span><br><span class="line">             return this.$store.state.count + this.localCount </span><br><span class="line">         &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>整个处理的过程是这样的，mapState首先对传入的参数调用 normalizeNamespace，也就是 :</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">normalizeNamespace(&#123;</span><br><span class="line"> count: state =&gt; state.count,</span><br><span class="line"> countAlias: &#x27;count&#x27;,</span><br><span class="line"> countPlusLocalState (state) &#123;</span><br><span class="line">     return state.count + this.localCount</span><br><span class="line"> &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>此时typeof namespace !== ‘string’ 为true，所以接来下会执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">map = &#123;</span><br><span class="line"> count: state =&gt; state.count,</span><br><span class="line"> countAlias: &#x27;count&#x27;,</span><br><span class="line"> countPlusLocalState (state) &#123;</span><br><span class="line">     return state.count + this.localCount</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace = &#x27;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>接下来会把上面的namespace=”作为第一个参数，map={…} 作为第二个参数传入下面这个函数【后面简称整个函数为fn】：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">(namespace, states) =&gt; &#123;</span><br><span class="line"> const res = &#123;&#125;</span><br><span class="line"> normalizeMap(states).forEach((&#123; key, val &#125;) =&gt; &#123;</span><br><span class="line">     res[key] = function mappedState () &#123;</span><br><span class="line">         let state = this.$store.state</span><br><span class="line">         let getters = this.$store.getters</span><br><span class="line">         if (namespace) &#123;</span><br><span class="line">            const module = getModuleByNamespace(this.$store, &#x27;mapState&#x27;, namespace)</span><br><span class="line">            if (!module) &#123;</span><br><span class="line">                return</span><br><span class="line">            &#125;</span><br><span class="line">            state = module.context.state</span><br><span class="line">            getters = module.context.getters</span><br><span class="line">          &#125;</span><br><span class="line">          return typeof val === &#x27;function&#x27;</span><br><span class="line">              ? val.call(this, state, getters)</span><br><span class="line">              : state[val]</span><br><span class="line">      &#125;</span><br><span class="line">      // mark vuex getter for devtools</span><br><span class="line">      res[key].vuex = true</span><br><span class="line"> &#125;)</span><br><span class="line"> return res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后对传入的参数调用normalizeMap，这个函数的定义如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function normalizeMap (map) &#123;</span><br><span class="line"> return Array.isArray(map)</span><br><span class="line"> ? map.map(key =&gt; (&#123; key, val: key &#125;))</span><br><span class="line"> : Object.keys(map).map(key =&gt; (&#123; key, val: map[key] &#125;))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从源码也可以看出，map是一个数组或者对象，如果map是一个数组，normalizeMap将传入的map数组的每个元素转换成一个{key, val: key}的对象，如果map是一个对象，则通过Object.keys方法遍历这个map对象的 key,把数组里的每个key都转换成一个{key, val: key}的对象，最后都会把转换后的对象数组作为normalizeMap的返回值。然后继续执行mapState的剩余代码，调用了normalizeMap函数后，把前面传入的states转换成了由{key, val: key}构成的数组，接下来就是调用forEach方法遍历这个数组，并构造了一个新的对象res，这个res对象的每个元素都返回一个新的函数mappedState，来看看mappedState函数内部的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function mappedState () &#123;</span><br><span class="line"> let state = this.$store.state</span><br><span class="line"> let getters = this.$store.getters</span><br><span class="line"> if (namespace) &#123;</span><br><span class="line">     const module = getModuleByNamespace(this.$store, &#x27;mapState&#x27;, namespace)</span><br><span class="line">     if (!module) &#123;</span><br><span class="line">         return</span><br><span class="line">     &#125;</span><br><span class="line">     state = module.context.state</span><br><span class="line">     getters = module.context.getters</span><br><span class="line"> &#125;</span><br><span class="line"> return typeof val === &#x27;function&#x27;</span><br><span class="line">   ? val.call(this, state, getters)</span><br><span class="line">   : state[val]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于我们传入的namespace是空，所以会直接执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">return typeof val === &#x27;function&#x27;</span><br><span class="line"> ? val.call(this, state, getters)</span><br><span class="line"> : state[val]</span><br></pre></td></tr></table></figure>
+
+<p>首先会判断val是不是一个函数，如果val是一个函数，则直接调用整个函数，并把store上的state和getters作为参数，执行结果作为mappedState的返回值，如果val不是函数，就直接把this.$store.state[val]作为mappedState的返回值。回到前面的例子，我们把</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">namespace=&#x27;&#x27;, </span><br><span class="line"></span><br><span class="line">state=&#123; </span><br><span class="line">    count: state =&gt; state.count,</span><br><span class="line">    countAlias: &#x27;count&#x27;,</span><br><span class="line">    countPlusLocalState (state) &#123;</span><br><span class="line">      return state.count + this.localCount</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传入fn函数后，先经过normalizeMap函数处理后的结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        key: &#x27;count&#x27;, val: state =&gt; state.count </span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        key: &#x27;coutAlias&#x27;, val: &#x27;count&#x27;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        key: &#x27;countPlusLocalState&#x27;, </span><br><span class="line">        val: function countPlusLocalState (state) &#123; return state.count + this.localCount &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>然后使用forEach方法遍历上这个数组的每个元素，判断到当前元素的val是function的，则会执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return val.call(this, this.$store.state, this.$store.getters)</span><br></pre></td></tr></table></figure>
+
+<p>也就是前面说的val.call(this, this.$store.state, this.$store.getters)的返回值会作为mappedState函数的返回值，这个返回值也就是res对象的某个key对应的value函数的返回值，比如当res的key是’count’时，它的value就是:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function mappedState() &#123;</span><br><span class="line">    return this.$store.state.count</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以，最终mapState处理后的结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">export default &#123; </span><br><span class="line"> // ... </span><br><span class="line">    computed: &#123; </span><br><span class="line">         count() &#123; </span><br><span class="line">             return this.$store.state.count </span><br><span class="line">         &#125;, </span><br><span class="line">         countAlias() &#123; </span><br><span class="line">             return this.$store.state[&#x27;count&#x27;] </span><br><span class="line">         &#125;, </span><br><span class="line">         countPlusLocalState() &#123; </span><br><span class="line">             return this.$store.state.count + this.localCount </span><br><span class="line">         &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上只是个人鄙见，研究还不是很深入，所以理解上可能还会有误差，如果有错误的地方，欢迎指正，感激不尽。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>前端农民工
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2021/06/24/vuex-mapState-analysis/" title="vuex mapState 函数源码浅析">https://www.xiaoweihuang.me/2021/06/24/vuex-mapState-analysis/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vuex/" rel="tag"># vuex</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/24/vue-reactivity/" rel="prev" title="谈谈Vue的数据绑定原理与实现">
+      <i class="fa fa-chevron-left"></i> 谈谈Vue的数据绑定原理与实现
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/gitlab-502-error/" rel="next" title="腾讯云搭建gitlab服务器，报502错误">
+      腾讯云搭建gitlab服务器，报502错误 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

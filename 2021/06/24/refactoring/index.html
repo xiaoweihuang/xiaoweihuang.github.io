@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言  今天周末，浏览订阅的公众号的时候，发现了这篇非常具有指导意义的文章。因为自己最近几个月的工作一直都是维护一个老旧的项目，想要重构它需要一定的魄力和资源允许，而且这个项目跟奇舞团技术团队重构的项目具有一定的相似度，所以我把这篇文章转载到自己的博客之下，希望在将来如果要重构项目可以拿它作为参考，本篇博客的结尾有标记文章来源，在此感谢奇舞团技术团队。以下是正文。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你一定是闲得蛋疼才重构的吧【转载】">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2021/06/24/refactoring/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="前言  今天周末，浏览订阅的公众号的时候，发现了这篇非常具有指导意义的文章。因为自己最近几个月的工作一直都是维护一个老旧的项目，想要重构它需要一定的魄力和资源允许，而且这个项目跟奇舞团技术团队重构的项目具有一定的相似度，所以我把这篇文章转载到自己的博客之下，希望在将来如果要重构项目可以拿它作为参考，本篇博客的结尾有标记文章来源，在此感谢奇舞团技术团队。以下是正文。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2021/06/23/imagee36fe41dac3618d1.png">
+<meta property="og:image" content="https://p4.ssl.qhimg.com/t01da09d0698869183f.png">
+<meta property="og:image" content="https://i.imgur.com/WRowDRV.png">
+<meta property="article:published_time" content="2021-06-23T16:01:05.842Z">
+<meta property="article:modified_time" content="2021-06-23T16:05:56.747Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="重构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.xiaoweihuang.me/images/2021/06/23/imagee36fe41dac3618d1.png">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2021/06/24/refactoring/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>你一定是闲得蛋疼才重构的吧【转载】 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2021/06/24/refactoring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          你一定是闲得蛋疼才重构的吧【转载】
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-24 00:01:05 / 修改时间：00:05:56" itemprop="dateCreated datePublished" datetime="2021-06-24T00:01:05+08:00">2021-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%87%8D%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">重构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>前言</p>
+</blockquote>
+<p>今天周末，浏览订阅的公众号的时候，发现了这篇非常具有指导意义的文章。因为自己最近几个月的工作一直都是维护一个老旧的项目，想要重构它需要一定的魄力和资源允许，而且这个项目跟奇舞团技术团队重构的项目具有一定的相似度，所以我把这篇文章转载到自己的博客之下，希望在将来如果要重构项目可以拿它作为参考，本篇博客的结尾有标记文章来源，在此感谢奇舞团技术团队。以下是正文。</p>
+<span id="more"></span>
+
+<blockquote>
+<p>随着“发布”进度条走到100%，重构的代码终于上线了。我露出了老母亲般的围笑……</p>
+</blockquote>
+<p>最近看了一篇文章，叫《史上最烂的开发项目长啥样：苦撑12年，600多万行代码》，讲的是法国的一个软件项目，因为各种奇葩的原因，导致代码质量惨不忍睹，项目多年无法交付，最终还有公司领导入狱。里面有一些细节让人哭笑不得：一个右键响应事件需要花45分钟；读取700MB的数据，需要花7天时间。足见这个软件的性能有多糟心。如果让笔者来接手这“坨”代码，内心早就飘过无数个敏感词。其实，笔者自己也维护着一套陈酿了将近7年的代码，随着后辈的添油加醋……哦不，添砖加瓦，功能逻辑日益复杂，代码也变得臃肿，维护起来步履维艰，性能也不尽如人意。终于有一天，我听见了内心的魔鬼在呼唤：“重构吧～～”重构是一件磨人的事情，轻易使不得。好在兄弟们齐心协力，各方资源也配合到位。我们小步迭代了大半年，最后一鼓作气，终于完成了。今天跟大家分享一下这次重构的经验和收益。</p>
+<h2 id="挑战"><a href="#挑战" class="headerlink" title="挑战"></a><a href="#%E6%8C%91%E6%88%98" title="挑战"></a>挑战</h2><p>此次重构的对象是一个大型单页应用。它实现了云端文件管理功能，共有10个路由页面，涉及文件上传、音视频播放、图片预览、套餐购买等几十个功能。前端使用QWrap、jQuery、RequireJS搭建，HTML使用PHP模板引擎Smarty编写。我们选择了Vue.js、vue-router、vuex来改造代码，用webpack完成模块打包的工作。仿佛一下子从原始社会迈向了新世纪，是不是很完美？<a target="_blank" rel="noopener" href="https://img.xiaoweihuang.me/images/2021/06/23/imagee36fe41dac3618d1.png"><img src="https://img.xiaoweihuang.me/images/2021/06/23/imagee36fe41dac3618d1.png"></a><br>（图片来自网络）由于项目比较庞大，为了快速迭代，重构的过渡期允许新旧代码并存，开发完一部分就测试上线一部分，直到最终完全替代旧代码。然鹅，我们很快就意识到一个问题：重构部分跟新增需求无法保证一致。比如重构到一半，线上功能变了……产品不会等重构完再往前发展。难不成要在新老代码中并行迭代相同的需求？别慌，一定能想出更高效的解决办法。稍微分析一下，发现我们要处理三种情况：<strong>1. 产品需要新增一个功能。比如一个活动弹窗或路由页面。</strong>解决方法：新功能用vue组件实现，然后手动加载到页面。比如:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const wrap = document.createElement(&#x27;div&#x27;)</span><br><span class="line">document.body.appendChild(wrap)</span><br><span class="line">new Vue(&#123;</span><br><span class="line">  el: wrap,</span><br><span class="line">  template: &#x27;&lt;App /&gt;&#x27;,</span><br><span class="line">  components: &#123; App &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>如果这个组件必须跟老代码交互，就将组件暴露给全局变量，然后由老代码调用全局变量的方法。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// someApp.js</span><br><span class="line">window.someApp = new Vue(&#123;</span><br><span class="line">  ...</span><br><span class="line">  methods: &#123;</span><br><span class="line">    funcA() &#123;</span><br><span class="line">      // do somthing</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 老代码.js</span><br><span class="line">...</span><br><span class="line">window.someApp.funcA()</span><br></pre></td></tr></table></figure>
+
+<p>注意：全局变量名需要人工协调，避免命名冲突。PS：这是过渡期的妥协，不是最终状态。新增一个路由页面时更棘手。聪明的读者一定会想到让新增的路由页面独立于已有的单页应用，单独分配一个URL，这样代码会更干净。假如新增的路由页面需要实现十几个功能，而这些功能已经存在于旧代码中呢？权衡了需求的紧急性和对代码整洁度的追求，我们再次妥协（PS：这也是过渡期，不是最终状态）。大家不要轻易模仿，如果条件允许，还是新起一个页面吧，心情会舒畅很多哦。<strong>2. 产品需要修改老代码里的独立组件。</strong>解决方法：如果这个组件不是特别复杂，我们会以“夹带私货”的方式重构上线，这样还能顺便让测试童鞋帮忙验一下重构后有没有bug。具体实现参考第一种情况。<br>**</p>
+<ol start="3">
+<li> 产品需要修改整站的公共部分。**</li>
+</ol>
+<p>我们的网站包含好几个页面，此次重构的单页应用只是其中之一。它们共用了顶部导航栏。在这些页面模板中通过Smarty的include语法加载：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;%include file=&quot;topPanel.inc&quot;%&#125;</span><br></pre></td></tr></table></figure>
+
+<p>产品在一次界面改版中提出要给导航栏加上一些功能的快捷入口，比如导入文件，购买套餐等。而这些功能在单页应用中已经用vue实现了。所以还得将导航栏实现为vue组件。为了更快渲染导航栏，需要保留它原有的标签，而不是在JS里以组件的形式渲染。所以需要用到特殊手段：</p>
+<ul>
+<li><p>在topPanel.inc里写上自定义标签，对应到vue组件，比如下面代码里的。当JS未加载时，会立即渲染导航栏的常规标签以及自定义标签。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;topPanelMountee&quot;&gt;</span><br><span class="line">&lt;div id=&quot;topPanel&quot;&gt;</span><br><span class="line">&lt;div&gt;一些页面直出的内容&lt;/div&gt;</span><br><span class="line">...</span><br><span class="line">&lt;import-button&gt;</span><br><span class="line">&lt;button class=&quot;btn-import&quot;&gt;</span><br><span class="line">导入</span><br><span class="line">&lt;/button&gt;</span><br><span class="line">&lt;/import-button&gt;</span><br><span class="line">...</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>导航栏组件：topPanel.js，它包含了ImportButton等子组件（对应上面的）。等JS加载后，ImportButton组件就会挂载到上并为这个按钮绑定行为。另外，注意下面代码中的template并不是，而是一个ID选择器，这样topPanel组件就会以#topPanelMountee里的内容作为模板挂载到#topPanelMountee元素中，是不是很机智～</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// topPanel.js</span><br><span class="line">new Vue(&#123;</span><br><span class="line">el: &#x27;#topPanelMountee&#x27;,</span><br><span class="line">template: &#x27;#topPanelMountee&#x27;,</span><br><span class="line">components: &#123;</span><br><span class="line">  //···</span><br><span class="line">  ImportButton</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>彻底重构后，我们还做了进一步的性能优化。</p>
+<h2 id="进一步优化"><a href="#进一步优化" class="headerlink" title="进一步优化"></a><a href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%BC%98%E5%8C%96" title="进一步优化"></a>进一步优化</h2><ol>
+<li> HTML瘦身</li>
+</ol>
+<p>在采用组件化开发之前，HTML中预置了许多标签元素，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;button data-cn=&quot;del&quot; class=&quot;del&quot;&gt;删除&lt;/button&gt;</span><br><span class="line">&lt;button data-cn=&quot;rename&quot; class=&quot;rename&quot;&gt;重命名&lt;/button&gt;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>当状态改变时，通过JS操作DOM来控制预置标签的内容或显示隐藏状态。这种做法不仅让HTML很臃肿，JS跟DOM的紧耦合也让人头大。改成组件化开发后，将这些元素统统删掉。之前还使用了很多全局变量存放服务端输出的数据。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    var SYS_CONF = &#123;</span><br><span class="line">        userName: &#123;%$userInfo.name%&#125;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>随着时间的推移，这些全局变量越来越多，管理起来很费劲。还有一些已经废弃的变量，对HTML的体积做出了“贡献”。所以重构时只保留了必需的变量。更多数据则在运行时加载。另外，在没有模板字面量的年代，HTML里大量使用了script标签存放运行时所需的模板元素。比如:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=&quot;text/template&quot; id=&quot;sharePanel&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;share&quot;&gt;</span><br><span class="line">        ...</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>虽然上线时会把这些标签内的字符串提取成JS变量，以减小HTML的体积，但在开发时，这些script标签会增加代码阅读的难度，因为要不停地切换HTML和JS目录查找。所以重构后删掉了大量的script标签，使用vue的</p>
+<ol start="2">
+<li> 渐进渲染</li>
+</ol>
+<p>首屏想要更快渲染，还要确保文档加载的CSS和JS尽量少，因为它们会阻塞文档加载。所以我们尽可能延迟加载非关键组件。比如：</p>
+<ul>
+<li>延迟非默认路由</li>
+</ul>
+<p>单页应用有很多路由组件。所以除了默认跳转的路由组件，将非默认路由组件打包成单独的chunk。使用import()的方式动态加载。只有命中该路由时，才加载组件。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const AsyncComp = () =&gt; import(/* webpackChunkName: &quot;AsyncCompName&quot; */ &#x27;AsyncComp.vue&#x27;)</span><br><span class="line">const routes = [&#123;</span><br><span class="line">  path: &#x27;/some/path&#x27;,</span><br><span class="line">  meta: &#123;</span><br><span class="line">    type: &#x27;sharelink&#x27;,</span><br><span class="line">    isValid: true,</span><br><span class="line">    listKey: &#x27;sharelink&#x27;</span><br><span class="line">  &#125;,</span><br><span class="line">  component: AsyncComp</span><br><span class="line">&#125;]</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>延迟不重要的展示型组件</li>
+</ul>
+<p>这些组件其实可以延迟到主要内容渲染完毕再加载。将这些组件单独打包为一个chunk。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import(/* webpackChunkName: &quot;lazy_load&quot; */ &#x27;a.js&#x27;)</span><br><span class="line">import(/* webpackChunkName: &quot;lazy_load&quot; */ &#x27;b.js&#x27;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>延迟低频的功能</li>
+</ul>
+<p>如果某些功能属于低频操作，或者不是所有用户都需要。则可以选择延迟到需要的时候再加载。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">async handler () &#123;</span><br><span class="line">  await const &#123;someFunc&#125; = import(&#x27;someFuncModule&#x27;)</span><br><span class="line">  someFunc()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li> 优化图片</li>
+</ol>
+<p>虽然代码做了很多优化，但是动辄几十到几百KB的图片瞬间碾压了辛苦重构带来的提升。所以图片的优化也是至关重要滴～</p>
+<ul>
+<li>PNG改成SVG</li>
+</ul>
+<p>由于项目曾经支持IE6-8，大量使用了PNG，JPEG等格式的图片。随着历史的车轮滚滚向前，IE6-8的用户占比已经大大降低，我们在去年放弃了对IE8-的支持。这样一来就能采取更优的解决方案啦～我们的页面上有各种大小的图标和不同种类的占位图。原先使用位图并不能很好的适配retina显示器。现在改成SVG，只需要一套图片即可。相比PNG，SVG有以下优点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、压缩后体积小</span><br><span class="line">2、无限缩放，不失真</span><br><span class="line">3、retina显示器上清晰</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进一步“压榨”SVG</li>
+</ul>
+<p>虽然换成SVG，但是还远远不够，使用webpack的loader可以有效地压缩SVG体积。</p>
+<ol>
+<li> 用svgo-loader去除无用属性</li>
+</ol>
+<p>SVG本身既是文本也是图片。设计师提供的SVG大多有冗余的内容，比如一些无用的defs，title等，删除后并不会降低图片质量，还能减小图片体积。我们使用svgo-loader对SVG做了一些优化，比如去掉无用属性，去掉空格换行等。这里就不细数它能提供的优化项目。大家可以对照svgo-loader的选项配置。</p>
+<ol start="2">
+<li> 用svg-sprite-loader合并多个SVG</li>
+</ol>
+<p>另外，SVG有多种用法，比如：img，background，inline，inline + 。如果某些图反复出现并且对页面渲染很关键，可以使用svg-sprite-loader将多个图合并成一个大的SVG，避免逐个发起图片请求。然后使用内联或者JS加载的方式将这个SVG引入页面，然后在需要的地方使用SVG的标签引用该图标。合并后的大SVG如下图：<a target="_blank" rel="noopener" href="https://p4.ssl.qhimg.com/t01da09d0698869183f.png"><img src="https://p4.ssl.qhimg.com/t01da09d0698869183f.png"></a>使用时：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg&gt;</span><br><span class="line">  &lt;use xlink:href=&quot;#icon-add&quot;&gt;&lt;/use&gt;</span><br><span class="line">&lt;/svg&gt;</span><br></pre></td></tr></table></figure>
+
+<p>即可在使用的位置展现该图标。以上是一些优化手段，下面给大家分享一下重构后的收益。</p>
+<h2 id="重构的收益"><a href="#重构的收益" class="headerlink" title="重构的收益"></a><a href="#%E9%87%8D%E6%9E%84%E7%9A%84%E6%94%B6%E7%9B%8A" title="重构的收益"></a>重构的收益</h2><p>以下是重构带来的收益：<a target="_blank" rel="noopener" href="https://i.imgur.com/WRowDRV.png"><img src="https://i.imgur.com/WRowDRV.png"></a></p>
+<ul>
+<li>组件化：从0到100%</li>
+</ul>
+<p>老代码没有组件的概念，都是指令式的编程模式以及对DOM的直接操作。重构后，改为组件化以后，可以充分利用组件的高复用性，以及虚拟DOM的性能优化，带来更愉悦的开发体验。</p>
+<ul>
+<li>模块化：从50%到100%</li>
+</ul>
+<p>老代码中也用RequireJS做了一定程度的模块化，但是仅限于业务模块，没有解决第三方依赖的安装和升级问题。重构后，借助webpack和npm，只需要npm install安装第三方依赖，然后用import的方式加载。极大地提高了开发效率。</p>
+<ul>
+<li>规范化：从0到1</li>
+</ul>
+<p>老代码几乎没有代码规范，甚至连同一份文件里都有不同的代码缩进，强迫症根本无法忍受。重构后，使用ESLint对代码格式进行了统一，代码看起来更加赏心悦目。</p>
+<ul>
+<li>ES6+语法：从0到大量使用</li>
+</ul>
+<p>老代码所使用的库因为历史悠久，加上没有引入转译流程，只能使用ES5语法。重构后，能够尽情使用箭头函数、解构、async/await等语言新特性来简化代码，从而提升开发体验。</p>
+<ul>
+<li>性能提升</li>
+</ul>
+<p>根据上线前后Lighthouse的性能检测数据，首次有效渲染时间（First Meaningful Paint，FMP）提升 19% 。该指标表示用户看到有用信息的时间（比如文件列表）。首次交互（First Interactive，FI）提升 39%。该指标表示用户可以开始跟网页进行交互的时间 。以上就是这次重构的总结。不要容忍代码里的坏味道，更不要容忍低效的开发模式。及时发现，勇敢改进吧～</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a><a href="#%E5%8F%82%E8%80%83" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://meixg.cn/2017/08/01/first-meaningful-paint/">https://meixg.cn/2017/08/01/first-meaningful-paint/</a></li>
+<li><a target="_blank" rel="noopener" href="https://css-tricks.com/using-svg/">https://css-tricks.com/using-svg/</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/the-node-js-collection/modern-javascript-explained-for-dinosaurs-f695e9747b70?source=userActivityShare-5c73882d22bf-1532143179">https://medium.com/the-node-js-collection/modern-javascript-explained-for-dinosaurs-f695e9747b70?source=userActivityShare-5c73882d22bf-1532143179</a></li>
+</ul>
+<p>本文链接：<a target="_blank" rel="noopener" href="https://75team.com/post/yunpan_refactoring.html">https://75team.com/post/yunpan_refactoring.html</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>前端农民工
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2021/06/24/refactoring/" title="你一定是闲得蛋疼才重构的吧【转载】">https://www.xiaoweihuang.me/2021/06/24/refactoring/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%87%8D%E6%9E%84/" rel="tag"># 重构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/23/deploy-hexo-to-vps/" rel="prev" title="如何部署hexo博客到VPS服务器上">
+      <i class="fa fa-chevron-left"></i> 如何部署hexo博客到VPS服务器上
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/vue-reactivity/" rel="next" title="谈谈Vue的数据绑定原理与实现">
+      谈谈Vue的数据绑定原理与实现 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%91%E6%88%98"><span class="nav-number">1.</span> <span class="nav-text">挑战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%BC%98%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">进一步优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E6%9E%84%E7%9A%84%E6%94%B6%E7%9B%8A"><span class="nav-number">3.</span> <span class="nav-text">重构的收益</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近一边阅读Vue源码，一边复习JavaScript的基础理论知识，前面回顾了JavaScipt中的词法作用域，这篇博客就回顾一下JavaScript中的执行上下文，理解了执行上下文就能更好地理解JavaScript中的作用域与作用域链。在查阅资料的过程中，我发现有一篇译文还不错，所以也就跟着那篇译文的思路回顾了JavaScript中的执行上下文，译文地址：https:&#x2F;&#x2F;yanhaijing.c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript基础回顾（五）：JavaScript中的执行上下文">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2021/06/24/the-execution-context-in-javascript/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="最近一边阅读Vue源码，一边复习JavaScript的基础理论知识，前面回顾了JavaScipt中的词法作用域，这篇博客就回顾一下JavaScript中的执行上下文，理解了执行上下文就能更好地理解JavaScript中的作用域与作用域链。在查阅资料的过程中，我发现有一篇译文还不错，所以也就跟着那篇译文的思路回顾了JavaScript中的执行上下文，译文地址：https:&#x2F;&#x2F;yanhaijing.c">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.imgur.com/FWYkxAi.png">
+<meta property="og:image" content="https://i.imgur.com/CE09AvI.jpg">
+<meta property="og:image" content="https://yanhaijing.com/blog/138.gif">
+<meta property="article:published_time" content="2021-06-24T13:51:17.555Z">
+<meta property="article:modified_time" content="2021-06-24T14:45:01.246Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/FWYkxAi.png">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2021/06/24/the-execution-context-in-javascript/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>JavaScript基础回顾（五）：JavaScript中的执行上下文 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2021/06/24/the-execution-context-in-javascript/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript基础回顾（五）：JavaScript中的执行上下文
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-24 21:51:17 / 修改时间：22:45:01" itemprop="dateCreated datePublished" datetime="2021-06-24T21:51:17+08:00">2021-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近一边阅读Vue源码，一边复习JavaScript的基础理论知识，前面回顾了JavaScipt中的词法作用域，这篇博客就回顾一下JavaScript中的执行上下文，理解了执行上下文就能更好地理解JavaScript中的作用域与作用域链。在查阅资料的过程中，我发现有一篇译文还不错，所以也就跟着那篇译文的思路回顾了JavaScript中的执行上下文，译文地址：<a target="_blank" rel="noopener" href="https://yanhaijing.com/javascript/2014/04/29/what-is-the-execution-context-in-javascript/">https://yanhaijing.com/javascript/2014/04/29/what-is-the-execution-context-in-javascript/</a>，全文如下：</p>
+<span id="more"></span>
+
+<p>在这篇文章里，我将深入研究JavaScript中最基本的部分——执行上下文（execution context）。读完本文后，你应该清楚了解解释器做了什么，为什么函数和变量能在声明前使用以及他们的值是如何决定的。</p>
+<blockquote>
+<h3>什么是执行上下文？</h3>
+</blockquote>
+<p>当JavaScript代码运行，执行环境非常重要，有下面几种不同的情况：</p>
+<ul>
+<li>全局代码——你的代码首次执行的默认环境。</li>
+<li>函数代码——每当进入一个函数内部。</li>
+<li>Eval代码——eval内部的文本被执行时。</li>
+</ul>
+<p>在网上你能读到许多关于作用域（scope）的资源，本文的目的是让事情变得更简单，让我们将术语执行上下文想象为当前被执行代码的环境/作用域。说的够多了，现在让我们看一个包含全局和函数上下文的代码例子。</p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/FWYkxAi.png"><img src="https://i.imgur.com/FWYkxAi.png"></a></p>
+<p>简单的例子，我们有一个被紫色边框圈起来的全局上下文和三个分别被绿色，蓝色和橘色框起来的不同函数上下文。只有全局上下文（的变量）能被其他任何上下文访问。</p>
+<p>你可以有任意多个函数上下文，每次调用函数创建一个新的上下文，会创建一个私有作用域，函数内部声明的任何变量都不能在当前函数作用域外部直接访问。在上面的例子中，函数能访问当前上下文外面的变量声明，但在外部上下文不能访问内部的变量/函数声明。为什么会发生这种情况？代码到底是如何被解释的？</p>
+<blockquote>
+<h3>执行上下文堆栈</h3>
+</blockquote>
+<p>浏览器里的JavaScript解释器被实现为单线程。这意味着同一时间只能发生一件事情，其他的行文或事件将会被放在叫做执行栈里面排队。下面的图是单线程栈的抽象视图：</p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/CE09AvI.jpg"><img src="https://i.imgur.com/CE09AvI.jpg"></a></p>
+<p>我们已经知道，当浏览器首次载入你的脚本，它将默认进入全局执行上下文。如果，你在你的全局代码中调用一个函数，你程序的时序将进入被调用的函数，并创建一个新的执行上下文，并将新创建的上下文压入执行栈的顶部。</p>
+<p>如果你调用当前函数内部的其他函数，相同的事情会在此上演。代码的执行流程进入内部函数，创建一个新的执行上下文并把它压入执行栈的顶部。浏览器将总会执行栈顶的执行上下文，一旦当前上下文函数执行结束，它将被从栈顶弹出，并将上下文控制权交给当前的栈。下面的例子显示递归函数的执行栈调用过程：</p>
+<pre><code>    (function foo(i) &#123;
+        if (i === 3) &#123;
+            return;
+        &#125;
+        else &#123;
+            foo(++i);
+        &#125;
+    &#125;(0));
+    
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://yanhaijing.com/blog/138.gif"><img src="https://yanhaijing.com/blog/138.gif"></a></p>
+<p>这代码调用自己三次，每次给i的值加一。每次foo函数被调用，将创建一个新的执行上下文。一旦上下文执行完毕，它将被从栈顶弹出，并将控制权返回给下面的上下文，直到只剩全局上下文能为止。</p>
+<p>有5个需要记住的关键点，关于执行栈（调用栈）：</p>
+<ul>
+<li>单线程。</li>
+<li>同步执行。</li>
+<li>一个全局上下文。</li>
+<li>无限制函数上下文。</li>
+<li>每次函数被调用创建新的执行上下文，包括调用自己。</li>
+</ul>
+<blockquote>
+<h3>执行上下文的细节</h3>
+</blockquote>
+<p>我们现在已经知道每次调用函数，都会创建新的执行上下文。然而，在JavaScript解释器内部，每次调用执行上下文，分为两个阶段：</p>
+<ol>
+<li>创建阶段【当函数被调用，但未执行任何其内部代码之前】：</li>
+</ol>
+<ul>
+<li>创建作用域链（Scope Chain）</li>
+<li>创建变量，函数和参数。</li>
+<li>求”this“的值。</li>
+</ul>
+<ol start="2">
+<li>激活/代码执行阶段：</li>
+</ol>
+<p>指派变量的值和函数的引用，解释/执行代码。</p>
+<p>可以将每个执行上下文抽象为一个对象并有三个属性：</p>
+<pre><code>    executionContextObj = &#123;
+        scopeChain: &#123; /* 变量对象（variableObject）+ 所有父执行上下文的变量对象*/ &#125;, 
+        variableObject: &#123; /*函数 arguments/参数，内部变量和函数声明 */ &#125;, 
+        this: &#123;&#125; 
+    &#125;
+    
+</code></pre>
+<blockquote>
+<h3>激活/变量对象【AO/VO】</h3>
+</blockquote>
+<p>当函数被调用是executionContextObj被创建，但在实际函数执行之前。这是我们上面提到的第一阶段，创建阶段。在此阶段，解释器扫描传递给函数的参数或arguments，本地函数声明和本地变量声明，并创建executionContextObj对象。扫描的结果将完成变量对象的创建。</p>
+<p>下面是解释器如果执行代码的伪逻辑：</p>
+<p>1、查找调用函数的代码。</p>
+<p>2、执行函数代码之前，先创建执行上下文。</p>
+<p>3、进入创建阶段：<br>    ① 初始化作用域链：<br>    ②创建变量对象：<br>        a、创建arguments对象，检查上下文，初始化参数名称和值并创建引用的复制。<br>        b、扫描上下文的函数声明：<br>            b-1、为发现的每一个函数，在变量对象上创建一个属性——确切的说是函数的名字——其有一个指向函数在内存中的引用。<br>            b-2、如果函数的名字已经存在，引用指针将被重写。<br>        c、扫面上下文的变量声明：<br>            c-1、为发现的每个变量声明，在变量对象上创建一个属性——就是变量的名字，并且将变量的值初始化为undefined<br>            c-2、如果变量的名字已经在变量对象里存在，将不会进行任何操作并继续扫描。<br>    ③求出上下文内部“this”的值。</p>
+<p>4、激活/代码执行阶段：<br>    在当前上下文上运行/解释函数代码，并随着代码一行行执行指派变量的值。</p>
+<p>让我们看一个例子：</p>
+<pre><code>    function foo(i) &#123;
+        var a = &#39;hello&#39;;
+        var b = function privateB() &#123;
+    
+        &#125;;
+        function c() &#123;
+    
+        &#125;
+    &#125;
+    
+    foo(22);
+    
+</code></pre>
+<p>当调用foo(22)时，创建状态像下面这样：</p>
+<pre><code>    fooExecutionContext = &#123;
+        scopeChain: &#123; ... &#125;,
+        variableObject: &#123;
+            arguments: &#123;
+                0: 22,
+                length: 1
+            &#125;,
+            i: 22,
+            c: pointer to function c()
+            a: undefined,
+            b: undefined
+        &#125;,
+        this: &#123; ... &#125;
+    &#125;
+    
+</code></pre>
+<p>真如你看到的，创建状态负责处理定义属性的名字，不为他们指派具体的值，以及形参/实参的处理。一旦创建阶段完成，执行流进入函数并且激活/代码执行阶段，看下函数执行完成后的样子：</p>
+<pre><code>    fooExecutionContext = &#123;
+        scopeChain: &#123; ... &#125;,
+        variableObject: &#123;
+            arguments: &#123;
+                0: 22,
+                length: 1
+            &#125;,
+            i: 22,
+            c: pointer to function c()
+            a: &#39;hello&#39;,
+            b: pointer to function privateB()
+        &#125;,
+        this: &#123; ... &#125;
+    &#125;
+    
+</code></pre>
+<blockquote>
+<h3>提升（Hoisting）</h3>
+</blockquote>
+<p>你能在网上找到很多定义JavaScript hoisting术语的资源，解释变量和函数声明被提升到函数作用域的顶部。然而，没有人解释为什么会发生这种情况的细节，学习了上面关于解释器如何创建爱你活动对象的新知识，很容易明白为什么。看下面的例子：</p>
+<pre><code>    (function() &#123;
+    
+        console.log(typeof foo); // 函数指针
+        console.log(typeof bar); // undefined
+    
+        var foo = &#39;hello&#39;,
+            bar = function() &#123;
+                return &#39;world&#39;;
+            &#125;;
+    
+        function foo() &#123;
+            return &#39;hello&#39;;
+        &#125;
+    
+    &#125;()); &amp;ZeroWidthSpace; 我们能回答下面的问题：
+    
+</code></pre>
+<ul>
+<li>为什么我们能在foo声明之前访问它？</li>
+</ul>
+<p>如果我们跟随创建阶段，我们知道变量在激活/代码执行阶段已经被创建。所以在函数开始执行之前，foo已经在活动对象里面被定义了。</p>
+<ul>
+<li>Foo被声明了两次，为什么foo显示为函数而不是undefined或字符串？</li>
+</ul>
+<p>尽管foo被声明了两次，我们知道从创建阶段函数已经在活动对象里面被创建，这一过程发生在变量创建之前，并且如果属性名已经在活动对象上存在，我们仅仅更新引用。<br>因此，对foo()函数的引用首先被创建在活动对象里，并且当我们解释到var foo时，我们看见foo属性名已经存在，所以代码什么都不做并继续执行。</p>
+<ul>
+<li>为什么bar的值是undefined？</li>
+</ul>
+<p>bar实际上是一个变量，但变量的值是函数，并且我们知道变量在创建阶段被创建但他们被初始化为undefined。</p>
+<blockquote>
+<h3>总结</h3>
+</blockquote>
+<p>希望现在你了解JavaScript解释器如何执行你的代码。了解执行上下文和堆栈，将有助于你了解背后的原因——为什么你的代码被解释为和你最初希望不同的值。</p>
+<p>你想知道解释器内部的运作的开销太大，或者你的JavaScript知识的必要性？知道执行上下文相帮你写出更好的JavaScript？</p>
+<p>你想知道解释器的内部工作原理，需要太多篇幅，和必要的JavaScript知识。知道执行上下文能帮你写出更好的JavaScript代码。</p>
+<p>注意：有些人一直在问闭包，回调，延时等问题，我将在<a target="_blank" rel="noopener" href="http://davidshariff.com/blog/javascript-scope-chain-and-closures/">下一篇</a>文章里提到，更多关注域执行上下文有关的<a target="_blank" rel="noopener" href="http://davidshariff.com/blog/javascript-scope-chain-and-closures/">作用域链</a>相关方面。</p>
+<blockquote>
+<h3>深入阅读</h3>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-262.pdf">ECMA-262 5th Edition</a></li>
+<li><a target="_blank" rel="noopener" href="http://dmitrysoshnikov.com/ecmascript/chapter-2-variable-object/">ECMA-262-3 in detail. Chapter 2. Variable object</a></li>
+<li><a target="_blank" rel="noopener" href="http://jibbering.com/faq/notes/closures/#clIRExSc">Identifier Resolution, Execution Contexts and scope chains</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>前端农民工
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2021/06/24/the-execution-context-in-javascript/" title="JavaScript基础回顾（五）：JavaScript中的执行上下文">https://www.xiaoweihuang.me/2021/06/24/the-execution-context-in-javascript/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/24/auto-renew-let's-encrypt-ssl/" rel="prev" title="linux设置自动续签Let's Encrypt SSL证书">
+      <i class="fa fa-chevron-left"></i> linux设置自动续签Let's Encrypt SSL证书
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/vue-cli3-config-sass-to-rem/" rel="next" title="vue移动端项目自适应解决方案">
+      vue移动端项目自适应解决方案 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">什么是执行上下文？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">执行上下文堆栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">执行上下文的细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">激活&#x2F;变量对象【AO&#x2F;VO】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">提升（Hoisting）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">深入阅读</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

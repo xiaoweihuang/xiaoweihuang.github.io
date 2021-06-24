@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近开始忙一个新需求，就是给公司的电商网站接入微信第三方登录，由于之前的工作中很少接触微信公众平台这一块的开发，所以在开发之前做了比较多的准备工作，查阅微信公众平台开发者文档和相关资料，然后我也试着用PHP做后端简单实现一下这个功能，由于个人订阅号没有获取OpenId和用户基本信息的权限，所以我申请了一个公众平台测试账号来进行开发。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信公众号获取OpenId和用户基本信息">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2021/06/24/get-wechat-openid-and-userinfo/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="最近开始忙一个新需求，就是给公司的电商网站接入微信第三方登录，由于之前的工作中很少接触微信公众平台这一块的开发，所以在开发之前做了比较多的准备工作，查阅微信公众平台开发者文档和相关资料，然后我也试着用PHP做后端简单实现一下这个功能，由于个人订阅号没有获取OpenId和用户基本信息的权限，所以我申请了一个公众平台测试账号来进行开发。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.imgur.com/rtiUXx4.png">
+<meta property="og:image" content="https://i.imgur.com/DzIyAOq.png">
+<meta property="article:published_time" content="2021-06-24T14:06:44.043Z">
+<meta property="article:modified_time" content="2021-06-24T14:38:36.421Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="微信公众号开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/rtiUXx4.png">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2021/06/24/get-wechat-openid-and-userinfo/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>微信公众号获取OpenId和用户基本信息 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2021/06/24/get-wechat-openid-and-userinfo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微信公众号获取OpenId和用户基本信息
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-24 22:06:44 / 修改时间：22:38:36" itemprop="dateCreated datePublished" datetime="2021-06-24T22:06:44+08:00">2021-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">微信公众号开发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近开始忙一个新需求，就是给公司的电商网站接入微信第三方登录，由于之前的工作中很少接触微信公众平台这一块的开发，所以在开发之前做了比较多的准备工作，查阅微信公众平台开发者文档和相关资料，然后我也试着用PHP做后端简单实现一下这个功能，由于个人订阅号没有获取OpenId和用户基本信息的权限，所以我申请了一个公众平台测试账号来进行开发。</p>
+<span id="more"></span>
+
+<p>官方文档：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421140842">https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421140842</a></p>
+<blockquote>
+<h3>修改OAuth2.0网页授权回调页面域名</h3>
+</blockquote>
+<p>申请好公众平台测试账号后，第一步是修改OAuth2.0网页授权回调页面域名，不然的话，在用户同意授权后获取code会报错“scope参数错误或没有scope权限”。</p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/rtiUXx4.png"><img src="https://i.imgur.com/rtiUXx4.png"></a></p>
+<p>点击修改，然后输入回调页面的域名：</p>
+<p><a target="_blank" rel="noopener" href="https://i.imgur.com/DzIyAOq.png"><img src="https://i.imgur.com/DzIyAOq.png"></a></p>
+<p>做好准备工作，然后开始开发。</p>
+<blockquote>
+<h3>用户同意授权，获取code</h3>
+</blockquote>
+<p>首先是拼装链接，提供用户在微信浏览器打开，以弹出授权页面：</p>
+<p><a target="_blank" rel="noopener" href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%5B%E4%BD%A0%E7%94%B3%E8%AF%B7%E7%9A%84%E5%85%AC%E4%BC%97%E5%B9%B3%E5%8F%B0%E6%B5%8B%E8%AF%95%E8%B4%A6%E5%8F%B7%E7%9A%84appid%5D&amp;redirect_uri=https://%5B%E4%BD%A0%E7%9A%84%E6%8E%88%E6%9D%83%E5%9B%9E%E8%B0%83%E9%A1%B5%E9%9D%A2%E5%9F%9F%E5%90%8D%5D/wechat/login.php&amp;response_type=code&amp;scope=snsapi_userinfo&amp;state=STATE#wechat_redirect">https://open.weixin.qq.com/connect/oauth2/authorize?appid=[你申请的公众平台测试账号的appid]&amp;redirect_uri=https://[你的授权回调页面域名]/wechat/login.php&amp;response_type=code&amp;scope=snsapi_userinfo&amp;state=STATE#wechat_redirect</a></p>
+<p>具体每个参数代表什么，我这里就不做解释了，微信公众平台开发者文档有详细说明。其中scope是比较重要的，由于不是采用静默授权的方式，所以它的值必须是snsapi_userinfo，另外就是要注意每个参数的顺序必须保持跟官方文档一致，不然会授权失败。在微信浏览器打开链接后，会弹出授权页面，用户点击同意后，页面会返回到redirect_uri页面，并且在链接中带上code参数，然后PHP就可以拿到code进行下一步的操作。</p>
+<blockquote>
+<h3>通过code换取网页授权access_token</h3>
+</blockquote>
+<p>用户在上一步点击同意授权后，获取OpenId以及用户基本信息的工作就交给PHp来做了，接下来示例一下PHP如何跟微信服务器交互。</p>
+<pre><code>    &lt;?php
+    $wechatObj = new wechatCallbackapiTest();
+    $wechatObj-&gt;redirectUrl();
+    
+    class wechatCallbackapiTest
+    &#123;
+        public function redirectUrl()
+        &#123;
+            $appid = &quot;公众平台测试账号的appid&quot;;
+            $secret = &quot;公众平台测试账号的appsecret&quot;;
+            $code = $_GET[&quot;code&quot;];
+    
+            $get_token_url = &#39;https://api.weixin.qq.com/sns/oauth2/access_token?appid=&#39; . $appid . &#39;&amp;secret=&#39; . $secret . &#39;&amp;code=&#39; . $code . &#39;&amp;grant_type=authorization_code&#39;;
+            $json = file_get_contents($get_token_url);
+            echo($json);
+        &#125;
+    &#125;
+    
+    ?&gt;
+    
+</code></pre>
+<p>上面的代码会在拿到access_token相关信息后在页面打印出来。</p>
+<blockquote>
+<h3>根据access_token获取OpenId以及用户基本信息</h3>
+</blockquote>
+<pre><code>    &lt;?php
+    $wechatObj = new wechatCallbackapiTest();
+    $wechatObj-&gt;redirectUrl();
+    
+    class wechatCallbackapiTest
+    &#123;
+        public function redirectUrl()
+        &#123;
+            $appid = &quot;公众平台测试账号的appid&quot;;
+            $secret = &quot;公众平台测试账号的appsecret&quot;;
+            $code = $_GET[&quot;code&quot;];
+    
+            $get_token_url = &#39;https://api.weixin.qq.com/sns/oauth2/access_token?appid=&#39; . $appid . &#39;&amp;secret=&#39; . $secret . &#39;&amp;code=&#39; . $code . &#39;&amp;grant_type=authorization_code&#39;;
+            $json = file_get_contents($get_token_url);
+            // echo($json);
+    
+            $arr = json_decode($json, true);
+               $access_token = $arr[&#39;access_token&#39;];
+               $openid = $arr[&#39;openid&#39;];
+    
+               $url = &#39;https://api.weixin.qq.com/sns/userinfo?access_token=&#39; . $access_token . &#39;&amp;openid=&#39; . $openid . &#39;&amp;lang=zh_CN&#39;;
+               $userInfo = file_get_contents($url);
+               $user_data = json_decode($userInfo, true);
+               echo($userInfo);
+        &#125;
+    &#125;
+    
+    ?&gt;
+    
+</code></pre>
+<p>这样，就获取到OpenId以及用户基本信息了，并将获取到的内容打印到页面。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>前端农民工
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.xiaoweihuang.me/2021/06/24/get-wechat-openid-and-userinfo/" title="微信公众号获取OpenId和用户基本信息">https://www.xiaoweihuang.me/2021/06/24/get-wechat-openid-and-userinfo/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BC%80%E5%8F%91/" rel="tag"># 微信公众号开发</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/24/vscode-vue-eslint-autofix/" rel="prev" title="VSCode写Vue代码保存时自动格式化">
+      <i class="fa fa-chevron-left"></i> VSCode写Vue代码保存时自动格式化
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/Safari-new-Date-bug/" rel="next" title="new Date()方法在Safari浏览器的一个bug">
+      new Date()方法在Safari浏览器的一个bug <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">修改OAuth2.0网页授权回调页面域名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">用户同意授权，获取code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">通过code换取网页授权access_token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">根据access_token获取OpenId以及用户基本信息</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
