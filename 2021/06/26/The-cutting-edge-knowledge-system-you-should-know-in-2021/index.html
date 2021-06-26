@@ -20,22 +20,17 @@
     var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="今天上班写页面的时候，遇到有个需求是做一个可以横向滑动的菜单，类似于小程序里面的scroll-view组件。当然，如果只是简单的使用overflow-y:scroll去实现横向滑动菜单的话，体验不怎么好，因为在左右滑动的时候，总会有一种卡顿不流畅的感觉，为了改善这种状况，我决定引入一个滴滴前端团队的某位成员开源的滚动插件：better-scroll，不过这个插件使用比较多的场景还是在竖直方向的下拉">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Better-Scroll在手机端横向滚动的应用">
-<meta property="og:url" content="https://www.xiaoweihuang.me/2021/06/24/better-scroll-horizontal-scrolling/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="前端农民工">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2021/06/26/The-cutting-edge-knowledge-system-you-should-know-in-2021/index.html">
 <meta property="og:site_name" content="前端农民工">
-<meta property="og:description" content="今天上班写页面的时候，遇到有个需求是做一个可以横向滑动的菜单，类似于小程序里面的scroll-view组件。当然，如果只是简单的使用overflow-y:scroll去实现横向滑动菜单的话，体验不怎么好，因为在左右滑动的时候，总会有一种卡顿不流畅的感觉，为了改善这种状况，我决定引入一个滴滴前端团队的某位成员开源的滚动插件：better-scroll，不过这个插件使用比较多的场景还是在竖直方向的下拉">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.xiaoweihuang.me/images/better-scroll.gif">
-<meta property="article:published_time" content="2021-06-24T14:02:49.687Z">
-<meta property="article:modified_time" content="2021-06-24T14:04:24.719Z">
+<meta property="article:published_time" content="2021-06-26T07:31:54.953Z">
+<meta property="article:modified_time" content="2021-06-26T07:31:54.953Z">
 <meta property="article:author" content="前端农民工">
-<meta property="article:tag" content="Vue">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.xiaoweihuang.me/images/better-scroll.gif">
 
-<link rel="canonical" href="https://www.xiaoweihuang.me/2021/06/24/better-scroll-horizontal-scrolling/">
+<link rel="canonical" href="https://www.xiaoweihuang.me/2021/06/26/The-cutting-edge-knowledge-system-you-should-know-in-2021/">
 
 
 <script id="page-configurations">
@@ -48,7 +43,7 @@
   };
 </script>
 
-  <title>Better-Scroll在手机端横向滚动的应用 | 前端农民工</title>
+  <title> | 前端农民工</title>
   
 
 
@@ -163,7 +158,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2021/06/24/better-scroll-horizontal-scrolling/">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2021/06/26/The-cutting-edge-knowledge-system-you-should-know-in-2021/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -176,7 +171,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Better-Scroll在手机端横向滚动的应用
+          
         </h1>
 
         <div class="post-meta">
@@ -185,18 +180,8 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-06-24 22:02:49 / 修改时间：22:04:24" itemprop="dateCreated datePublished" datetime="2021-06-24T22:02:49+08:00">2021-06-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
-                </span>
+              <time title="创建时间：2021-06-26 15:31:54" itemprop="dateCreated datePublished" datetime="2021-06-26T15:31:54+08:00">2021-06-26</time>
             </span>
 
           
@@ -210,150 +195,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>今天上班写页面的时候，遇到有个需求是做一个可以横向滑动的菜单，类似于小程序里面的scroll-view组件。当然，如果只是简单的使用overflow-y:scroll去实现横向滑动菜单的话，体验不怎么好，因为在左右滑动的时候，总会有一种卡顿不流畅的感觉，为了改善这种状况，我决定引入一个滴滴前端团队的某位成员开源的滚动插件：better-scroll，不过这个插件使用比较多的场景还是在竖直方向的下拉列表里面，但今天我借助它来制作横向滑动的菜单，两种场景在使用上其实差不多，区别仅仅是横向滚动的场景中需要我们手动计算一下所有item的宽度之和，然后把总宽度赋值给它们的父容器，先看看最终的效果：</p>
-<span id="more"></span>
-
-<p><a href="https://www.xiaoweihuang.me/images/better-scroll.gif"><img src="https://www.xiaoweihuang.me/images/better-scroll.gif"></a></p>
-<p>实现起来也不复杂，我把主要的代码贴出来，感兴趣的同学可以自己去尝试：</p>
-<blockquote>
-<p>imgSearch.vue</p>
-</blockquote>
-<pre><code>    &lt;template&gt;
-      &lt;div class=&quot;imgSearch_container&quot;&gt;
-        &lt;div class=&quot;top_nav&quot;&gt;
-          &lt;Header title=&quot;图搜&quot; /&gt;
-          &lt;div class=&quot;search_nav&quot;&gt;
-              &lt;img class=&quot;search_img&quot; src=&quot;../../assets/mock_imgs/goodsImg.png&quot; /&gt;
-              &lt;div class=&quot;categorys&quot; ref=&quot;categorys&quot;&gt;
-                  &lt;div class=&quot;categoty_list&quot; ref=&quot;categoty_list&quot;&gt;
-                        &lt;span 
-                          class=&quot;category_item&quot; 
-                          ref=&quot;category_item&quot;
-                          :class=&quot;selectedCategoryIndex === index ? &#39;selected&#39;:&#39;&#39;&quot; 
-                          v-for=&quot;(item, index) in categorys&quot; 
-                          @click=&quot;handleCategorySelect(index)&quot;
-                          :key=&quot;index&quot;&gt;&#123;&#123;item.text&#125;&#125;&lt;/span&gt;
-                  &lt;/div&gt;
-              &lt;/div&gt;
-          &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/template&gt;
-    
-    &lt;script&gt;
-    import BScroll from &#39;better-scroll&#39;
-    import Header from &#39;../../components/header/header.vue&#39;
-    
-    export default &#123;
-        name: &#39;ImageSearch&#39;,
-        data() &#123;
-          return &#123;
-            categorys: [
-              &#123; id: 0, text: &#39;全部&#39; &#125;,
-              &#123; id: 1, text: &#39;外套&#39; &#125;,
-              &#123; id: 2, text: &#39;裙子&#39; &#125;,
-              &#123; id: 3, text: &#39;衬衫&#39; &#125;,
-              &#123; id: 4, text: &#39;鞋子&#39; &#125;,
-              &#123; id: 5, text: &#39;牛仔裤&#39; &#125;,
-              &#123; id: 6, text: &#39;毛衣&#39; &#125;,
-            ],
-            // ...
-            selectedCategoryIndex: 0
-          &#125;
-        &#125;,
-        components: &#123;
-          Header
-        &#125;,
-        methods: &#123;
-          // ...
-          handleCategorySelect (index) &#123;
-              this.selectedCategoryIndex = index
-          &#125;
-        &#125;,
-        mounted () &#123;
-          let width = 0
-          for (let  i = 0; i &lt; this.categorys.length + 1; i++) &#123;
-              width += this.$refs.category_item[0].getBoundingClientRect().width
-          &#125;
-          this.$refs.categoty_list.style.width = width / parseFloat(document.documentElement.style.fontSize) + &#39;rem&#39;
-    
-          if (!this.scroll) &#123;
-            this.scroll = new BScroll(this.$refs.categorys, &#123;
-              scrollX: true,
-              scrollY: false,
-              momentum: false,
-              snap: &#123;
-                loop: this.loop,
-                threshold: 0.3,
-                speed: 400
-              &#125;,
-              click: true
-            &#125;)
-          &#125; else &#123;
-            this.scroll.refresh()
-          &#125;
-        &#125;
-    &#125;
-    &lt;/script&gt;
-    
-    &lt;style lang=&quot;less&quot; scoped&gt;
-    @import &#39;./imageSearch.less&#39;;
-    &lt;/style&gt;
-    
-</code></pre>
-<blockquote>
-<p>imageSearch.less</p>
-</blockquote>
-<pre><code>    .imgSearch_container &#123;
-        .top_nav &#123;
-            position: relative;
-            z-index: 100;
-            background: #fff;
-        &#125;
-    
-        .search_nav &#123;
-            display: flex;
-            height: 107px;
-            border-top: 1px solid #E5E5E5;
-            border-bottom: 1px solid #E5E5E5;
-            .search_img &#123;
-                width: 110px;
-                height: 110px;
-            &#125;
-            .categorys &#123;
-                width: 640px;
-                overflow: hidden;
-    
-                .categoty_list &#123;
-                    display: flex;
-                    width: 100%;
-                    height: 128px;
-                &#125;
-    
-                .category_item &#123;
-                    flex-shrink: 0;
-                    width: 116px;
-                    height: 46px;
-                    line-height: 46px;
-                    border-radius: 25px;
-                    border: 2px solid #9C9C9C;
-                    font-size: 24px;
-                    color: #9C9C9C;
-                    text-align: center;
-                    margin-top: 30px;
-                    margin-left: 18px;
-    
-                    &amp;.selected &#123;
-                        border-color: #F96388;
-                        color: #F96388;
-                    &#125;
-                &#125;
-            &#125;
-        &#125;
-    &#125;
-    
-</code></pre>
-
+        
     </div>
 
     
@@ -368,7 +210,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.xiaoweihuang.me/2021/06/24/better-scroll-horizontal-scrolling/" title="Better-Scroll在手机端横向滚动的应用">https://www.xiaoweihuang.me/2021/06/24/better-scroll-horizontal-scrolling/</a>
+    <a href="https://www.xiaoweihuang.me/2021/06/26/The-cutting-edge-knowledge-system-you-should-know-in-2021/" title="">https://www.xiaoweihuang.me/2021/06/26/The-cutting-edge-knowledge-system-you-should-know-in-2021/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -378,9 +220,6 @@
 
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/Vue/" rel="tag"># Vue</a>
-          </div>
 
         
 
@@ -388,12 +227,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/06/24/vue-cli3-config-sass-to-rem/" rel="prev" title="vue移动端项目自适应解决方案">
-      <i class="fa fa-chevron-left"></i> vue移动端项目自适应解决方案
+    <a href="/2021/06/24/v2021-blog/" rel="prev" title="2021年的第一篇博客">
+      <i class="fa fa-chevron-left"></i> 2021年的第一篇博客
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/06/24/vscode-vue-eslint-autofix/" rel="next" title="VSCode写Vue代码保存时自动格式化">
-      VSCode写Vue代码保存时自动格式化 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/06/26/2021-you-need-to-know-frontend-knowledge/" rel="next" title="2021你应该了解的前端知识体系">
+      2021你应该了解的前端知识体系 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
