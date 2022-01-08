@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.xiaoweihuang.me","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="曾经以为遥遥无期的2022年，转眼就到了。自大学本科毕业以来，从事前端开发行业也有五年了，对于日常工作中的业务需求开发基本都已游刃有余，但总感觉自己还存在很大的提升空间，也许是遇到大家口中常说的每隔三年五年就会面临的上升瓶颈了吧。 一个优秀的前端工程师，不仅能高效完成页面的开发，还能掌握和实践一系列前端工程化的技术，包括脚手架与项目脚本，测试体系、监控体系、项目规范、项目构建和打包、项目部署和运维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="这次彻底搞懂JavaScript中的原型与原型链">
+<meta property="og:url" content="https://www.xiaoweihuang.me/2022/01/08/javascript-prototype/index.html">
+<meta property="og:site_name" content="前端农民工">
+<meta property="og:description" content="曾经以为遥遥无期的2022年，转眼就到了。自大学本科毕业以来，从事前端开发行业也有五年了，对于日常工作中的业务需求开发基本都已游刃有余，但总感觉自己还存在很大的提升空间，也许是遇到大家口中常说的每隔三年五年就会面临的上升瓶颈了吧。 一个优秀的前端工程师，不仅能高效完成页面的开发，还能掌握和实践一系列前端工程化的技术，包括脚手架与项目脚本，测试体系、监控体系、项目规范、项目构建和打包、项目部署和运维">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2022/01/08/imagee75e022842dea854.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2022/01/08/image910b6a0a3c310923.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2022/01/08/imageb0f9807461856f9c.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2022/01/08/imageeb36d1f447e93fb9.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2022/01/08/imaged14efdb976389f08.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2022/01/08/image15dd2a04abedcc59.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2022/01/08/image5a11d84bd424b0f9.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2022/01/08/imaged90ff8837af0a6e8.png">
+<meta property="og:image" content="https://img.xiaoweihuang.me/images/2022/01/08/imagec1ae464678106063.png">
+<meta property="article:published_time" content="2022-01-08T11:02:59.667Z">
+<meta property="article:modified_time" content="2022-01-08T11:11:49.340Z">
+<meta property="article:author" content="前端农民工">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.xiaoweihuang.me/images/2022/01/08/imagee75e022842dea854.png">
+
+<link rel="canonical" href="https://www.xiaoweihuang.me/2022/01/08/javascript-prototype/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>这次彻底搞懂JavaScript中的原型与原型链 | 前端农民工</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">前端农民工</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.xiaoweihuang.me/2022/01/08/javascript-prototype/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="前端农民工">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="前端农民工">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          这次彻底搞懂JavaScript中的原型与原型链
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-01-08 19:02:59 / 修改时间：19:11:49" itemprop="dateCreated datePublished" datetime="2022-01-08T19:02:59+08:00">2022-01-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>曾经以为遥遥无期的2022年，转眼就到了。自大学本科毕业以来，从事前端开发行业也有五年了，对于日常工作中的业务需求开发基本都已游刃有余，但总感觉自己还存在很大的提升空间，也许是遇到大家口中常说的每隔三年五年就会面临的上升瓶颈了吧。</p>
+<p>一个优秀的前端工程师，不仅能高效完成页面的开发，还能掌握和实践一系列前端工程化的技术，包括脚手架与项目脚本，测试体系、监控体系、项目规范、项目构建和打包、项目部署和运维等。不仅能做项目，而且有足够的经验和方案做好项目，具体可以是性能优化方面或者是技术方面，性能优化如长列表优化、加载性能优化、提升项目的可维护性等，技术方面如微前端、服务端渲染、跨端开发等。</p>
+<span id="more"></span>
+
+<p>当感到迷茫的时候，需要做的是及时调整好自己的心态，捋清思路，回过头来反思和沉淀一下自己的过去，以让自己的能力能得到进一步的提升。</p>
+<p>过去在上下班碎片化时间阅读一些公众号推文的时候，经常感觉自己的基础知识不过关，掌握的前端开发知识未成体系，现在就趁着过年前没那么忙复习一下，计划接下来写一个深入理解JavaScript的系列文章，这篇博客是系列的第一篇，从 JavaScript 的原型与原型链说起。</p>
+<h5 id="JavaScript的面向对象"><a href="#JavaScript的面向对象" class="headerlink" title="JavaScript的面向对象"></a>JavaScript的面向对象</h5><p>学习过Java的同学应该都知道，面向对象的语言有三大特性：封装性、继承性、多态性。但是JavaScript不是严格意义上的面向对象编程语言，它是一门基于原型的语言，通过原型可以实现继承的特性。</p>
+<p>举个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">function Person(name, age) &#123;</span><br><span class="line">    this.name = name</span><br><span class="line">    this.age = age</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.language = &#x27;chinese&#x27;</span><br><span class="line"></span><br><span class="line">Person.prototype.sayName = function() &#123;</span><br><span class="line">    console.log(&#x27;My name is &#x27; + this.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.sayAge = function() &#123;</span><br><span class="line">    console.log(&#x27;My age is &#x27; + this.age)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.getLanguage = function() &#123;</span><br><span class="line">    console.log(this.language)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let foo = new Person(&#x27;foo&#x27;, 25)</span><br><span class="line">console.log(foo.sayName()) // My name is foo</span><br><span class="line">console.log(foo.sayAge()) // My age is 25</span><br><span class="line">console.log(foo.getLanguage()) // chinese</span><br></pre></td></tr></table></figure>
+
+<p>从这个例子我们可以看到，构造函数Person中没有sayName方法和sayAge方法，但是foo实例对象却成功调用了这两个方法，那为什么呢？这是因为它从原型对象中继承了这两个方法。通过这个例子我们也引出今天要讨论的话题，JavaScript中的原型、实例与构造函数三者之间有什么内在的联系呢？</p>
+<h5 id="原型prototype"><a href="#原型prototype" class="headerlink" title="原型prototype"></a>原型prototype</h5><p>每个函数都有一个 prototype 属性，它指向通过这个函数创建的实例对象的原型，实例对象都会从这个原型上继承属性，也就是说原型上的属性和方法会被所有实例对象共用。那什么是原型呢？原型可以理解为实例对象在被创建的时候，就会有一个与之相关联的对象，这对象就是我们经常说的原型。</p>
+<p>构造函数与原型的关系可以使用下图来表示：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2022/01/08/imagee75e022842dea854.png" alt="image"></p>
+<p>那实例跟原型是怎么联系起来的呢？</p>
+<h5 id="proto-属性"><a href="#proto-属性" class="headerlink" title="__proto__属性"></a>__proto__属性</h5><p>每个实例对象都有 __proto__私有属性，它指向了构造函数的原型对象，也就是说实例对象是通过 __proto__属性与原型联系起来的。我们再完善一下实例、构造函数、原型之间的关系图：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2022/01/08/image910b6a0a3c310923.png" alt="image"></p>
+<p>需要注意的是，__proto__属性从来没有被包括在ECMAScript 的语言规范中，但是所有现代浏览器都实现了它。__proto__属性已在ECMAScript6语言规范中标准化，用于确保web浏览器的兼容性，因此它未来也将被支持，但它已不推荐使用，现在更推荐得是使用Object.getPrototypeOf/Reflect.getPrototypeOf和Object.setPrototypeOf/Reflect.setPrototypeOf。</p>
+<p>__proto__属性是继承于Object.prototype 的一个访问器属性 ，暴露了一个对象的内部 [[Prototype]] 。如果一个对象设置了其他的.__proto__属性，那么将会覆盖原有的构造器原型对象，可以理解为如果改变了对象的 __proto__属性就会改变原型链。下文会讲原型链。</p>
+<p>上文提到每个实例对象都会有 __proto__属性，使用不同方式创建的对象，它们的__proto__分别指向什么呢？</p>
+<h6 id="对象字面量创建对象"><a href="#对象字面量创建对象" class="headerlink" title="对象字面量创建对象"></a>对象字面量创建对象</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let person = &#123;</span><br><span class="line">    name: &#x27;tom&#x27;,</span><br><span class="line">    age: 22</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img.xiaoweihuang.me/images/2022/01/08/imageb0f9807461856f9c.png" alt="image"></p>
+<p>从控制台输出可以看到，通过对象字面量构造出的对象，其 __proto__指向 Object.prototype，这里也可以知道 Object 也是一个构造函数。</p>
+<h6 id="构造函数创建对象"><a href="#构造函数创建对象" class="headerlink" title="构造函数创建对象"></a>构造函数创建对象</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">function Person() &#123;&#125;</span><br><span class="line">let p = new Person()</span><br></pre></td></tr></table></figure>
+<p><img src="https://img.xiaoweihuang.me/images/2022/01/08/imageeb36d1f447e93fb9.png" alt="image"></p>
+<p>上面这种形式创建对象的方式就是通过构造函数创建对象，这里的构造函数是 Person 函数。上文也讲过了，通过构造函数创建的对象，其__proto__指向的是构造函数的prototype属性指向的对象，即构造函数的原型对象。</p>
+<h6 id="Object-create创建对象"><a href="#Object-create创建对象" class="headerlink" title="Object.create创建对象"></a>Object.create创建对象</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let person = &#123;</span><br><span class="line">    name: &#x27;tom&#x27;,</span><br><span class="line">    age: 22</span><br><span class="line">&#125;</span><br><span class="line">const subPerson = Object.create(person);</span><br></pre></td></tr></table></figure>
+<p><img src="https://img.xiaoweihuang.me/images/2022/01/08/imaged14efdb976389f08.png" alt="image"></p>
+<p>可见通过Object.create 创建的对象subPerson 的 __proto__属性指向了person，看以下Object.create的 polyfill 代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">if (typeof Object.create !== &quot;function&quot;) &#123;</span><br><span class="line">    Object.create = function (proto, propertiesObject) &#123;</span><br><span class="line">        if (typeof proto !== &#x27;object&#x27; &amp;&amp; typeof proto !== &#x27;function&#x27;) &#123;</span><br><span class="line">            throw new TypeError(&#x27;Object prototype may only be an Object: &#x27; + proto);</span><br><span class="line">        &#125; else if (proto === null) &#123;</span><br><span class="line">            throw new Error(&quot;This browser&#x27;s implementation of Object.create is a shim and doesn&#x27;t support &#x27;null&#x27; as the first argument.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (typeof propertiesObject !== &#x27;undefined&#x27;) throw new Error(&quot;This browser&#x27;s implementation of Object.create is a shim and doesn&#x27;t support a second argument.&quot;);</span><br><span class="line"></span><br><span class="line">        function F() &#123;&#125;</span><br><span class="line">        F.prototype = proto;</span><br><span class="line"></span><br><span class="line">        return new F();</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过这段polyfill代码不难理解上述例子为什么 subPerson 的 __proto__属性指向了person。</p>
+<p>既然实例对象有__proto__属性指向原型对象，构造函数有prototype属性指向原型对象，那么原型对象有没有属性指向实例和构造函数呢？指向构造函数的有，即 constructor，指向实例对象的没有，因为构造函数可以创建很多实例对象，自然没有与原型对象一对一关系的属性，但是每个实例对象都是从原型继承属性和方法。</p>
+<h5 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h5><p><img src="https://img.xiaoweihuang.me/images/2022/01/08/image15dd2a04abedcc59.png" alt="image"></p>
+<p>因为原型对象可以通过constructor属性指向构造函数，事实上这个属性是通过原型链从 Object.prototype 继承而来的。进一步完善实例对象、构造函数与原型对象的关系图：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2022/01/08/image5a11d84bd424b0f9.png" alt="image"></p>
+<h5 id="实例对象与原型"><a href="#实例对象与原型" class="headerlink" title="实例对象与原型"></a>实例对象与原型</h5><p>从文章开头的例子，我们就已经了解到实例对象会从它的构造函数的原型对象继承属性和方法。如 foo 对象调用 getLanguage 方法的时候，会获取对象的 language 属性并打印出来，但是 foo 对象上并没有设置 language 属性，所以会去与它关联的原型对象上查找，也就是 foo.<strong>proto</strong> === Person.prototype 对象，这个对象上正好有这个属性，属性值为 “chinese”，于是就被正确打印出来。但是如果实例对象的构造函数的原型上也没有这个属性呢？那么就会去原型的原型对象上查找，直到找到属性为止。</p>
+<h5 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h5><p>既然构造函数的原型也是一个对象，那么它是由哪个构造函数创建出来的呢？它的 __proto__属性又指向谁呢？从上文提到对象创建的三种方式中，对象字面量创建的对象由最原始的 Object 构造函数创建，其实构造函数的原型对象也是由它创建的，原型 的__proto__属性自然指向了 Object.prototype，我们进一步完善实例对象、构造函数与原型的关系图：</p>
+<p><img src="https://img.xiaoweihuang.me/images/2022/01/08/imaged90ff8837af0a6e8.png" alt="image"></p>
+<p>Object.prototype 也是一个对象，那么它的__proto__属性又指向谁呢？null,没错，就是 null。</p>
+<p><img src="https://img.xiaoweihuang.me/images/2022/01/08/imagec1ae464678106063.png" alt="image"></p>
+<p>通过 __proto__属性从将 foo 实例对象一直延伸到 null 的链状结构就是原型链。 </p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>前端农民工
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/02/ability-and-attitude/" rel="prev" title="关于个人能力与姿态的一些思考">
+      <i class="fa fa-chevron-left"></i> 关于个人能力与姿态的一些思考
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#JavaScript%E7%9A%84%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.</span> <span class="nav-text">JavaScript的面向对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8Bprototype"><span class="nav-number">2.</span> <span class="nav-text">原型prototype</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#proto-%E5%B1%9E%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">__proto__属性</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%AD%97%E9%9D%A2%E9%87%8F%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.1.</span> <span class="nav-text">对象字面量创建对象</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.2.</span> <span class="nav-text">构造函数创建对象</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Object-create%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.3.</span> <span class="nav-text">Object.create创建对象</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#constructor-NaN"><span class="nav-number">4.</span> <span class="nav-text">constructor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1%E4%B8%8E%E5%8E%9F%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text">实例对象与原型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="nav-number">6.</span> <span class="nav-text">原型链</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="前端农民工"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">前端农民工</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">前端农民工</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
